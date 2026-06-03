@@ -35,12 +35,17 @@ Headings in Space Grotesk, body in Inter.
 - Legal data: UAB "Lateral repairs" · company code 304403126 · VAT LT100010469717 ·
   Paberžių g. 5, LT-72328 Tauragė, Lithuania.
 
+### Logo
+
+`images/logo.png` is the **official Lateral Repairs droplet mark**, processed from the
+supplied artwork: the white background was knocked out to transparency (the white "LR"
+letters are preserved) so it sits cleanly on the dark theme. App icons / favicons
+(`icon-192`, `icon-512`, `apple-touch-icon`) are generated from the same mark. The nav and
+footer pair the mark with a CSS wordmark lockup.
+
 ## ⚠️ Before launch — TODO
 
-1. **Logo** — `images/logo.svg` is a brand-accurate *placeholder* wordmark.
-   Drop the official logo in `images/` (e.g. `logo.png`) and update the three
-   `src="images/logo.svg"` references in `index.html` (nav, app mockup, footer).
-2. **Contact form** — currently a front-end prototype (no backend). Wire it to email/CRM
+1. **Contact form** — currently a front-end prototype (no backend). Wire it to email/CRM
    (e.g. Vercel serverless function, Formspree, or your inbox) before going live.
 3. **App Store / Play links** — verified live, but confirm the listings are the correct
    public ones for your region.
