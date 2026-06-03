@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PLACEHOLDER WORDMARK — replace with the real Lateral Repairs logo.
+  Drop the official file in this folder (e.g. images/logo.png) and update the
+  <img src> in index.html (search for "logo.svg"). Built in brand colours so the
+  prototype looks finished until the real asset is dropped in.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 56" width="320" height="56" role="img" aria-label="Lateral Repairs">
+  <defs>
+    <linearGradient id="lrG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e91e8c"/>
+      <stop offset="1" stop-color="#00bcd4"/>
+    </linearGradient>
+  </defs>
+  <!-- pipe-cross mark -->
+  <g transform="translate(4,6)">
+    <rect x="0" y="0" width="44" height="44" rx="11" fill="none" stroke="url(#lrG)" stroke-width="2.5"/>
+    <path d="M11 22 H33 M22 11 V33" stroke="url(#lrG)" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="22" cy="22" r="4.4" fill="#0a0a0a" stroke="#e91e8c" stroke-width="2.4"/>
+  </g>
+  <!-- wordmark -->
+  <text x="62" y="26" font-family="'Space Grotesk',Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="1.5" fill="#f5f5f7">LATERAL</text>
+  <text x="62" y="46" font-family="'Space Grotesk',Arial,sans-serif" font-size="20" font-weight="700" letter-spacing="1.5" fill="url(#lrG)">REPAIRS</text>
+</svg>
