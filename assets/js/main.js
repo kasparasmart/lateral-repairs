@@ -13,12 +13,33 @@
 
   /* ---- mobile menu ---- */
   var burger = document.querySelector('.nav__burger');
+  var navLinks = document.querySelectorAll('.nav__links a[href^="#"]');
   if (burger) {
     burger.addEventListener('click', function () { nav.classList.toggle('open'); });
-    document.querySelectorAll('.nav__links.mobile a').forEach(function (a) {
+    navLinks.forEach(function (a) {
       a.addEventListener('click', function () { nav.classList.remove('open'); });
     });
   }
+
+  /* ---- scroll-spy: light up the current section's nav link ---- */
+  (function () {
+    var byId = {};
+    var sections = [];
+    navLinks.forEach(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      var sec = document.getElementById(id);
+      if (sec) { byId[id] = a; if (sections.indexOf(sec) === -1) sections.push(sec); }
+    });
+    if (!sections.length || !('IntersectionObserver' in window)) return;
+    function setActive(id) {
+      navLinks.forEach(function (a) { a.classList.remove('active'); });
+      if (byId[id]) byId[id].classList.add('active');
+    }
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (s) { spy.observe(s); });
+  })();
 
   /* ---- scroll reveal ---- */
   var revealEls = document.querySelectorAll('.reveal');
