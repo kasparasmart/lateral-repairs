@@ -336,14 +336,15 @@ const styles = {
 };
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
-const LINER_TYPES = ["LR Drain Plus Liner", "LR Megaliner", "LR Nanotec"];
+const LINER_TYPES = ["MULTIline PRO", "MULTIline FLEX", "MULTIline FORCE", "MULTIline CORE"];
 const RESIN_SYSTEMS = ["LR-Epoxy Fastcast 15", "LR-Epoxy Fastcast 30", "LR-120+", "LR-UV-Resin"];
 const WALL_THICKNESSES = ["3 mm", "4.5 mm"];
 
 const DATASHEETS = [
-  "LR Drain Plus Liner - Technical Specs",
-  "LR Megaliner - Datasheet",
-  "LR Nanotec - Specs",
+  "MULTIline PRO - Specs",
+  "MULTIline FLEX - Technical Specs",
+  "MULTIline FORCE - Datasheet",
+  "MULTIline CORE - Datasheet",
   "LR-Epoxy Fastcast 15 - TDS",
   "LR-Epoxy Fastcast 30 - TDS",
   "LR-120+ Resilience Data",
@@ -473,7 +474,7 @@ function HomeScreen({ navigate }) {
 
 function CalcScreen() {
   const [units, setUnits] = useState("METRIC");
-  const [linerType, setLinerType] = useState("LR Drain Plus Liner");
+  const [linerType, setLinerType] = useState("MULTIline FLEX");
   const [resin, setResin] = useState("LR-Epoxy Fastcast 15");
   const [dn, setDn] = useState("150");
   const [thickness, setThickness] = useState("3 mm");
@@ -727,7 +728,7 @@ function CertsScreen() {
 const SITE_PHOTOS = [
   { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/img-2121_1110-343801ea0c5e6465ba6acc35581b9b0b.jpg",    label: "Manufacturing" },
   { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/img-1911_4388-83b659b53b8e5f9c62d5e77f672189d1.jpg",   label: "Production" },
-  { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/nanotech-2_1445-d2712b21d3cc525b56d5db034a69bc77.jpg", label: "LR Nanotec" },
+  { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/nanotech-2_1445-d2712b21d3cc525b56d5db034a69bc77.jpg", label: "MULTIline PRO" },
   { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/img-1950-1_2332-594cc86c23d98a1ce32938e716ca43b7.jpg", label: "Installation" },
   { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/img-1756-1_1070-a621643b6ca80940d166618ffde729e1.jpg", label: "Workshop" },
   { url: "https://www.lateralrepairs.com/uploads/_CGSmartImage/img-1290_6534-801eee21cf7669c38b222f7fd2775653.jpg",   label: "Process" },
