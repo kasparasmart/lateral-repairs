@@ -7,6 +7,9 @@ rehabilitation solutions, based in Tauragė, Lithuania.
 This is a **separate product** from the Lateral Repairs mobile app (the resin calculator /
 datasheet tool). The site links out to the app on the App Store and Google Play.
 
+> The app itself (React 19 + Vite) lives in [`app/`](./app) — rebuilt with per-resin
+> mix ratios. Deploy it as its own project; see [`app/README.md`](./app/README.md).
+
 ## Stack
 
 Zero-build static site — pure HTML, CSS and vanilla JS. No dependencies, no install step,
