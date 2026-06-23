@@ -18,20 +18,21 @@ npm run lint
 
 ## Images
 
-The app loads brand photos from `public/images/` (referenced in `App.jsx` → `IMG`):
+The app loads brand photos from `public/images/` (referenced in `App.jsx` → `IMG`).
+These were rasterized from the supplied print PDFs (1500 px, ~q82):
 
-| File | Used on |
-|------|---------|
-| `logo.jpg` | header (currently a placeholder — the website droplet logo) |
-| `top-wall.jpg` | Home hero |
-| `backwall-desni.jpg` | Home footer band |
-| `backwall-400.jpg` | Calculator / Certificates |
-| `backwall-levi.jpg` | Cure Timer |
-| `backwall-425.jpg` | Contact |
-| `banner.jpg` | (defined, currently unused) |
+| File | Source PDF | Used on |
+|------|------------|---------|
+| `logo.jpg` | Grafik_Logo (transparent PNG) | header |
+| `top-wall.jpg` | Top_wall 400×170 | Home hero |
+| `backwall-desni.jpg` | Backwall Desni 160×280 | Home footer band |
+| `backwall-levi.jpg` | Backwall Levi 160×280 | Cure Timer |
+| `backwall-425.jpg` | Backwall 425×280 | Contact |
+| `backwall-400.jpg` | *(reused from `backwall-425`)* | Calculator / Certificates |
+| `banner.jpg` | Banner 80×240 | (defined, currently unused) |
 
-Drop the real JPGs in with these exact names and they appear automatically.
-Until then those spots show a broken-image placeholder.
+`backwall-400.jpg` has no dedicated artwork yet — it's a copy of `backwall-425.jpg`.
+Drop a real `backwall-400.jpg` in to replace it.
 
 ## ⚠️ The resin formula — known issue (not yet fixed here)
 
