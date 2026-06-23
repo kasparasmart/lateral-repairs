@@ -585,7 +585,7 @@ function CalcScreen() {
     <div style={styles.body}>
       <SectionPhoto
         src={IMG.backwall400}
-        url={IMG.backwall400}
+        url="/images/explore-trenchless.pdf"
         style={{ marginBottom: 20 }}
       />
       <div style={styles.calcTitle}>
