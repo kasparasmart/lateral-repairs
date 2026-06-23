@@ -341,14 +341,13 @@ const RESIN_SYSTEMS = ["LR-Epoxy Fastcast 15", "LR-Epoxy Fastcast 30", "LR-120+"
 const WALL_THICKNESSES = ["3 mm", "4.5 mm"];
 
 const DATASHEETS = [
-  "MULTIline PRO - Specs",
-  "MULTIline FLEX - Technical Specs",
-  "MULTIline FORCE - Datasheet",
-  "MULTIline CORE - Datasheet",
-  "LR-Epoxy Fastcast 15 - TDS",
-  "LR-Epoxy Fastcast 30 - TDS",
-  "LR-120+ Resilience Data",
-  "LR-UV-Resin Technical Specs",
+  { name: "MULTIline PRO 4.0 mm",      file: "/datasheets/multiline-pro-4-0mm.pdf" },
+  { name: "MULTIline PRO 5.5 mm",      file: "/datasheets/multiline-pro-5-5mm.pdf" },
+  { name: "MULTIline FLEX",            file: "/datasheets/multiline-flex.pdf" },
+  { name: "MULTIline CORE",            file: "/datasheets/multiline-core.pdf" },
+  { name: "MULTIline FORCE 3.0 mm",    file: "/datasheets/multiline-force-3-0mm.pdf" },
+  { name: "MULTIline FORCE RF 4.5 mm", file: "/datasheets/multiline-force-rf-4-5mm.pdf" },
+  { name: "MULTIline FORCE UV",        file: "/datasheets/multiline-force-uv.pdf" },
 ];
 
 const CERTIFICATES = [
@@ -685,12 +684,12 @@ function DataScreen() {
       <div style={styles.sectionTitle}>TECHNICAL DATA</div>
       <div style={styles.sectionSub}>:: OFFICIAL DOCUMENTATION</div>
       <div style={styles.divider} />
-      {DATASHEETS.map((name) => (
-        <div key={name} style={styles.listItem}>
+      {DATASHEETS.map(({ name, file }) => (
+        <div key={name} style={styles.listItem} onClick={() => window.open(file, "_blank")}>
           <div style={styles.listIcon}><FileText size={24} color={C.pink} /></div>
           <div style={styles.listText}>
-            <div style={styles.listTitle}>{name.length > 30 ? name.slice(0, 30) + "…" : name}</div>
-            <div style={styles.listSub}>PDF DOWNLOAD</div>
+            <div style={styles.listTitle}>{name}</div>
+            <div style={styles.listSub}>OPEN PDF</div>
           </div>
           <ChevronRight size={18} color={C.muted} />
         </div>
