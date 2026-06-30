@@ -350,11 +350,12 @@ const DATASHEETS = [
   { name: "MULTIline FORCE UV",        file: "/datasheets/multiline-force-uv.pdf" },
 ];
 
-const CERTIFICATES = [
-  { name: "ISO 9001:2015 Certification" },
-  { name: "SINTEF Technical Approval" },
-  { name: "Eurofins Environmental Certificate" },
-  { name: "CE Marking Declaration" },
+// Certifying / testing bodies shown as logos only (no certificate uploaded).
+const CERT_BODIES = [
+  { name: "Eurofins", src: "/certificates/logos/eurofins.png" },
+  { name: "NSF", src: "/certificates/logos/nsf.png" },
+  { name: "SINTEF", src: "/certificates/logos/sintef.jpeg" },
+  { name: "WRC", src: "/certificates/logos/wrc.jpg" },
 ];
 
 const MEDIA_ITEMS = [
@@ -704,21 +705,29 @@ function CertsScreen() {
       <div style={styles.sectionTitle}>CERTIFICATES</div>
       <div style={styles.sectionSub}>:: OFFICIAL APPROVALS</div>
       <div style={styles.divider} />
-      <SectionPhoto
-        src={IMG.backwall400}
-        url={IMG.backwall400}
-        style={{ marginBottom: 24 }}
-      />
-      {CERTIFICATES.map((cert) => (
-        <div key={cert.name} style={styles.listItem}>
-          <div style={styles.listIcon}><Shield size={24} color={C.purple} /></div>
-          <div style={styles.listText}>
-            <div style={styles.listTitle}>{cert.name.length > 30 ? cert.name.slice(0, 30) + "…" : cert.name}</div>
-            <div style={styles.listSub}>PDF DOWNLOAD</div>
-          </div>
-          <ChevronRight size={18} color={C.muted} />
+
+      {/* ISO 9001 — actual certificate, opens the PDF */}
+      <div style={styles.listItem} onClick={() => window.open("/certificates/iso-9001.pdf", "_blank")}>
+        <div style={{ ...styles.listIcon, background: "#fff", padding: 8 }}>
+          <img src="/certificates/logos/iso.jpeg" alt="ISO 9001" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
         </div>
-      ))}
+        <div style={styles.listText}>
+          <div style={styles.listTitle}>ISO 9001:2015</div>
+          <div style={styles.listSub}>OPEN CERTIFICATE · PDF</div>
+        </div>
+        <ChevronRight size={18} color={C.muted} />
+      </div>
+
+      {/* Other certifying / testing bodies — logos only */}
+      <span style={{ ...styles.label, marginTop: 28 }}>CERTIFIED &amp; TESTED BY</span>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+        {CERT_BODIES.map((c) => (
+          <div key={c.name} style={{ background: "#fff", borderRadius: 8, padding: "20px 16px", display: "flex", alignItems: "center", justifyContent: "center", minHeight: 92 }}>
+            <img src={c.src} alt={c.name} style={{ maxWidth: "100%", maxHeight: 56, objectFit: "contain", display: "block" }} />
+          </div>
+        ))}
+      </div>
+
       <div style={styles.versionText}>VERSION 1.3.0</div>
     </div>
   );
