@@ -370,9 +370,14 @@ const LINER_TYPES = LINERS.map((l) => l.name);
 // single-component. Entries flagged `confirm` must be checked against the
 // kit label before quoting — this array is the only place to change them.
 const RESINS = [
+  // FC15: 100:30 pbw — decodes exactly from the legacy app constants (see docs).
   { name: "LR-Epoxy Fastcast 15", ratio: [100, 30], densA: 1.153, densB: 1.079 },
-  { name: "LR-Epoxy Fastcast 30", ratio: [100, 30], densA: 1.153, densB: 1.079, confirm: true },
-  { name: "LR-120+",              ratio: [100, 30], densA: 1.153, densB: 1.079, confirm: true },
+  // FC30: 100:33 pbw — from the earlier datasheet review; slower blend = more
+  // hardener, consistent with the family pattern (22 → 30 → 43 pbw).
+  { name: "LR-Epoxy Fastcast 30", ratio: [100, 33], densA: 1.153, densB: 1.079, confirm: true },
+  // LR-120+: 100:43 pbw — the long-pot-life "Ambient" family blend
+  // (2:1 by volume / 43 pbw); 120+ min pot life matches that blend.
+  { name: "LR-120+",              ratio: [100, 43], densA: 1.153, densB: 1.079, confirm: true },
   // Density: mid-range of the MFE 7516 styrene-free vinyl ester SDS
   // ("relative density 1.1–1.20 g/mL at 25 °C", in Tech Data).
   { name: "LR-UV-Resin",          single: true, dens: 1.15, confirm: true },
@@ -402,6 +407,7 @@ const mixedDensity = (r) =>
   r.single ? r.dens : (r.ratio[0] + r.ratio[1]) / (r.ratio[0] / r.densA + r.ratio[1] / r.densB);
 
 const DATASHEETS = [
+  { name: "Complete pack — all documents", file: "/datasheets/lr-technical-data-complete.pdf" },
   { name: "MULTIline PRO 4.0 mm",      file: "/datasheets/multiline-pro-4-0mm.pdf" },
   { name: "MULTIline PRO 5.5 mm",      file: "/datasheets/multiline-pro-5-5mm.pdf" },
   { name: "MULTIline FLEX",            file: "/datasheets/multiline-flex.pdf" },

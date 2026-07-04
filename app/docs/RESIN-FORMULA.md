@@ -41,11 +41,27 @@ dimension change — the operator adds those to the entered length.
 
 | Constant | Value | Source |
 |---|---|---|
-| Mix ratio (epoxies) | **100 : 30 by weight** (≈ 3 : 1 by volume) | Original app constants (see below); matches the published lateral-resin "Extended" blend (30 pbw hardener, 3:1 v/v) |
+| Fastcast 15 ratio | **100 : 30 by weight** (≈ 3 : 1 by volume) | Decodes exactly from the legacy app constants (see below); matches the published lateral-resin "Extended" blend (30 pbw, 3:1 v/v) |
+| Fastcast 30 ratio | **100 : 33 by weight** | Earlier datasheet review; directionally consistent with the family pattern (slower blend → more hardener); **confirm on kit label** |
+| LR-120+ ratio | **100 : 43 by weight** (≈ 2 : 1 by volume) | The long-pot-life **"Ambient"** blend in the published lateral-resin family PDS (2:1 v/v, 43 pbw); LR-120+'s 120-min pot life maps to that blend; **confirm on kit label** |
 | Density part A | **1.153 kg/L** | Original app |
 | Density part B | **1.079 kg/L** | Original app |
-| Mixed density | **1.135 kg/L** (derived) | = (100+30) / (100/1.153 + 30/1.079) — reproduces the original app's hard-coded 1.135 exactly |
+| Mixed density | derived per ratio: FC15 **1.135**, FC30 **1.134**, LR-120+ **1.130** kg/L | = (a+b) / (a/1.153 + b/1.079); FC15 reproduces the legacy hard-coded 1.135 exactly |
 | LR-UV-Resin | single component, density **1.15 kg/L** | mid-range of the MFE 7516 styrene-free vinyl ester SDS ("relative density 1,1–1,20 g/mL at 25 °C", in Tech Data); **confirm** it is the UV resin's SDS |
+
+### Ratio assignment logic (pot life ↔ family blend)
+
+The published lateral-resin family PDS is internally consistent with our
+component densities — converting its volume ratios to weight with
+A 1.153 / B 1.079 gives: 4:1 v/v → 23 pbw (printed 22), 3:1 → 31 (printed 30),
+2:1 → 47 (printed 43). Longer working time = more hardener parts:
+
+| Blend | v/v | pbw | Pot life class | Mapped product |
+|---|---|---|---|---|
+| Winter / Standard / Summer | 4:1 | 22 | fastest | — (not in app) |
+| Extended | 3:1 | 30 | fast (~15 min class) | **Fastcast 15** |
+| (between Extended and Ambient) | — | 33 | ~30 min | **Fastcast 30** |
+| Ambient | 2:1 | 43 | long (ambient cure, 120+ min) | **LR-120+** |
 
 **Why we trust the original constants:** the legacy app split volume as
 0.757 / 0.243 with densities 1.153 / 1.079. That split is *exactly* 100:30 by
@@ -81,9 +97,10 @@ for Fastcast 15, so historical quotes remain comparable.)
 
 Change these in **one place** — the `RESINS` array in `src/App.jsx`:
 
-1. **Fastcast 30** — ratio assumed 100:30 by weight (family blend; pot life ~30 min
-   @25 °C per supplier page). Confirm on the kit label.
-2. **LR-120+** — ratio assumed 100:30. Confirm.
+1. **Fastcast 30** — ratio 100:33 by weight (earlier datasheet review; pot life
+   ~30 min @25 °C per supplier page). Confirm on the kit label.
+2. **LR-120+** — ratio 100:43 by weight (mapped to the "Ambient" family blend,
+   2:1 v/v / 43 pbw, by its 120-min pot life). Confirm on the kit label.
 3. **LR-UV-Resin** — density 1.15 kg/L, taken as the mid-range of the MFE 7516
    vinyl ester SDS (1,1–1,20 g/mL). Confirm MFE 7516 is the LR-UV-Resin base.
 4. Component densities for FC30 / LR-120+ assumed same as FC15 (A 1.153 / B 1.079).
