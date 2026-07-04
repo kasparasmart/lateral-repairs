@@ -63,8 +63,7 @@ The `#group` section links to all partner companies:
 
 - Company facts, products, certifications and the company video are reused from the
   Lateral Repairs app and the official site (lateralrepairs.com).
-- The 6 facility / product photos are served from the company's own CDN
-  (`www.lateralrepairs.com/uploads/...`).
+- All photography is self-hosted in `images/` — real product liners, job-site and equipment shots supplied by the company.
 - Group/partner facts from the public announcement (Trenchless Works, Apheon,
   ims-robotics.de, resinnovation.com).
 - Legal data: UAB "Lateral repairs" · company code 304403126 · VAT LT100010469717 ·
