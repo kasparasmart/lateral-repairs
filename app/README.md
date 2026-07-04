@@ -34,20 +34,18 @@ These were rasterized from the supplied print PDFs (1500 px, ~q82):
 `backwall-400.jpg` has no dedicated artwork yet — it's a copy of `backwall-425.jpg`.
 Drop a real `backwall-400.jpg` in to replace it.
 
-## ⚠️ The resin formula — known issue (not yet fixed here)
+## The resin formula (sales-grade, datasheet-driven)
 
-This is a faithful restore, so it keeps the **original** calculator behaviour,
-including the bug. In `src/App.jsx` → `CalcScreen.calculate()`:
+Resin quantity comes from the **official kg/m tables printed in the MULTIline
+datasheets** (V2026.1, the PDFs in Tech Data), interpolated by DN, times length,
+plus a selectable wet-out margin (default +10 %). The A/B split uses each resin
+system's own mix ratio (epoxies 100:30 by weight with densities A 1.153 /
+B 1.079 kg/L — the verified manufacturer constants; UV is single-component).
 
-```js
-const compAL = totalL * 0.757;   // Resin A  — same split for EVERY resin
-const compBL = totalL * 0.243;   // Hardener — same split for EVERY resin (≈100:32)
-```
-
-The selected resin (Fastcast 15 / Fastcast 30 / LR-120+ / UV) does **not** change
-the math — it's only printed as a label. The intended fix is a per-resin ratio,
-e.g. FC15 = 100:30, FC30 = 100:33, UV = single component. Applying it correctly
-needs the exact ratio + component densities from each datasheet (pending).
+Full derivation, verification tables and the list of values still to confirm
+with the supplier: **[`docs/RESIN-FORMULA.md`](./docs/RESIN-FORMULA.md)**.
+All product data lives in the `LINERS` / `RESINS` arrays at the top of
+`src/App.jsx` — edit there only.
 
 ## Deploy
 

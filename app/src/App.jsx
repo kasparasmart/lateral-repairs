@@ -336,9 +336,68 @@ const styles = {
 };
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
-const LINER_TYPES = ["MULTIline PRO", "MULTIline FLEX", "MULTIline FORCE", "MULTIline CORE"];
-const RESIN_SYSTEMS = ["LR-Epoxy Fastcast 15", "LR-Epoxy Fastcast 30", "LR-120+", "LR-UV-Resin"];
-const WALL_THICKNESSES = ["3 mm", "4.5 mm"];
+// ─── RESIN CALCULATION DATA ──────────────────────────────────────────────────
+// Quantity basis: the official "Resin kg/m" tables printed in the MULTIline
+// technical datasheets (Issue V2026.1 · 2026.06) — the same PDFs shipped in
+// the Tech Data section. Points are [DN (mm), kg mixed resin per metre];
+// datasheet range rows map to their lower-bound DN (cross-checked against
+// shell geometry π·D·t within ±5 %). Between points: linear interpolation.
+// FORCE RF / FORCE UV datasheets cover DN 100–600 and their tables are linear
+// in DN, so the same slope extends past the last printed point.
+// Full derivation + verification: docs/RESIN-FORMULA.md.
+const LINERS = [
+  { name: "MULTIline FLEX",            wall: 3.0, dn: [30, 250],
+    kgm: [[30, 0.32], [50, 0.51], [70, 0.73], [100, 1.01], [125, 1.24], [150, 1.58], [200, 2.08], [225, 2.31], [250, 2.58]] },
+  { name: "MULTIline PRO 4.0 mm",      wall: 4.0, dn: [70, 300],
+    kgm: [[70, 0.82], [100, 1.15], [150, 1.70], [200, 2.45], [250, 2.99]] },
+  { name: "MULTIline PRO 5.5 mm",      wall: 5.5, dn: [70, 300],
+    kgm: [[70, 0.95], [100, 1.32], [150, 1.88], [200, 2.65], [250, 3.25]] },
+  { name: "MULTIline CORE",            wall: 4.0, dn: [70, 350],
+    kgm: [[70, 0.94], [100, 1.25], [150, 1.90], [200, 2.60], [250, 3.10], [300, 3.80]] },
+  { name: "MULTIline FORCE 3.0 mm",    wall: 3.0, dn: [100, 300],
+    kgm: [[100, 1.15], [125, 1.44], [150, 1.72], [200, 2.30], [225, 2.60], [250, 2.90], [300, 3.21]] },
+  { name: "MULTIline FORCE RF 4.5 mm", wall: 4.5, dn: [100, 600],
+    kgm: [[100, 1.60], [125, 2.00], [150, 2.41], [200, 3.21], [225, 3.61], [250, 4.01], [300, 4.81]] },
+  { name: "MULTIline FORCE UV",        wall: 3.3, dn: [100, 600],
+    kgm: [[100, 1.15], [125, 1.44], [150, 1.72], [200, 2.30], [225, 2.60], [250, 2.90], [300, 3.21]] },
+];
+const LINER_TYPES = LINERS.map((l) => l.name);
+
+// Mix data. 100:30 by weight (≈3:1 by volume) with component densities
+// A 1.153 / B 1.079 kg/L are the manufacturer constants from the original
+// app — exactly self-consistent (mixed density 1.135 kg/L) and matching the
+// published "Extended" lateral-resin blend (30 pbw hardener). UV resin is
+// single-component. Entries flagged `confirm` must be checked against the
+// kit label before quoting — this array is the only place to change them.
+const RESINS = [
+  { name: "LR-Epoxy Fastcast 15", ratio: [100, 30], densA: 1.153, densB: 1.079 },
+  { name: "LR-Epoxy Fastcast 30", ratio: [100, 30], densA: 1.153, densB: 1.079, confirm: true },
+  { name: "LR-120+",              ratio: [100, 30], densA: 1.153, densB: 1.079, confirm: true },
+  { name: "LR-UV-Resin",          single: true, dens: 1.10, confirm: true },
+];
+const RESIN_SYSTEMS = RESINS.map((r) => r.name);
+
+// Wet-out / wastage margin applied on top of the datasheet quantity.
+const EXTRA_OPTIONS = ["0 %", "5 %", "10 %", "15 %"];
+
+// kg of mixed resin per metre at a given DN — linear interpolation between
+// datasheet points, linear extrapolation past the last point (used only by
+// the DN 100–600 FORCE liners; DN is clamped to the product range first).
+function kgPerMetre(liner, dnMm) {
+  const pts = liner.kgm;
+  if (dnMm <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    if (dnMm <= pts[i][0]) {
+      const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+      return y0 + ((y1 - y0) * (dnMm - x0)) / (x1 - x0);
+    }
+  }
+  const [x0, y0] = pts[pts.length - 2], [x1, y1] = pts[pts.length - 1];
+  return y1 + ((y1 - y0) * (dnMm - x1)) / (x1 - x0);
+}
+
+const mixedDensity = (r) =>
+  r.single ? r.dens : (r.ratio[0] + r.ratio[1]) / (r.ratio[0] / r.densA + r.ratio[1] / r.densB);
 
 const DATASHEETS = [
   { name: "MULTIline PRO 4.0 mm",      file: "/datasheets/multiline-pro-4-0mm.pdf" },
@@ -477,31 +536,57 @@ function CalcScreen() {
   const [linerType, setLinerType] = useState("MULTIline FLEX");
   const [resin, setResin] = useState("LR-Epoxy Fastcast 15");
   const [dn, setDn] = useState("150");
-  const [thickness, setThickness] = useState("3 mm");
+  const [extra, setExtra] = useState("10 %");
   const [length, setLength] = useState("5");
   const [result, setResult] = useState(null);
 
+  const liner = LINERS.find((l) => l.name === linerType);
+  const isMetric = units === "METRIC";
+
   function calculate() {
-    const dnNum = parseFloat(dn) || 150;
-    const thickNum = parseFloat(thickness) || 3;
-    const lenNum = parseFloat(length) || 5;
-    // Volume of cylindrical shell: π × DN(mm) × length(m) × thickness(mm) / 1000 = litres
-    const totalL  = parseFloat(((Math.PI * dnNum * lenNum * thickNum) / 1000).toFixed(2));
-    const totalKg = parseFloat((totalL * 1.135).toFixed(2));
-    const compAL  = parseFloat((totalL  * 0.757).toFixed(2));
-    const compBL  = parseFloat((totalL  * 0.243).toFixed(2));
-    const compAKg = parseFloat((compAL  * 1.153).toFixed(2));
-    const compBKg = parseFloat((compBL  * 1.079).toFixed(2));
+    const rs = RESINS.find((r) => r.name === resin);
+    const dnMm = (parseFloat(dn) || 0) * (isMetric ? 1 : 25.4);
+    const lenM = (parseFloat(length) || 0) * (isMetric ? 1 : 0.3048);
+    if (dnMm <= 0 || lenM <= 0) return;
+    const extraPct = parseFloat(extra) || 0;
+
+    // Quantity from the liner datasheet's resin table (kg/m at this DN),
+    // clamped to the product's DN range, plus the selected margin.
+    const dnClamped = Math.min(Math.max(dnMm, liner.dn[0]), liner.dn[1]);
+    const kgm = kgPerMetre(liner, dnClamped);
+    const totalKg = kgm * lenM * (1 + extraPct / 100);
+    const totalL = totalKg / mixedDensity(rs);
+
+    // Component split by the resin system's mix ratio (by weight).
+    let compAKg, compBKg, compAL, compBL;
+    if (rs.single) {
+      compAKg = totalKg; compBKg = 0; compAL = totalL; compBL = 0;
+    } else {
+      const [a, b] = rs.ratio;
+      compAKg = (totalKg * a) / (a + b);
+      compBKg = (totalKg * b) / (a + b);
+      compAL = compAKg / rs.densA;
+      compBL = compBKg / rs.densB;
+    }
+
+    const r2 = (n) => parseFloat(n.toFixed(2));
     setResult({
-      linerType, resin,
-      dn: dnNum, thickness: thickNum, length: lenNum,
-      totalKg, totalL, compAL, compBL, compAKg, compBKg,
+      linerType, resin, rs, extraPct,
+      dn: parseFloat(dn) || 0, dnMm: r2(dnMm), dnClamped: r2(dnClamped),
+      dnOutOfRange: dnMm !== dnClamped,
+      length: parseFloat(length) || 0, wall: liner.wall, kgm: r2(kgm),
+      totalKg: r2(totalKg), totalL: r2(totalL),
+      compAKg: r2(compAKg), compBKg: r2(compBKg), compAL: r2(compAL), compBL: r2(compBL),
     });
   }
 
   function reset() {
-    setDn("150"); setThickness("3 mm"); setLength("5"); setResult(null);
+    setDn("150"); setExtra("10 %"); setLength("5"); setResult(null);
   }
+
+  // Output formatting in the selected unit system.
+  const fmtW = (kg) => (isMetric ? `${kg} kg` : `${(kg * 2.20462).toFixed(2)} lbs`);
+  const fmtV = (l) => (isMetric ? `${l} L` : `${(l * 0.264172).toFixed(2)} gal`);
 
   if (result) {
     const resinA = result.resin + " A";
@@ -521,9 +606,11 @@ function CalcScreen() {
         {[
           ["Liner type",       result.linerType],
           ["Resin system",     result.resin],
-          ["Liner DN",         result.dn + " mm"],
-          ["Wall thickness",   result.thickness + " mm"],
+          ["Liner DN",         result.dn + (units === "METRIC" ? " mm" : " in")],
+          ["Wall thickness",   result.wall.toFixed(1) + " mm"],
           ["Liner lenght",     result.length + (units === "METRIC" ? " m" : " ft")],
+          ["Extra margin",     "+" + result.extraPct + " %"],
+          ["Mix ratio",        result.rs.single ? "Single component" : result.rs.ratio.join(":") + " by weight"],
         ].map(([l, v]) => (
           <div key={l} style={row}>
             <span style={rowLbl}>{l}</span>
@@ -531,47 +618,79 @@ function CalcScreen() {
           </div>
         ))}
 
+        {result.dnOutOfRange && (
+          <div style={{ color: "#ffb020", fontSize: 12, padding: "6px 0" }}>
+            ⚠ DN {result.dnMm} mm is outside the {result.linerType} range
+            ({LINERS.find((l) => l.name === result.linerType).dn.join("–")} mm) —
+            calculated at DN {result.dnClamped} mm.
+          </div>
+        )}
+
         {/* Total */}
         <div style={{ ...divider, marginTop: 12 }} />
         <div style={sectionHdr}>Resultant total amount of resin</div>
         <div style={divider} />
         <div style={row}>
           <span style={rowLbl}>Resin mixture Total</span>
-          <span style={rowVal}>{result.totalL} L</span>
+          <span style={rowVal}>{fmtV(result.totalL)}</span>
         </div>
         <div style={{ ...row, paddingTop: 0 }}>
           <span style={rowLbl} />
-          <span style={rowVal}>{result.totalKg} kg</span>
+          <span style={rowVal}>{fmtW(result.totalKg)}</span>
         </div>
 
-        {/* Volume */}
-        <div style={{ ...divider, marginTop: 12 }} />
-        <div style={sectionHdr}>Volume</div>
-        <div style={divider} />
-        <div style={compLbl}>Resin</div>
-        <div style={{ ...row, paddingTop: 0 }}>
-          <span style={subLbl}>{resinA}</span>
-          <span style={rowVal}>{result.compAL} L</span>
-        </div>
-        <div style={compLbl}>Hardener</div>
-        <div style={{ ...row, paddingTop: 0 }}>
-          <span style={subLbl}>{resinB}</span>
-          <span style={rowVal}>{result.compBL} L</span>
-        </div>
+        {result.rs.single ? (
+          <>
+            <div style={{ ...divider, marginTop: 12 }} />
+            <div style={sectionHdr}>Component</div>
+            <div style={divider} />
+            <div style={compLbl}>Resin (single component — no hardener)</div>
+            <div style={{ ...row, paddingTop: 0 }}>
+              <span style={subLbl}>{result.resin}</span>
+              <span style={rowVal}>{fmtV(result.compAL)} · {fmtW(result.compAKg)}</span>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Volume */}
+            <div style={{ ...divider, marginTop: 12 }} />
+            <div style={sectionHdr}>Volume</div>
+            <div style={divider} />
+            <div style={compLbl}>Resin</div>
+            <div style={{ ...row, paddingTop: 0 }}>
+              <span style={subLbl}>{resinA}</span>
+              <span style={rowVal}>{fmtV(result.compAL)}</span>
+            </div>
+            <div style={compLbl}>Hardener</div>
+            <div style={{ ...row, paddingTop: 0 }}>
+              <span style={subLbl}>{resinB}</span>
+              <span style={rowVal}>{fmtV(result.compBL)}</span>
+            </div>
 
-        {/* Weight */}
+            {/* Weight */}
+            <div style={{ ...divider, marginTop: 12 }} />
+            <div style={sectionHdr}>Weight</div>
+            <div style={divider} />
+            <div style={compLbl}>Resin</div>
+            <div style={{ ...row, paddingTop: 0 }}>
+              <span style={subLbl}>{resinA}</span>
+              <span style={rowVal}>{fmtW(result.compAKg)}</span>
+            </div>
+            <div style={compLbl}>Hardener</div>
+            <div style={{ ...row, paddingTop: 0 }}>
+              <span style={subLbl}>{resinB}</span>
+              <span style={rowVal}>{fmtW(result.compBKg)}</span>
+            </div>
+          </>
+        )}
+
         <div style={{ ...divider, marginTop: 12 }} />
-        <div style={sectionHdr}>Weight</div>
-        <div style={divider} />
-        <div style={compLbl}>Resin</div>
-        <div style={{ ...row, paddingTop: 0 }}>
-          <span style={subLbl}>{resinA}</span>
-          <span style={rowVal}>{result.compAKg} kg</span>
-        </div>
-        <div style={compLbl}>Hardener</div>
-        <div style={{ ...row, paddingTop: 0 }}>
-          <span style={subLbl}>{resinB}</span>
-          <span style={rowVal}>{result.compBKg} kg</span>
+        <div style={{ color: C.muted, fontSize: 11, lineHeight: 1.5, padding: "10px 0 0" }}>
+          Basis: {result.linerType} datasheet (V2026.1) resin table — {result.kgm} kg/m at
+          DN {result.dnClamped} mm, +{result.extraPct} % wet-out margin.
+          {result.rs.confirm && " Confirm the mix ratio on the kit label before ordering."}
+          {" "}Non-binding guideline values; add length for bends and dimension changes per the
+          liner datasheet.
         </div>
 
         <div style={{ height: 24 }} />
@@ -607,14 +726,17 @@ function CalcScreen() {
       <span style={styles.label}>RESIN SYSTEM</span>
       <SelectDropdown options={RESIN_SYSTEMS} value={resin} onChange={setResin} />
 
-      <span style={styles.label}>LINER DN (MM)</span>
-      <input style={styles.input} value={dn} onChange={(e) => setDn(e.target.value)} placeholder="150" type="number" />
+      <span style={styles.label}>LINER DN ({isMetric ? "MM" : "IN"})</span>
+      <input style={styles.input} value={dn} onChange={(e) => setDn(e.target.value)} placeholder={isMetric ? "150" : "6"} type="number" />
+      <div style={{ color: C.muted, fontSize: 11, marginTop: 6 }}>
+        {liner.name}: DN {liner.dn[0]}–{liner.dn[1]} mm · wall {liner.wall.toFixed(1)} mm (from datasheet)
+      </div>
 
-      <span style={styles.label}>WALL THICKNESS</span>
-      <SelectDropdown options={WALL_THICKNESSES} value={thickness} onChange={setThickness} />
+      <span style={styles.label}>LINER LENGTH ({isMetric ? "M" : "FT"})</span>
+      <input style={styles.input} value={length} onChange={(e) => setLength(e.target.value)} placeholder={isMetric ? "5" : "15"} type="number" />
 
-      <span style={styles.label}>LINER LENGTH ({units === "METRIC" ? "M" : "FT"})</span>
-      <input style={styles.input} value={length} onChange={(e) => setLength(e.target.value)} placeholder="5" type="number" />
+      <span style={styles.label}>EXTRA MARGIN (WET-OUT / WASTAGE)</span>
+      <SelectDropdown options={EXTRA_OPTIONS} value={extra} onChange={setExtra} />
 
       <button style={styles.calcBtn(C.green)} onClick={calculate}>CALCULATE</button>
       <button style={styles.calcBtn(C.red)} onClick={reset}>
