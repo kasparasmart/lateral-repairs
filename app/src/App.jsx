@@ -373,7 +373,9 @@ const RESINS = [
   { name: "LR-Epoxy Fastcast 15", ratio: [100, 30], densA: 1.153, densB: 1.079 },
   { name: "LR-Epoxy Fastcast 30", ratio: [100, 30], densA: 1.153, densB: 1.079, confirm: true },
   { name: "LR-120+",              ratio: [100, 30], densA: 1.153, densB: 1.079, confirm: true },
-  { name: "LR-UV-Resin",          single: true, dens: 1.10, confirm: true },
+  // Density: mid-range of the MFE 7516 styrene-free vinyl ester SDS
+  // ("relative density 1.1–1.20 g/mL at 25 °C", in Tech Data).
+  { name: "LR-UV-Resin",          single: true, dens: 1.15, confirm: true },
 ];
 const RESIN_SYSTEMS = RESINS.map((r) => r.name);
 
@@ -407,6 +409,9 @@ const DATASHEETS = [
   { name: "MULTIline FORCE 3.0 mm",    file: "/datasheets/multiline-force-3-0mm.pdf" },
   { name: "MULTIline FORCE RF 4.5 mm", file: "/datasheets/multiline-force-rf-4-5mm.pdf" },
   { name: "MULTIline FORCE UV",        file: "/datasheets/multiline-force-uv.pdf" },
+  { name: "Glassfiber Complex 1050",   file: "/datasheets/glassfiber-complex-1050.pdf" },
+  { name: "End Cap Glue",              file: "/datasheets/end-cap-glue.pdf" },
+  { name: "MFE 7516 Vinyl Ester — SDS", file: "/datasheets/mfe7516-vinyl-ester-sds.pdf" },
 ];
 
 // Certifying / testing bodies shown as logos only (no certificate uploaded).

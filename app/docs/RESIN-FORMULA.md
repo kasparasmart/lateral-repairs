@@ -45,7 +45,7 @@ dimension change — the operator adds those to the entered length.
 | Density part A | **1.153 kg/L** | Original app |
 | Density part B | **1.079 kg/L** | Original app |
 | Mixed density | **1.135 kg/L** (derived) | = (100+30) / (100/1.153 + 30/1.079) — reproduces the original app's hard-coded 1.135 exactly |
-| LR-UV-Resin | single component, density **1.10 kg/L** (typical) | typical styrene-free UV CIPP resin; **confirm** |
+| LR-UV-Resin | single component, density **1.15 kg/L** | mid-range of the MFE 7516 styrene-free vinyl ester SDS ("relative density 1,1–1,20 g/mL at 25 °C", in Tech Data); **confirm** it is the UV resin's SDS |
 
 **Why we trust the original constants:** the legacy app split volume as
 0.757 / 0.243 with densities 1.153 / 1.079. That split is *exactly* 100:30 by
@@ -84,7 +84,8 @@ Change these in **one place** — the `RESINS` array in `src/App.jsx`:
 1. **Fastcast 30** — ratio assumed 100:30 by weight (family blend; pot life ~30 min
    @25 °C per supplier page). Confirm on the kit label.
 2. **LR-120+** — ratio assumed 100:30. Confirm.
-3. **LR-UV-Resin** — density assumed 1.10 kg/L. Confirm from UV TDS.
+3. **LR-UV-Resin** — density 1.15 kg/L, taken as the mid-range of the MFE 7516
+   vinyl ester SDS (1,1–1,20 g/mL). Confirm MFE 7516 is the LR-UV-Resin base.
 4. Component densities for FC30 / LR-120+ assumed same as FC15 (A 1.153 / B 1.079).
 
 The result screen prints "Confirm the mix ratio on the kit label before ordering"
