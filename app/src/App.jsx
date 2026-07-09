@@ -418,6 +418,10 @@ const DATASHEETS = [
   { name: "Glassfiber Complex 1050",   file: "/datasheets/glassfiber-complex-1050.pdf" },
   { name: "End Cap Glue",              file: "/datasheets/end-cap-glue.pdf" },
   { name: "MFE 7516 Vinyl Ester — SDS", file: "/datasheets/mfe7516-vinyl-ester-sds.pdf" },
+  { name: "Silicate Resin Waterglass Hardener — SDS", file: "/datasheets/silicate-resin-waterglass-hardener-sds.pdf" },
+  { name: "Silicate Resin W01 Fast — SDS",            file: "/datasheets/silicate-resin-w01-fast-sds.pdf" },
+  { name: "Silicate Resin Winter — SDS",               file: "/datasheets/silicate-resin-winter-sds.pdf" },
+  { name: "Silicate Resin Summer — SDS",               file: "/datasheets/silicate-resin-summer-sds.pdf" },
 ];
 
 // Certifying / testing bodies shown as logos only (no certificate uploaded).
