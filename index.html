@@ -17,11 +17,10 @@
   <meta property="og:image" content="https://lateral-repairs-website.vercel.app/images/gallery/inside-liner.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="assets/fonts/fonts.css?v=10" />
   <link rel="canonical" href="https://lateral-repairs-website.vercel.app/" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=9" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=10" />
   <noscript>
     <style>
       /* JS unavailable: kill the preloader overlay and show all content */
@@ -71,7 +70,6 @@
     <canvas id="pipe3d" class="hero__canvas" aria-hidden="true"></canvas>
     <div class="hero__vignette" aria-hidden="true"></div>
     <div class="container hero__inner">
-      <span class="hero__badge reveal-up"><i class="dot"></i> Now part of the IMS Trenchless &amp; Polypipe group</span>
       <h1>
         <span class="line"><span>Rebuild pipelines</span></span>
         <span class="line"><span>without breaking</span></span>
@@ -470,12 +468,29 @@
           <b>UAB&nbsp;"Lateral&nbsp;repairs"</b> &nbsp;·&nbsp; Company code (įmonės kodas): 304403126 &nbsp;·&nbsp; VAT: LT100010469717<br>
           Paberžių g. 5, LT-72328 Tauragė, Lithuania
         </div>
-        <div class="copy">© <span id="year">2026</span> Lateral Repairs. All rights reserved.</div>
+        <div class="copy">
+          <a href="privacy.html">Privacy Policy</a> · <a href="cookies.html">Cookie Policy</a> · <button type="button" class="linklike" id="cookieSettings">Cookie settings</button><br>
+          © <span id="year">2026</span> Lateral Repairs. All rights reserved.
+        </div>
       </div>
     </div>
   </footer>
 
+  <!-- ============ COOKIE CONSENT ============ -->
+  <div class="consent" id="consent" role="dialog" aria-modal="false" aria-labelledby="consentTitle" hidden>
+    <div class="consent__card">
+      <div class="consent__text">
+        <b id="consentTitle">Privacy on this site</b>
+        <p>We set <b>no tracking cookies</b> — only one entry that remembers this choice. Embedded videos (YouTube) load from Google only if you allow third-party content. Details: <a href="cookies.html">Cookie Policy</a> · <a href="privacy.html">Privacy Policy</a>.</p>
+      </div>
+      <div class="consent__actions">
+        <button class="btn btn-primary" id="consentAccept" type="button">Accept all</button>
+        <button class="btn btn-ghost" id="consentNecessary" type="button">Necessary only</button>
+      </div>
+    </div>
+  </div>
+
   <script src="assets/vendor/three.min.js?v=8" defer></script>
-  <script src="assets/js/main.js?v=8" defer></script>
+  <script src="assets/js/main.js?v=10" defer></script>
 </body>
 </html>

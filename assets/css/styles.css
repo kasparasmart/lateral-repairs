@@ -632,6 +632,69 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
 .copy { font-size: 13px; color: var(--muted-dark); }
 
 /* ==========================================================================
+   Cookie consent banner
+   ========================================================================== */
+.consent {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 150;
+  padding: 16px clamp(14px, 3vw, 28px) calc(16px + env(safe-area-inset-bottom));
+  pointer-events: none;
+}
+.consent[hidden] { display: none; }
+.consent__card {
+  pointer-events: auto;
+  margin-inline: auto; width: min(880px, 100%);
+  display: flex; align-items: center; gap: 22px;
+  background: rgba(13, 11, 15, 0.97);
+  border: 1px solid rgba(230,0,126,0.35); border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(7,6,8,0.8), 0 0 40px rgba(230,0,126,0.15);
+  padding: 18px 22px;
+  animation: consentIn 0.5s var(--ease);
+}
+@keyframes consentIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.consent__text b { font-family: var(--font-head); font-size: 15px; color: var(--white); display: block; margin-bottom: 4px; }
+.consent__text p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.consent__text a { color: var(--pink-2); text-decoration: underline; text-underline-offset: 2px; }
+.consent__actions { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+.consent__actions .btn { padding: 11px 22px; font-size: 13.5px; justify-content: center; white-space: nowrap; }
+
+.linklike {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 2px;
+}
+.linklike:hover { color: var(--pink-2); }
+
+/* video poster consent overlay */
+.video-consent {
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: rgba(7, 6, 8, 0.82); backdrop-filter: blur(4px);
+  padding: 24px; text-align: center;
+}
+.video-consent p { font-size: 14px; color: var(--muted); max-width: 460px; line-height: 1.6; }
+.video-consent p a { color: var(--pink-2); text-decoration: underline; }
+.video-consent .btn { padding: 12px 24px; font-size: 14px; }
+
+/* ==========================================================================
+   Legal pages (privacy / cookies)
+   ========================================================================== */
+.legal-page { background: var(--black); }
+.legal-doc { padding: 140px 0 80px; }
+.legal-doc .container { max-width: 760px; }
+.legal-doc h1 { font-size: clamp(32px, 5vw, 48px); margin: 6px 0 10px; }
+.legal-doc__updated { color: var(--muted-dark); font-size: 13.5px; margin-bottom: 40px; }
+.legal-doc h2 { font-size: 21px; margin: 38px 0 12px; }
+.legal-doc h3 { font-size: 16.5px; margin: 24px 0 8px; color: var(--pink-2); }
+.legal-doc p { color: var(--muted); font-size: 15.5px; margin-bottom: 12px; }
+.legal-doc p b { color: var(--white); }
+.legal-doc a { color: var(--pink-2); text-decoration: underline; text-underline-offset: 2px; }
+.legal-doc code { background: rgba(255,255,255,0.07); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; font-size: 13px; }
+.legal-table-wrap { overflow-x: auto; margin: 14px 0; }
+.legal-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.legal-table th, .legal-table td { text-align: left; padding: 11px 14px; border: 1px solid var(--line); color: var(--muted); vertical-align: top; }
+.legal-table th { font-family: var(--font-head); color: var(--white); background: var(--black-3); font-size: 13px; }
+.legal-page footer { margin-top: 40px; }
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 @media (max-width: 1024px) {
@@ -669,6 +732,9 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
   .cert-doc__cta { margin-left: 0; }
   .foot { grid-template-columns: 1fr; }
   .legal { flex-direction: column; align-items: flex-start; }
+  .consent__card { flex-direction: column; align-items: stretch; text-align: center; gap: 14px; }
+  .consent__actions { flex-direction: row; }
+  .consent__actions .btn { flex: 1; }
 }
 
 /* ==========================================================================

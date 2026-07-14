@@ -145,9 +145,35 @@
     }
   }
 
-  /* ================= Lazy YouTube embed ================= */
+  /* ================= Cookie consent =================
+     No tracking cookies are used. The only stored entry is the visitor's own
+     choice; third-party content (YouTube) loads only after opt-in. */
+  var CONSENT_KEY = 'lr-consent-v1';
+  function getConsent() {
+    try { return JSON.parse(localStorage.getItem(CONSENT_KEY)); } catch (e) { return null; }
+  }
+  function setConsent(thirdParty) {
+    try { localStorage.setItem(CONSENT_KEY, JSON.stringify({ thirdParty: !!thirdParty, ts: Date.now() })); } catch (e) {}
+  }
+  var banner = document.getElementById('consent');
+  function showBanner() { if (banner) banner.hidden = false; }
+  function hideBanner() { if (banner) banner.hidden = true; }
+  if (banner) {
+    if (!getConsent()) showBanner();
+    var acceptBtn = document.getElementById('consentAccept');
+    var necessaryBtn = document.getElementById('consentNecessary');
+    if (acceptBtn) acceptBtn.addEventListener('click', function () { setConsent(true); hideBanner(); });
+    if (necessaryBtn) necessaryBtn.addEventListener('click', function () { setConsent(false); hideBanner(); });
+  }
+  var cookieSettings = document.getElementById('cookieSettings');
+  if (cookieSettings) cookieSettings.addEventListener('click', function () {
+    showBanner();
+    banner.scrollIntoView({ block: 'end', behavior: reduce ? 'auto' : 'smooth' });
+  });
+
+  /* ================= Consent-gated YouTube embed ================= */
   document.querySelectorAll('.video-poster[data-yt]').forEach(function (poster) {
-    function play() {
+    function embed() {
       var id = poster.getAttribute('data-yt');
       var iframe = document.createElement('iframe');
       iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
@@ -155,6 +181,24 @@
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframe.allowFullscreen = true;
       poster.replaceWith(iframe);
+    }
+    function play() {
+      var c = getConsent();
+      if (c && c.thirdParty) { embed(); return; }
+      if (poster.querySelector('.video-consent')) return; // prompt already shown
+      var ask = document.createElement('div');
+      ask.className = 'video-consent';
+      ask.innerHTML =
+        '<p>Playing the video loads it from <b>YouTube (Google)</b>, which may set cookies and process your IP address. See our <a href="cookies.html">Cookie Policy</a>.</p>';
+      var allow = document.createElement('button');
+      allow.type = 'button'; allow.className = 'btn btn-primary';
+      allow.textContent = 'Allow & play';
+      allow.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setConsent(true); hideBanner(); embed();
+      });
+      ask.appendChild(allow);
+      poster.appendChild(ask);
     }
     poster.addEventListener('click', play);
     poster.addEventListener('keydown', function (e) {
