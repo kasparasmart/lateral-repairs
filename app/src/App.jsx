@@ -346,13 +346,13 @@ const styles = {
 // in DN, so the same slope extends past the last printed point.
 // Full derivation + verification: docs/RESIN-FORMULA.md.
 const LINERS = [
-  { name: "MULTIline FLEX",            wall: 3.0, dn: [30, 250],
+  { name: "MULTIline FLEX",            wall: 3.5, dn: [30, 250],
     kgm: [[30, 0.32], [50, 0.51], [70, 0.73], [100, 1.01], [125, 1.24], [150, 1.58], [200, 2.08], [225, 2.31], [250, 2.58]] },
-  { name: "MULTIline PRO 4.0 mm",      wall: 4.0, dn: [70, 300],
+  { name: "MULTIline PRO 4.5 mm",      wall: 4.5, dn: [70, 300],
     kgm: [[70, 0.82], [100, 1.15], [150, 1.70], [200, 2.45], [250, 2.99]] },
   { name: "MULTIline PRO 5.5 mm",      wall: 5.5, dn: [70, 300],
     kgm: [[70, 0.95], [100, 1.32], [150, 1.88], [200, 2.65], [250, 3.25]] },
-  { name: "MULTIline CORE",            wall: 4.0, dn: [70, 350],
+  { name: "MULTIline CORE",            wall: 4.5, dn: [70, 350],
     kgm: [[70, 0.94], [100, 1.25], [150, 1.90], [200, 2.60], [250, 3.10], [300, 3.80]] },
   { name: "MULTIline FORCE 3.0 mm",    wall: 3.0, dn: [100, 300],
     kgm: [[100, 1.15], [125, 1.44], [150, 1.72], [200, 2.30], [225, 2.60], [250, 2.90], [300, 3.21]] },
@@ -408,7 +408,7 @@ const mixedDensity = (r) =>
 
 const DATASHEETS = [
   { name: "Complete pack — all documents", file: "/datasheets/lr-technical-data-complete.pdf" },
-  { name: "MULTIline PRO 4.0 mm",      file: "/datasheets/multiline-pro-4-0mm.pdf" },
+  { name: "MULTIline PRO 4.5 mm",      file: "/datasheets/multiline-pro-4-5mm.pdf" },
   { name: "MULTIline PRO 5.5 mm",      file: "/datasheets/multiline-pro-5-5mm.pdf" },
   { name: "MULTIline FLEX",            file: "/datasheets/multiline-flex.pdf" },
   { name: "MULTIline CORE",            file: "/datasheets/multiline-core.pdf" },
