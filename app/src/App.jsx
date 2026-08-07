@@ -30,8 +30,11 @@ const C = {
   purple: "#7c4dff",
   gold: "#ffa000",
   text: "#ffffff",
-  muted: "#666",
-  label: "#888",
+  // Secondary text. #666 measured only ~3.5:1 against the near-black
+  // background (below the 4.5:1 minimum); these read ~7:1 while staying
+  // clearly secondary to pure white.
+  muted: "#9e9ea8",
+  label: "#b8b8c2",
 };
 
 // ─── STATIC IMAGE URLS ───────────────────────────────────────────────────────
@@ -78,7 +81,7 @@ const styles = {
   },
   headerTitle: { lineHeight: 1.1 },
   brandName: { fontSize: 18, fontWeight: 700, letterSpacing: 2, fontStyle: "italic" },
-  brandSub: { fontSize: 10, color: C.muted, letterSpacing: 3 },
+  brandSub: { fontSize: 11, color: C.muted, letterSpacing: 3 },
   backBtn: {
     background: "none",
     border: "none",
@@ -126,7 +129,7 @@ const styles = {
   gridLabel: { fontSize: 14, fontWeight: 700, letterSpacing: 2, marginTop: 4 },
   // Section page
   sectionTitle: { fontSize: 28, fontWeight: 700, letterSpacing: 1, marginBottom: 2 },
-  sectionSub: { fontSize: 11, color: C.muted, letterSpacing: 3, marginBottom: 0 },
+  sectionSub: { fontSize: 12, color: C.muted, letterSpacing: 3, marginBottom: 0 },
   divider: { height: 2, background: C.pink, margin: "12px 0 24px", borderRadius: 1 },
   listItem: {
     background: C.card,
@@ -151,10 +154,10 @@ const styles = {
   },
   listText: { flex: 1 },
   listTitle: { fontSize: 15, fontWeight: 700, marginBottom: 2 },
-  listSub: { fontSize: 10, color: C.muted, letterSpacing: 2 },
+  listSub: { fontSize: 12, color: C.muted, letterSpacing: 2 },
   // Calculator
   calcTitle: { fontSize: 24, fontWeight: 700, letterSpacing: 1, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 },
-  label: { fontSize: 12, color: C.label, letterSpacing: 3, marginBottom: 8, marginTop: 16, display: "block" },
+  label: { fontSize: 13, color: C.label, letterSpacing: 3, marginBottom: 8, marginTop: 16, display: "block" },
   toggleRow: { display: "flex", gap: 0, marginBottom: 4 },
   toggleBtn: (active, color = C.cyan) => ({
     flex: 1,
@@ -278,7 +281,7 @@ const styles = {
     marginBottom: 4,
   },
   contactTitle: { fontSize: 32, fontWeight: 900, letterSpacing: 2, textAlign: "center" },
-  contactSub: { fontSize: 11, color: C.muted, letterSpacing: 4, textAlign: "center" },
+  contactSub: { fontSize: 12, color: C.muted, letterSpacing: 4, textAlign: "center" },
   contactRow: {
     width: "100%",
     background: "#1a1a1a",
@@ -289,7 +292,7 @@ const styles = {
     alignItems: "center",
     gap: 14,
   },
-  contactRowLabel: { fontSize: 10, color: C.muted, letterSpacing: 2 },
+  contactRowLabel: { fontSize: 12, color: C.muted, letterSpacing: 2 },
   contactRowValue: { fontSize: 16, fontWeight: 600 },
   visitBtn: {
     width: "100%",
@@ -307,7 +310,7 @@ const styles = {
     justifyContent: "center",
     gap: 10,
   },
-  versionText: { fontSize: 11, color: C.muted, textAlign: "center", letterSpacing: 2, marginTop: 16 },
+  versionText: { fontSize: 12, color: C.muted, textAlign: "center", letterSpacing: 2, marginTop: 16 },
   updateBtn: {
     background: "#1a1a1a",
     border: `1px solid ${C.border}`,
@@ -612,10 +615,10 @@ function CalcScreen() {
     const divider = { height: 1, background: "#2a2a2a", margin: "4px 0" };
     const sectionHdr = { fontSize: 15, fontWeight: 600, color: C.text, padding: "14px 0 8px", letterSpacing: 0.5 };
     const row = { display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "5px 0" };
-    const rowLbl = { color: C.muted, fontSize: 14 };
+    const rowLbl = { color: C.muted, fontSize: 15 };
     const rowVal = { color: C.text, fontSize: 14, fontWeight: 400, textAlign: "right" };
     const compLbl = { fontSize: 14, fontWeight: 700, color: C.text, padding: "8px 0 2px" };
-    const subLbl  = { fontSize: 12, color: C.muted, paddingBottom: 4 };
+    const subLbl  = { fontSize: 13, color: C.muted, paddingBottom: 4 };
     return (
       <div style={styles.body}>
         {/* Your Entries */}
@@ -637,7 +640,7 @@ function CalcScreen() {
         ))}
 
         {result.dnOutOfRange && (
-          <div style={{ color: "#ffb020", fontSize: 12, padding: "6px 0" }}>
+          <div style={{ color: "#ffc65c", fontSize: 13, lineHeight: 1.5, padding: "8px 0" }}>
             ⚠ DN {result.dnMm} mm is outside the {result.linerType} range
             ({LINERS.find((l) => l.name === result.linerType).dn.join("–")} mm) —
             calculated at DN {result.dnClamped} mm.
@@ -703,7 +706,7 @@ function CalcScreen() {
         )}
 
         <div style={{ ...divider, marginTop: 12 }} />
-        <div style={{ color: C.muted, fontSize: 11, lineHeight: 1.5, padding: "10px 0 0" }}>
+        <div style={{ color: C.muted, fontSize: 13, lineHeight: 1.55, padding: "10px 0 0" }}>
           Basis: {result.linerType} datasheet (V2026.1) resin table — {result.kgm} kg/m at
           DN {result.dnClamped} mm, +{result.extraPct} % wet-out margin.
           {result.rs.confirm && " Confirm the mix ratio on the kit label before ordering."}
@@ -746,7 +749,7 @@ function CalcScreen() {
 
       <span style={styles.label}>LINER DN ({isMetric ? "MM" : "IN"})</span>
       <input style={styles.input} value={dn} onChange={(e) => setDn(e.target.value)} placeholder={isMetric ? "150" : "6"} type="number" />
-      <div style={{ color: C.muted, fontSize: 11, marginTop: 6 }}>
+      <div style={{ color: C.muted, fontSize: 13, marginTop: 6 }}>
         {liner.name}: DN {liner.dn[0]}–{liner.dn[1]} mm · wall {liner.wall.toFixed(1)} mm (from datasheet)
       </div>
 
@@ -810,7 +813,7 @@ function CureScreen() {
         <div style={styles.cureResult}>
           <div style={{ color: C.cyan, fontSize: 12, letterSpacing: 3, marginBottom: 8 }}>ESTIMATED CURE TIME</div>
           <div style={{ fontSize: 48, fontWeight: 900, color: C.cyan }}>{result.hours}h</div>
-          <div style={{ color: C.muted, fontSize: 12, marginTop: 4 }}>{result.method} @ {result.temp}°C</div>
+          <div style={{ color: C.muted, fontSize: 13, marginTop: 4 }}>{result.method} @ {result.temp}°C</div>
         </div>
       )}
 
@@ -915,7 +918,7 @@ function MediaScreen() {
         >
           <img src={lightbox.url} alt={lightbox.label} style={{ maxWidth: "100%", maxHeight: "80vh", borderRadius: 8, objectFit: "contain" }} />
           <div style={{ color: "#fff", marginTop: 12, fontSize: 13, letterSpacing: 2, opacity: 0.7 }}>{lightbox.label.toUpperCase()}</div>
-          <div style={{ color: C.muted, marginTop: 6, fontSize: 11, letterSpacing: 1 }}>TAP TO CLOSE</div>
+          <div style={{ color: C.muted, marginTop: 6, fontSize: 12, letterSpacing: 1 }}>TAP TO CLOSE</div>
         </div>
       )}
 
