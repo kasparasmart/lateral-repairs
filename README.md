@@ -1,7 +1,7 @@
 # Lateral Repairs — Marketing Website
 
 A fully animated marketing site for **Lateral Repairs** (UAB "Lateral repairs"),
-an independent manufacturer of CIPP liners and supplier of no-dig trenchless pipe & sewer
+a manufacturer of CIPP liners and supplier of no-dig trenchless pipe & sewer
 rehabilitation solutions, based in Tauragė, Lithuania — now part of the European
 trenchless platform founded around **IMS Trenchless & Polypipe** (April 2026).
 

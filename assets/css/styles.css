@@ -330,16 +330,26 @@ h1, h2, h3, h4, h5 { font-family: var(--font-head); line-height: 1.08; letter-sp
 }
 .product:hover .product__glow { opacity: 1; }
 
-.resins { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--font-head); font-weight: 600; font-size: 14px;
-  background: var(--white); color: var(--black);
-  border: 1px solid var(--line-light); border-radius: 100px; padding: 12px 22px;
-  transition: transform 0.3s var(--ease), border-color 0.3s, box-shadow 0.3s;
+.resins-lead {
+  color: var(--muted-dark); font-size: 15.5px; line-height: 1.65;
+  max-width: 680px; margin-bottom: 22px;
 }
-.chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--grad); }
-.chip:hover { transform: translateY(-3px); border-color: var(--pink); box-shadow: 0 10px 26px rgba(230,0,126,0.16); }
+.resins-lead b { color: var(--black); font-weight: 600; }
+.resins { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 14px; }
+.resin {
+  background: var(--white); border: 1px solid var(--line-light); border-radius: var(--rad);
+  padding: 22px 22px 20px;
+  box-shadow: 0 6px 26px rgba(7, 6, 8, 0.05);
+  transition: transform 0.35s var(--ease), border-color 0.35s, box-shadow 0.35s;
+}
+.resin:hover { transform: translateY(-4px); border-color: rgba(230,0,126,0.45); box-shadow: 0 18px 44px rgba(230,0,126,0.14); }
+.resin__name {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-head); font-weight: 600; font-size: 15px; color: var(--black);
+  margin-bottom: 10px;
+}
+.resin__name i { width: 9px; height: 9px; border-radius: 50%; background: var(--grad); flex-shrink: 0; }
+.resin p { font-size: 13.5px; color: var(--muted-dark); line-height: 1.6; }
 
 /* ==========================================================================
    Gallery
@@ -699,7 +709,7 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
    ========================================================================== */
 @media (max-width: 1024px) {
   .stats { grid-template-columns: repeat(2, 1fr); }
-  .products, .partners { grid-template-columns: repeat(2, 1fr); }
+  .products, .partners, .resins { grid-template-columns: repeat(2, 1fr); }
   .about-grid { grid-template-columns: 1fr; }
   .ba-card { justify-self: start; }
   .gallery { grid-template-columns: repeat(2, 1fr); }
@@ -721,7 +731,7 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
   .nav__burger { display: flex; }
   .nav__cta .btn-ghost { display: none; }
   .brand__word { display: none; }
-  .products, .partners, .contact { grid-template-columns: 1fr; }
+  .products, .partners, .contact, .resins { grid-template-columns: 1fr; }
   .gallery { grid-template-columns: 1fr; grid-auto-rows: 230px; }
   .t-wide, .t-3 { grid-column: span 1; }
   .t-tall { grid-row: span 1; }
