@@ -106,9 +106,14 @@ h1, h2, h3, h4, h5 { font-family: var(--font-head); line-height: 1.08; letter-sp
   padding-block: 10px;
 }
 .nav__logo { display: inline-flex; align-items: center; gap: 12px; }
-.brand__mark { width: 42px; height: auto; transition: transform 0.5s var(--ease); }
+.brand__mark { width: 42px; height: auto; transition: transform 0.5s var(--ease), filter 0.45s var(--ease); }
 .nav__logo:hover .brand__mark { transform: rotate(-10deg) scale(1.08); }
-.brand__word { font-family: var(--font-head); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: var(--white); }
+
+/* --- brand mark in flight between hero and nav --- */
+html.logo-flying .brand__mark { transition: none; filter: drop-shadow(0 20px 55px rgba(230, 0, 126, 0.42)); }
+html.logo-flying .nav__logo { pointer-events: none; }
+html.logo-flying .brand__word { opacity: 0; }
+.brand__word { font-family: var(--font-head); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: var(--white); transition: opacity 0.45s var(--ease); }
 .brand__word b { color: var(--pink-2); font-weight: 600; }
 
 .nav__links { display: flex; gap: 4px; }
@@ -164,7 +169,16 @@ h1, h2, h3, h4, h5 { font-family: var(--font-head); line-height: 1.08; letter-sp
     radial-gradient(80% 60% at 50% 45%, transparent 40%, rgba(7,6,8,0.55) 100%),
     linear-gradient(to bottom, rgba(7,6,8,0.5), transparent 22%, transparent 70%, var(--black) 100%);
 }
-.hero__inner { position: relative; z-index: 2; padding-top: 110px; padding-bottom: 80px; }
+.hero__inner { position: relative; z-index: 2; padding-top: 100px; padding-bottom: 72px; }
+
+/* Space reserved for the brand mark while it sits in the hero.
+   The element itself is the nav logo, transformed into this slot by JS. */
+.hero__logo {
+  width: clamp(92px, 8.5vw, 116px);
+  aspect-ratio: 2182.68 / 2891.34;
+  margin-bottom: clamp(10px, 1.4vw, 16px);
+  pointer-events: none;
+}
 
 .hero__badge {
   display: inline-flex; align-items: center; gap: 10px;
@@ -756,4 +770,5 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
   .hero h1 .line > span { transform: none; }
   .reveal, .reveal-up { opacity: 1; transform: none; }
   .hero__canvas { display: none; }
+  .hero__logo { display: none; }
 }

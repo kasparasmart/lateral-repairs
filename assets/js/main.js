@@ -27,6 +27,64 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  /* ================= Hero logo → nav dock =================
+     The brand mark lives in the nav (its final resting place). On load it is
+     transformed out into the hero slot; as you scroll it eases back to its
+     natural nav position, so it lands pixel-perfect (transform: none). */
+  (function () {
+    var mark = document.querySelector('.nav__logo .brand__mark');
+    var slot = document.getElementById('heroLogoSlot');
+    if (!mark || !slot || reduce) return;
+
+    var root = document.documentElement;
+    var from = null;
+
+    function measure() {
+      var prev = mark.style.transform;
+      mark.style.transform = 'none';
+      var m = mark.getBoundingClientRect();
+      var s = slot.getBoundingClientRect();
+      mark.style.transform = prev;
+      if (!m.width || !s.width) { from = null; return; }
+      // slot position is taken in document space so measuring works at any scroll offset
+      var slotTop = s.top + window.scrollY;
+      from = {
+        scale: s.width / m.width,
+        x: (s.left + s.width / 2) - (m.left + m.width / 2),
+        y: (slotTop + s.height / 2) - (m.top + m.height / 2)
+      };
+    }
+
+    function render() {
+      ticking = false;
+      if (!from) return;
+      var travel = Math.max(1, window.innerHeight * 0.5);
+      var p = Math.min(Math.max(window.scrollY / travel, 0), 1);
+      var k = Math.pow(1 - p, 3); // easeOutCubic remainder: 1 = in hero, 0 = docked
+      if (k < 0.002) {
+        mark.style.transform = ''; // fully docked — hand hover styling back to CSS
+        root.classList.remove('logo-flying');
+        return;
+      }
+      root.classList.add('logo-flying');
+      mark.style.transform =
+        'translate3d(' + (from.x * k).toFixed(2) + 'px,' + (from.y * k).toFixed(2) + 'px,0)' +
+        ' scale(' + (1 + (from.scale - 1) * k).toFixed(4) + ')';
+    }
+
+    var ticking = false;
+    function onScrollLogo() {
+      if (!ticking) { ticking = true; requestAnimationFrame(render); }
+    }
+    function remeasure() { measure(); render(); }
+
+    measure();
+    render();
+    window.addEventListener('scroll', onScrollLogo, { passive: true });
+    window.addEventListener('resize', remeasure);
+    window.addEventListener('load', remeasure);
+  })();
+
   /* ================= Mobile menu ================= */
   var burger = document.getElementById('burger');
   var navLinksWrap = document.getElementById('navLinks');

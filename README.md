@@ -27,8 +27,9 @@ vercel.json             # caching + security headers
 - **Palette:** strictly pink / white / black — magenta `#e6007e` & `#ff4fb0`,
   near-black `#070608`, white/off-white surfaces. Dark and light sections alternate.
 - **Type:** Space Grotesk (headings) + Inter (body).
-- **Logo:** the official Lateral Repairs droplet mark (`images/logo.png`) is the primary
-  brand element — preloader, nav, phone mockup, footer and favicons all use it.
+- **Logo:** the official Lateral Repairs droplet mark, converted from the supplied vector
+  artwork to `images/logo.svg` (2.5 KB, transparent, sharp at any size). Used by the
+  preloader, nav, hero, phone mockup and footer; PNG icons remain for favicons.
 
 ## Animation
 
@@ -38,6 +39,9 @@ vercel.json             # caching + security headers
   when WebGL or the CDN is unavailable.
 - **3D tilt cards** with cursor-follow glow (products, partners, stats, certifications)
   and a 3D-swaying phone mockup.
+- **Hero logo dock:** the brand mark opens large in the hero and eases up into its nav
+  slot as you scroll (transform-only, so it lands pixel-perfect); scrolling back up
+  returns it. The wordmark fades in on docking.
 - **Scroll choreography:** preloader with floating droplet, scroll-progress bar,
   staggered reveals, count-up stats, scroll-spy nav, infinite marquee,
   hero headline line-rise.

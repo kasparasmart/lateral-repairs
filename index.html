@@ -20,7 +20,7 @@
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="assets/fonts/fonts.css?v=10" />
   <link rel="canonical" href="https://lateral-repairs-website.vercel.app/" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=11" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=12" />
   <noscript>
     <style>
       /* JS unavailable: kill the preloader overlay and show all content */
@@ -28,6 +28,7 @@
       .progress { display: none !important; }
       .reveal, .reveal-up { opacity: 1 !important; transform: none !important; }
       .hero__canvas { display: none !important; }
+      .hero__logo { display: none !important; }
     </style>
   </noscript>
 </head>
@@ -36,7 +37,7 @@
   <!-- ============ PRELOADER ============ -->
   <div class="loader" id="loader" aria-hidden="true">
     <div class="loader__drop">
-      <img src="images/logo.png" alt="" />
+      <img src="images/logo.svg" alt="" />
       <span class="loader__ring"></span>
     </div>
     <div class="loader__bar"><i></i></div>
@@ -48,7 +49,7 @@
   <!-- ============ NAV ============ -->
   <header class="nav" id="nav">
     <a href="#top" class="nav__logo" aria-label="Lateral Repairs home">
-      <img src="images/logo.png" alt="Lateral Repairs" class="brand__mark" />
+      <img src="images/logo.svg" alt="Lateral Repairs" class="brand__mark" />
       <span class="brand__word">Lateral<b>Repairs</b></span>
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
@@ -70,6 +71,7 @@
     <canvas id="pipe3d" class="hero__canvas" aria-hidden="true"></canvas>
     <div class="hero__vignette" aria-hidden="true"></div>
     <div class="container hero__inner">
+      <div class="hero__logo" id="heroLogoSlot" aria-hidden="true"></div>
       <h1>
         <span class="line"><span>Rebuild pipelines</span></span>
         <span class="line"><span>without breaking</span></span>
@@ -386,7 +388,7 @@
         <div class="phone" id="phone" aria-hidden="true">
           <div class="phone__notch"></div>
           <div class="phone__screen">
-            <img src="images/logo.png" alt="" />
+            <img src="images/logo.svg" alt="" />
             <div class="calc">
               <div class="row"><span>Liner type</span><b>MULTIline FLEX</b></div>
               <div class="row"><span>Resin</span><b>Fastcast 15</b></div>
@@ -439,7 +441,7 @@
       <div class="foot">
         <div class="foot__brand">
           <a href="#top" class="brand--foot" aria-label="Lateral Repairs">
-            <img src="images/logo.png" alt="Lateral Repairs" class="brand__mark" />
+            <img src="images/logo.svg" alt="Lateral Repairs" class="brand__mark" />
           </a>
           <p>Manufacturer of CIPP liners and supplier of no-dig solutions for trenchless pipe and sewer rehabilitation worldwide. Part of the European trenchless platform around IMS Trenchless &amp; Polypipe.</p>
           <div class="socials">
@@ -504,6 +506,6 @@
   </div>
 
   <script src="assets/vendor/three.min.js?v=8" defer></script>
-  <script src="assets/js/main.js?v=10" defer></script>
+  <script src="assets/js/main.js?v=12" defer></script>
 </body>
 </html>
