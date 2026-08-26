@@ -284,16 +284,29 @@ CATALOGUE = [
                 "slug": "lr-silicate-resin",
                 "name": "LR Silicate Resin",
                 "tag": "Silicate system",
-                "lead": "Two-component silicate (waterglass) resin system.",
-                "summary": "A silicate resin family supplied as an A component matched to a waterglass "
-                           "hardener, with season-specific grades.",
-                "highlights": ["2-component silicate", "Winter / Summer / Fast grades", "Waterglass hardener"],
+                "lead": "Water glass / polyisocyanate two-component synthetic resin system for lining.",
+                "summary": "Supplied as an \"A\" component — Winter, Summer or W01 Fast — cured with the "
+                           "waterglass \"B\" hardener, so the system can be matched to site temperature and "
+                           "the required set speed.",
+                "highlights": ["2-component (A + B)", "Winter · Summer · W01 Fast", "Waterglass hardener"],
                 "body": [
-                    "The silicate range is supplied as an A component — Winter, Summer or W01 Fast — "
-                    "combined with the waterglass hardener as the B component, so the system can be matched "
-                    "to site temperature and the required set speed.",
-                    "Safety data sheets for each grade are available on request; please confirm the exact "
-                    "grade and mixing ratio against the labels on the kit you receive.",
+                    "The silicate range is a water glass / polyisocyanate based two-component synthetic "
+                    "resin. The \"A\" component is chosen for the conditions — Type W (Winter), Type Summer "
+                    "or Type W01 (Fast) — and is combined with the LR Silicate Resin Waterglass Hardener as "
+                    "the \"B\" component.",
+                    "Confirm the exact grade and mixing ratio against the labels on the kit you receive. "
+                    "The safety data sheets below carry the full hazard, handling and first-aid information "
+                    "and should be read before use.",
+                ],
+                "docs": [
+                    {"label": "LR Silicate Resin Type W · Winter", "sub": "Safety data sheet · \"A\" component",
+                     "file": "assets/datasheets/LR_Silicate_Resin_Winter_SDS.pdf"},
+                    {"label": "LR Silicate Resin Type Summer", "sub": "Safety data sheet · \"A\" component",
+                     "file": "assets/datasheets/LR_Silicate_Resin_Summer_SDS.pdf"},
+                    {"label": "LR Silicate Resin Type W01 · Fast", "sub": "Safety data sheet · \"A\" component",
+                     "file": "assets/datasheets/LR_Silicate_Resin_W01_Fast_SDS.pdf"},
+                    {"label": "LR Silicate Resin Waterglass · Hardener", "sub": "Safety data sheet · \"B\" component",
+                     "file": "assets/datasheets/LR_Silicate_Resin_Waterglass_Hardener_SDS.pdf"},
                 ],
             },
         ],
@@ -307,15 +320,63 @@ CATALOGUE = [
                 "slug": "calibration-hoses",
                 "name": "Calibration hoses",
                 "tag": "Installation equipment",
-                "lead": "Calibration hoses for inversion and curing.",
-                "summary": "Available in light, medium and heavy duty — welded violet, welded MD and "
-                           "stitched-and-welded HD.",
-                "highlights": ["Welded Violet — light duty", "Welded MD — medium duty", "Stitched & Welded HD"],
+                "lead": "PVC-coated polyester calibration hose in light and heavy duty constructions.",
+                "summary": "The calibration hose carries the pressure that holds the impregnated liner "
+                           "against the host pipe while it cures. Both constructions work with the common "
+                           "resin systems — UV vinyl ester, silicate and epoxy.",
+                "highlights": ["Light duty · 50 °C", "Heavy duty · 80 °C", "50 m / 100 m rolls"],
+                "variants": [
+                    {
+                        "name": "Welded LD — light duty",
+                        "specs": [
+                            ("Material", "Welded LD — available Transparent or Violet"),
+                            ("Base fabric", "PVC-coated polyester"),
+                            ("Seam", "Overlapped and heat-welded seam (light duty)"),
+                            ("Compatible resins", "UV Vinyl Ester · Silicate · Epoxy"),
+                            ("Standard roll lengths", "50 m, 100 m"),
+                            ("Maximum working temperature", "50 °C"),
+                        ],
+                        "matrix": {
+                            "head": ["Pipe diameter (mm)", "50", "70", "100", "125", "150", "200", "225", "250", "300"],
+                            "row": ["Max. recommended pressure (bar)", "0.80", "0.68", "0.55", "0.51", "0.47",
+                                    "0.45", "0.44", "0.42", "0.40"],
+                        },
+                    },
+                    {
+                        "name": "Stitched & Welded HD — heavy duty",
+                        "specs": [
+                            ("Material", "Stitched & Welded HD — available Transparent or Orange"),
+                            ("Base fabric", "PVC-coated polyester"),
+                            ("Seam", "Overlapped, stitched and tape-welded seam (heavy duty)"),
+                            ("Compatible resins", "UV Vinyl Ester · Silicate · Epoxy"),
+                            ("Standard roll lengths", "50 m, 100 m"),
+                            ("Maximum working temperature", "80 °C"),
+                        ],
+                        "matrix": {
+                            "head": ["Pipe diameter (mm)", "100", "125", "150", "200", "225", "250", "300"],
+                            "row": ["Max. recommended pressure (bar)", "1.70", "1.60", "1.40", "1.20", "1.00",
+                                    "0.80", "0.60"],
+                        },
+                    },
+                ],
                 "body": [
-                    "The calibration hose carries the pressure that presses the impregnated liner against "
-                    "the host pipe while it cures. Duty class is chosen from the pressure and the diameter "
-                    "of the run.",
-                    "Data sheets for each duty class are available on request.",
+                    "Duty class is chosen from the working pressure and the diameter of the run: the heavy "
+                    "duty construction carries roughly three times the pressure of the light duty hose at "
+                    "DN 100 and tolerates a higher curing temperature.",
+                    "All hose is supplied for single use only; re-use is at the customer's risk. In use the "
+                    "hose must be supported outside the pipe, kept off grit and gravel, and never walked on. "
+                    "Because of sizing at manufacture, please state whether the hose is intended as a "
+                    "calibration hose or a pre-liner when ordering.",
+                ],
+                "docs": [
+                    {"label": "Calibration Hose Welded — Transparent", "sub": "Technical data sheet · light duty",
+                     "file": "assets/datasheets/LR_Calibration_Hose_Heat_Welded_MD.pdf"},
+                    {"label": "Calibration Hose Welded · Violet", "sub": "Technical data sheet · light duty",
+                     "file": "assets/datasheets/LR_Calibration_Hose_Welded_Violet.pdf"},
+                    {"label": "Calibration Hose Stitched & Welded — Transparent", "sub": "Technical data sheet · heavy duty",
+                     "file": "assets/datasheets/LR_Calibration_Hose_Stitched_Welded.pdf"},
+                    {"label": "Calibration Hose Stitched & Welded — Orange", "sub": "Technical data sheet · heavy duty",
+                     "file": "assets/datasheets/LR_Calibration_Hose_Stitched_Welded_Orange.pdf"},
                 ],
             },
             {
@@ -513,14 +574,23 @@ PAGE = """<!doctype html>
 def build_page(cat, item):
     highlights = "".join(f"<li>{esc(h)}</li>" for h in item.get("highlights", []))
 
+    pdf_icon = (
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+        'stroke-linecap="round" stroke-linejoin="round">'
+        '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>'
+        '<path d="M14 2v6h6"/></svg>'
+    )
     actions = []
     if item.get("pdf"):
         actions.append(
             f'<a class="btn btn-primary" href="../{item["pdf"]}" target="_blank" rel="noopener">'
-            f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
-            f'stroke-linecap="round" stroke-linejoin="round">'
-            f'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>'
-            f'<path d="M14 2v6h6"/></svg> Technical data sheet</a>'
+            f"{pdf_icon} Technical data sheet</a>"
+        )
+    elif item.get("docs"):
+        n = len(item["docs"])
+        actions.append(
+            f'<a class="btn btn-primary" href="#documents">{pdf_icon} '
+            f'{n} document{"s" if n != 1 else ""}</a>'
         )
     actions.append('<a class="btn btn-ghost" href="../index.html#contact">Ask a question</a>')
 
@@ -542,9 +612,50 @@ def build_page(cat, item):
             f'<p class="pdp__note">{esc(LINER_NOTE)}</p>'
             "</section>"
         )
+    if item.get("variants"):
+        parts = []
+        for v in item["variants"]:
+            rows = "".join(
+                f'<tr><th scope="row">{esc(k)}</th><td>{esc(val)}</td></tr>' for k, val in v["specs"]
+            )
+            block = (
+                f'<h3 class="pdp__variant-name">{esc(v["name"])}</h3>'
+                f'<div class="legal-table-wrap"><table class="legal-table pdp__table"><tbody>{rows}'
+                f"</tbody></table></div>"
+            )
+            if v.get("matrix"):
+                head = "".join(f"<th>{esc(h)}</th>" for h in v["matrix"]["head"])
+                cells = "".join(
+                    (f'<th scope="row">{esc(c)}</th>' if i == 0 else f"<td>{esc(c)}</td>")
+                    for i, c in enumerate(v["matrix"]["row"])
+                )
+                block += (
+                    '<div class="legal-table-wrap"><table class="legal-table pdp__matrix">'
+                    f"<thead><tr>{head}</tr></thead><tbody><tr>{cells}</tr></tbody></table></div>"
+                )
+            parts.append(f'<div class="pdp__variant">{block}</div>')
+        blocks.append(
+            '<section class="pdp__specs"><h2>Technical data</h2>' + "".join(parts) + "</section>"
+        )
+
     if item.get("body"):
         paras = "".join(f"<p>{esc(p)}</p>" for p in item["body"])
         blocks.append(f'<section class="pdp__body"><h2>About this product</h2>{paras}</section>')
+
+    if item.get("docs"):
+        cards = "".join(
+            f'<a class="doc-item" href="../{d["file"]}" target="_blank" rel="noopener">'
+            f'<span class="doc-item__ic">{pdf_icon}</span>'
+            f'<span class="doc-item__txt"><b>{esc(d["label"])}</b><span>{esc(d["sub"])}</span></span>'
+            f'<svg class="doc-item__go" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            f'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+            f'<path d="M7 17 17 7M9 7h8v8"/></svg></a>'
+            for d in item["docs"]
+        )
+        blocks.append(
+            '<section class="pdp__docs" id="documents"><h2>Documents</h2>'
+            f'<div class="doc-grid">{cards}</div></section>'
+        )
 
     others = [i for i in cat["items"] if i["slug"] != item["slug"]]
     if others:

@@ -797,6 +797,34 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
 .pdp__table td { color: var(--white); }
 .pdp__note { font-size: 12.5px; color: var(--muted-dark); margin-top: 10px; }
 .pdp__body p { color: var(--muted); margin-bottom: 12px; max-width: 70ch; }
+.pdp__variant + .pdp__variant { margin-top: 30px; }
+.pdp__variant-name { font-size: 16px; color: var(--pink-2); margin-bottom: 12px; }
+.pdp__matrix { margin-top: 10px; }
+.pdp__matrix th, .pdp__matrix td { text-align: center; white-space: nowrap; }
+.pdp__matrix thead th { background: var(--black-3); font-size: 12.5px; }
+.pdp__matrix tbody th { text-align: left; font-family: var(--font-body); font-weight: 500; font-size: 13px; color: var(--muted); background: transparent; }
+.pdp__matrix tbody td { color: var(--white); font-family: var(--font-head); font-weight: 600; font-size: 13.5px; }
+
+/* document downloads */
+.pdp__docs { margin-bottom: clamp(36px, 5vw, 56px); scroll-margin-top: 100px; }
+.doc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.doc-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--black-2); border: 1px solid var(--line); border-radius: 16px;
+  padding: 14px 16px;
+  transition: border-color 0.3s, transform 0.3s var(--ease), box-shadow 0.3s;
+}
+.doc-item:hover { border-color: rgba(230, 0, 126, 0.5); transform: translateY(-3px); box-shadow: 0 14px 34px rgba(230, 0, 126, 0.16); }
+.doc-item__ic {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+  background: rgba(230, 0, 126, 0.12); border: 1px solid rgba(230, 0, 126, 0.32); color: var(--pink-2);
+}
+.doc-item__ic svg { width: 19px; height: 19px; }
+.doc-item__txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.doc-item__txt b { font-family: var(--font-head); font-weight: 600; font-size: 13.5px; color: var(--white); }
+.doc-item__txt span { font-size: 12px; color: var(--muted-dark); }
+.doc-item__go { flex-shrink: 0; width: 16px; height: 16px; color: var(--muted-dark); transition: transform 0.3s var(--ease), color 0.3s; }
+.doc-item:hover .doc-item__go { color: var(--pink-2); transform: translate(3px, -3px); }
 .pdp__related .mega__grid { grid-template-columns: repeat(3, 1fr); }
 .pdp__related .mega__item { background: var(--black-2); border-color: var(--line); }
 .pdp__cta {
@@ -818,6 +846,7 @@ footer { border-top: 1px solid var(--line); background: var(--black-2); padding:
   .ba-card { justify-self: start; }
   .pdp__head { grid-template-columns: 1fr; }
   .pdp__related .mega__grid { grid-template-columns: repeat(2, 1fr); }
+  .doc-grid { grid-template-columns: 1fr; }
   .gallery { grid-template-columns: repeat(2, 1fr); }
   .t-3 { grid-column: span 2; }
   .app__card { grid-template-columns: 1fr; }
