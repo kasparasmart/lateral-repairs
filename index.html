@@ -18,9 +18,9 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="assets/fonts/fonts.css?v=10" />
+  <link rel="stylesheet" href="assets/fonts/fonts.css?v=13" />
   <link rel="canonical" href="https://lateral-repairs-website.vercel.app/" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=12" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=13" />
   <noscript>
     <style>
       /* JS unavailable: kill the preloader overlay and show all content */
@@ -28,7 +28,7 @@
       .progress { display: none !important; }
       .reveal, .reveal-up { opacity: 1 !important; transform: none !important; }
       .hero__canvas { display: none !important; }
-      .hero__logo { display: none !important; }
+      .hero__brand { display: none !important; }
     </style>
   </noscript>
 </head>
@@ -49,11 +49,25 @@
   <!-- ============ NAV ============ -->
   <header class="nav" id="nav">
     <a href="#top" class="nav__logo" aria-label="Lateral Repairs home">
-      <img src="images/logo.svg" alt="Lateral Repairs" class="brand__mark" />
-      <span class="brand__word">Lateral<b>Repairs</b></span>
+      <img src="images/logo.svg" alt="" class="brand__mark" />
+      <img src="images/wordmark.png" alt="Lateral Repairs" class="brand__wordmark" />
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
-      <a href="#products">Products</a>
+      <div class="nav__has-mega" data-mega-root>
+        <a href="#products" class="nav__mega-trigger" id="megaTrigger"
+           aria-haspopup="true" aria-expanded="false">Products
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+        <!-- MEGAMENU:START -->
+        <div class="mega" id="megaMenu" hidden>
+        <div class="mega__inner">
+          <div class="mega__cats" role="tablist" aria-label="Product categories"><button type="button" class="mega__cat is-active" role="tab" aria-selected="true" aria-controls="mega-liners" data-mega-cat="liners"><span>Liners</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button><button type="button" class="mega__cat" role="tab" aria-selected="false" aria-controls="mega-resins" data-mega-cat="resins"><span>Resins</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button><button type="button" class="mega__cat" role="tab" aria-selected="false" aria-controls="mega-consumables" data-mega-cat="consumables"><span>Other consumables</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button></div>
+          <div class="mega__panels"><div class="mega__panel is-active" id="mega-liners" role="tabpanel" data-mega-panel="liners"><p class="mega__blurb">CIPP hose liners for every diameter and application.</p><div class="mega__grid"><a class="mega__item" href="products/multiline-flex.html"><b>MULTIline FLEX</b><span>Drain &amp; lateral lines</span></a><a class="mega__item" href="products/multiline-core.html"><b>MULTIline CORE</b><span>Everyday sewer &amp; pipe</span></a><a class="mega__item" href="products/multiline-pro-40.html"><b>MULTIline PRO 4.0 mm</b><span>Advanced technology</span></a><a class="mega__item" href="products/multiline-pro-45.html"><b>MULTIline PRO 4.5 mm</b><span>Advanced technology</span></a><a class="mega__item" href="products/multiline-force.html"><b>MULTIline FORCE</b><span>Structural rehabilitation</span></a><a class="mega__item" href="products/multiline-force-rf.html"><b>MULTIline FORCE RF</b><span>Large diameter</span></a><a class="mega__item" href="products/multiline-force-uv.html"><b>MULTIline FORCE UV</b><span>UV curing</span></a></div></div><div class="mega__panel" id="mega-resins" role="tabpanel" data-mega-panel="resins"><p class="mega__blurb">Matched resin systems — the difference between them is working time.</p><div class="mega__grid"><a class="mega__item" href="products/lr-epoxy-fastcast-15.html"><b>LR-Epoxy Fastcast 15</b><span>Fastest cure</span></a><a class="mega__item" href="products/lr-epoxy-fastcast-30.html"><b>LR-Epoxy Fastcast 30</b><span>Longer window</span></a><a class="mega__item" href="products/lr-120-plus.html"><b>LR-120+</b><span>Longest working time</span></a><a class="mega__item" href="products/lr-uv-resin.html"><b>LR-UV-Resin</b><span>Light cured</span></a><a class="mega__item" href="products/lr-silicate-resin.html"><b>LR Silicate Resin</b><span>Silicate system</span></a></div></div><div class="mega__panel" id="mega-consumables" role="tabpanel" data-mega-panel="consumables"><p class="mega__blurb">Everything else the crew needs to complete the installation.</p><div class="mega__grid"><a class="mega__item" href="products/calibration-hoses.html"><b>Calibration hoses</b><span>Installation equipment</span></a><a class="mega__item" href="products/patch-repair-kit.html"><b>Patch Repair Kit</b><span>Spot repairs</span></a><a class="mega__item" href="products/glassfiber-complex-1050.html"><b>Glassfiber Complex 1050</b><span>Reinforcement</span></a><a class="mega__item" href="products/end-cap-glue.html"><b>End Cap Glue</b><span>Ancillary</span></a></div></div></div>
+        </div>
+      </div>
+        <!-- MEGAMENU:END -->
+      </div>
       <a href="#technology">Technology</a>
       <a href="#group">Group</a>
       <a href="#certifications">Quality</a>
@@ -71,7 +85,10 @@
     <canvas id="pipe3d" class="hero__canvas" aria-hidden="true"></canvas>
     <div class="hero__vignette" aria-hidden="true"></div>
     <div class="container hero__inner">
-      <div class="hero__logo" id="heroLogoSlot" aria-hidden="true"></div>
+      <div class="hero__brand" aria-hidden="true">
+        <div class="hero__logo" id="heroLogoSlot"></div>
+        <div class="hero__wordmark" id="heroWordSlot"></div>
+      </div>
       <h1>
         <span class="line"><span>Rebuild pipelines</span></span>
         <span class="line"><span>without breaking</span></span>
@@ -480,7 +497,7 @@
       </div>
       <div class="legal">
         <div class="reg">
-          <b>UAB&nbsp;"Lateral&nbsp;repairs"</b> &nbsp;·&nbsp; Company code (įmonės kodas): 304403126 &nbsp;·&nbsp; VAT: LT100010469717<br>
+          <b>UAB&nbsp;"Lateral&nbsp;repairs"</b> &nbsp;·&nbsp; Company code: 304403126 &nbsp;·&nbsp; VAT: LT100010469717<br>
           Paberžių g. 5, LT-72328 Tauragė, Lithuania
         </div>
         <div class="copy">
@@ -506,6 +523,6 @@
   </div>
 
   <script src="assets/vendor/three.min.js?v=8" defer></script>
-  <script src="assets/js/main.js?v=12" defer></script>
+  <script src="assets/js/main.js?v=13" defer></script>
 </body>
 </html>

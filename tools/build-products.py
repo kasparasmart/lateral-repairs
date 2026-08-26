@@ -1,0 +1,611 @@
+#!/usr/bin/env python3
+"""
+Builds the product pages and the Products mega-menu from one catalogue.
+
+  python3 tools/build-products.py
+
+Writes products/<slug>.html for every item and patches the mega-menu between the
+MEGAMENU markers in index.html and in every generated page, so the menu markup
+has a single source of truth.
+
+Liner specifications are transcribed from the official technical data sheets in
+assets/datasheets/ (issue V2026.1). Do not hand-edit generated pages.
+"""
+import html
+import pathlib
+import re
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+
+# --------------------------------------------------------------------------- #
+# Catalogue
+# --------------------------------------------------------------------------- #
+LINER_NOTE = "Values marked * are nominal. Always confirm against the current data sheet."
+
+CATALOGUE = [
+    {
+        "slug": "liners",
+        "name": "Liners",
+        "blurb": "CIPP hose liners for every diameter and application.",
+        "items": [
+            {
+                "slug": "multiline-flex",
+                "name": "MULTIline FLEX",
+                "tag": "Drain & lateral lines",
+                "lead": "Flexible hose liner for the trenchless rehabilitation of drains and house connections.",
+                "summary": "The most flexible liner in the range — negotiates 90° bends and the small "
+                           "diameters typical of house connections, from DN 30 upwards.",
+                "image": "images/products/flex.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_FLEX.pdf",
+                "highlights": ["DN 30 – 250", "3.50 mm wall", "90° bends"],
+                "specs": [
+                    ("Product code", "FLEX"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "30, 40, 50, 60, 65, 70, 75, 80, 100, 125, 150, 200, 225, 250"),
+                    ("Wall thickness", "3.50* mm / 0.14* inch"),
+                    ("Liner undersized", "5 %, 9 %, 18 %"),
+                    ("Heat resistance", "Max. 50 °C / 122 °F"),
+                    ("Negotiating bends", "90°"),
+                    ("Material", "PES-Plush (knitted) and brushed, with one-sided PU coating"),
+                    ("Textile", "Polyester, 450* g/m²"),
+                    ("Coating", "One side PU, 250* g/m²"),
+                    ("Colour / coating", "White / Transparent"),
+                    ("Water penetration", "≤ 500 mbar / ≤ 7.25 psi"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+            {
+                "slug": "multiline-core",
+                "name": "MULTIline CORE",
+                "tag": "Everyday sewer & pipe",
+                "lead": "Multi-knitted hose liner for the trenchless inner lining of pipes.",
+                "summary": "The dependable all-rounder for standard sewer and pipe rehabilitation, with a "
+                           "higher heat resistance than FLEX and the same 90° bend capability.",
+                "image": "images/products/core.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_CORE.pdf",
+                "highlights": ["DN 70 – 250", "4.50 mm wall", "85 °C"],
+                "specs": [
+                    ("Product code", "CORE"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "70, 80, 100, 125, 150, 200, 225, 250"),
+                    ("Wall thickness", "4.50* mm / 0.18* inch"),
+                    ("Liner undersized", "13 %"),
+                    ("Heat resistance", "Max. 85 °C / 167 °F"),
+                    ("Negotiating bends", "Max. 90°"),
+                    ("Material", "Multi-knitted fleece with one-sided polypropylene (PP) coating"),
+                    ("Textile", "Polyester, 550* g/m²"),
+                    ("Coating", "One side PP, 300* g/m²"),
+                    ("Colour / coating", "White / Transparent"),
+                    ("Water penetration", "≤ 550 mbar / ≤ 7.97 psi"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+            {
+                "slug": "multiline-pro-40",
+                "name": "MULTIline PRO 4.0 mm",
+                "tag": "Advanced technology",
+                "lead": "Hose liner for the trenchless inner lining of defective, leaking and statically "
+                        "impaired pipes.",
+                "summary": "TPU-coated multi-knitted liner for demanding, high-specification work — up to "
+                           "DN 300 while still negotiating 90° bends.",
+                "image": "images/products/pro.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_PRO_40mm.pdf",
+                "highlights": ["DN 70 – 300", "4.00 mm wall", "TPU coating"],
+                "specs": [
+                    ("Product code", "PRO"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "70, 80, 100, 125, 150, 200, 225, 250, 300"),
+                    ("Wall thickness", "4.00* mm / 0.16* inch"),
+                    ("Liner undersized", "13 %"),
+                    ("Heat resistance", "Max. 70 °C / 158 °F"),
+                    ("Negotiating bends", "Max. 90°"),
+                    ("Material", "Multi (knitted) fleece with one-sided TPU"),
+                    ("Textile", "Polyester, 550* g/m²"),
+                    ("Coating", "One side TPU, 150* g/m²"),
+                    ("Colour / coating", "White / Transparent"),
+                    ("Water penetration", "≤ 550 mbar / ≤ 7.97 psi"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+            {
+                "slug": "multiline-pro-45",
+                "name": "MULTIline PRO 4.5 mm",
+                "tag": "Advanced technology",
+                "lead": "Hose liner for the trenchless inner lining of defective, leaking and statically "
+                        "impaired pipes.",
+                "summary": "The thicker-walled PRO for the same DN range — more structural reserve where "
+                           "the host pipe is badly degraded.",
+                "image": "images/products/pro.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_PRO_45mm.pdf",
+                "highlights": ["DN 70 – 300", "4.50 mm wall", "TPU coating"],
+                "specs": [
+                    ("Product code", "PRO"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "70, 80, 100, 125, 150, 200, 225, 250, 300"),
+                    ("Wall thickness", "4.50* mm / 0.18* inch"),
+                    ("Liner undersized", "13 %"),
+                    ("Heat resistance", "Max. 70 °C / 158 °F"),
+                    ("Negotiating bends", "Max. 90°"),
+                    ("Material", "Multi (knitted) fleece with one-sided TPU"),
+                    ("Textile", "Polyester, 550* g/m²"),
+                    ("Coating", "One side TPU, 150* g/m²"),
+                    ("Colour / coating", "White / Transparent"),
+                    ("Water penetration", "≤ 550 mbar / ≤ 7.97 psi"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+            {
+                "slug": "multiline-force",
+                "name": "MULTIline FORCE",
+                "tag": "Structural rehabilitation",
+                "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
+                "summary": "Filament-reinforced liner rated to 100 °C — the choice when the new pipe has to "
+                           "carry the load itself.",
+                "image": "images/products/force.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_FORCE.pdf",
+                "highlights": ["DN 100 – 300", "3.00 mm wall", "100 °C"],
+                "specs": [
+                    ("Product code", "FORCE"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "100 mm – 300 mm / 4 inch – 12 inch"),
+                    ("Wall thickness", "3.00 mm / 0.12 inch"),
+                    ("Liner undersized", "10 %"),
+                    ("Heat resistance", "Max. 100 °C / 212 °F"),
+                    ("Negotiating bends", "Max. 45°"),
+                    ("Material", "Polyester needle-punched fleece with filament reinforcement and a "
+                                 "polypropylene (PP) coating"),
+                    ("Textile", "Polyester, 650 g/m²"),
+                    ("Coating", "PP, 300 g/m²"),
+                    ("Colour / coating", "White / Milky white"),
+                    ("Water penetration", "≥ 500 mbar"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+            {
+                "slug": "multiline-force-rf",
+                "name": "MULTIline FORCE RF",
+                "tag": "Large diameter",
+                "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
+                "summary": "The heavy-duty FORCE: a 4.50 mm wall and a heavier textile, reaching DN 600 for "
+                           "mains and manhole-to-manhole runs.",
+                "image": "images/products/force.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_FORCE_RF.pdf",
+                "highlights": ["DN 100 – 600", "4.50 mm wall", "900 g/m²"],
+                "specs": [
+                    ("Product code", "FORCE"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "100 mm – 600 mm / 4 inch – 24 inch"),
+                    ("Wall thickness", "4.50 mm / 0.18 inch"),
+                    ("Liner undersized", "10 %"),
+                    ("Heat resistance", "Max. 100 °C / 212 °F"),
+                    ("Negotiating bends", "Max. 45°"),
+                    ("Material", "Polyester needle-punched fleece with filament reinforcement and a "
+                                 "polypropylene (PP) coating"),
+                    ("Textile", "Polyester, 900 g/m²"),
+                    ("Coating", "PP, 300 g/m²"),
+                    ("Colour / coating", "White / Milky white"),
+                    ("Water penetration", "≥ 500 mbar"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+            {
+                "slug": "multiline-force-uv",
+                "name": "MULTIline FORCE UV",
+                "tag": "UV curing",
+                "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
+                "summary": "Reinforced liner with a TPU coating built for UV light-train curing — the crew "
+                           "controls exactly when the reline sets, up to DN 600.",
+                "image": "images/products/force.jpg",
+                "pdf": "assets/datasheets/LR_MULTIline_FORCE_UV.pdf",
+                "highlights": ["DN 100 – 600", "3.30 mm wall", "UV cure"],
+                "specs": [
+                    ("Product code", "FORCEUV"),
+                    ("Length", "50 m; 100 m / 164 ft; 328 ft"),
+                    ("Diameter", "100 mm – 600 mm / 4 inch – 24 inch"),
+                    ("Wall thickness", "3.30 mm / 0.13 inch"),
+                    ("Liner undersized", "10 %"),
+                    ("Heat resistance", "Max. 80 °C / 176 °F"),
+                    ("Negotiating bends", "Max. 45°"),
+                    ("Material", "Polyester needle-punched fleece with filament reinforcement and a "
+                                 "thermoplastic polyurethane (TPU) coating"),
+                    ("Textile", "Polyester, 500 g/m²"),
+                    ("Coating", "TPU, 150 g/m²"),
+                    ("Colour / coating", "White / Transparent"),
+                    ("Storage", "Protected from light, dry"),
+                ],
+            },
+        ],
+    },
+    {
+        "slug": "resins",
+        "name": "Resins",
+        "blurb": "Matched resin systems — the difference between them is working time.",
+        "items": [
+            {
+                "slug": "lr-epoxy-fastcast-15",
+                "name": "LR-Epoxy Fastcast 15",
+                "tag": "Fastest cure",
+                "lead": "Two-component epoxy resin for CIPP lining.",
+                "summary": "Our fastest two-part epoxy. Built for small drain and lateral repairs where the "
+                           "priority is getting the line back into service the same visit.",
+                "highlights": ["2-component epoxy", "Shortest working time", "Drain & lateral repairs"],
+                "body": [
+                    "Fastcast 15 is the shortest-working-time epoxy in the range. It suits compact jobs — "
+                    "house connections, short lateral runs and spot repairs — where the liner can be "
+                    "impregnated, inverted and positioned quickly and the customer needs the line back.",
+                    "Because the working window is short, plan the wet-out and installation before mixing, "
+                    "and mix only what the run needs.",
+                ],
+            },
+            {
+                "slug": "lr-epoxy-fastcast-30",
+                "name": "LR-Epoxy Fastcast 30",
+                "tag": "Longer window",
+                "lead": "Two-component epoxy resin for CIPP lining.",
+                "summary": "The same fast-cast chemistry with a longer working window — extra time to "
+                           "impregnate and place the liner, while still curing quickly on site.",
+                "highlights": ["2-component epoxy", "Longer working time", "General lining"],
+                "body": [
+                    "Fastcast 30 gives crews more room than Fastcast 15 without moving to a long pot-life "
+                    "system. It is the general-purpose choice for everyday lateral and sewer lining where "
+                    "the run is longer or access makes the installation slower.",
+                ],
+            },
+            {
+                "slug": "lr-120-plus",
+                "name": "LR-120+",
+                "tag": "Longest working time",
+                "lead": "Long pot-life epoxy resin for large-diameter and long installations.",
+                "summary": "Our longest working time, for large-diameter and manhole-to-manhole runs where a "
+                           "big liner has to be soaked and installed without racing the clock.",
+                "highlights": ["2-component epoxy", "Extended pot life", "Large diameter / long runs"],
+                "body": [
+                    "LR-120+ is formulated for the jobs where volume is the constraint: long liners, large "
+                    "diameters and manhole-to-manhole rehabilitation. The extended pot life lets a crew "
+                    "wet out a large liner properly and still have time to invert and position it.",
+                ],
+            },
+            {
+                "slug": "lr-uv-resin",
+                "name": "LR-UV-Resin",
+                "tag": "Light cured",
+                "lead": "Light-cured resin for UV liner systems.",
+                "summary": "Stays workable until the UV light train is switched on, so the crew decides "
+                           "exactly when curing starts.",
+                "highlights": ["Single component", "Cure on demand", "For UV liner systems"],
+                "body": [
+                    "With a UV system there is no mixing clock. The impregnated liner stays workable until "
+                    "the light train is drawn through it, which gives complete control over timing — useful "
+                    "on complex installations and long runs.",
+                    "Pair with MULTIline FORCE UV, which carries the TPU coating intended for UV curing.",
+                ],
+            },
+            {
+                "slug": "lr-silicate-resin",
+                "name": "LR Silicate Resin",
+                "tag": "Silicate system",
+                "lead": "Two-component silicate (waterglass) resin system.",
+                "summary": "A silicate resin family supplied as an A component matched to a waterglass "
+                           "hardener, with season-specific grades.",
+                "highlights": ["2-component silicate", "Winter / Summer / Fast grades", "Waterglass hardener"],
+                "body": [
+                    "The silicate range is supplied as an A component — Winter, Summer or W01 Fast — "
+                    "combined with the waterglass hardener as the B component, so the system can be matched "
+                    "to site temperature and the required set speed.",
+                    "Safety data sheets for each grade are available on request; please confirm the exact "
+                    "grade and mixing ratio against the labels on the kit you receive.",
+                ],
+            },
+        ],
+    },
+    {
+        "slug": "consumables",
+        "name": "Other consumables",
+        "blurb": "Everything else the crew needs to complete the installation.",
+        "items": [
+            {
+                "slug": "calibration-hoses",
+                "name": "Calibration hoses",
+                "tag": "Installation equipment",
+                "lead": "Calibration hoses for inversion and curing.",
+                "summary": "Available in light, medium and heavy duty — welded violet, welded MD and "
+                           "stitched-and-welded HD.",
+                "highlights": ["Welded Violet — light duty", "Welded MD — medium duty", "Stitched & Welded HD"],
+                "body": [
+                    "The calibration hose carries the pressure that presses the impregnated liner against "
+                    "the host pipe while it cures. Duty class is chosen from the pressure and the diameter "
+                    "of the run.",
+                    "Data sheets for each duty class are available on request.",
+                ],
+            },
+            {
+                "slug": "patch-repair-kit",
+                "name": "Patch Repair Kit",
+                "tag": "Spot repairs",
+                "lead": "Complete kit for a single localised pipe repair.",
+                "summary": "A boxed, pre-measured kit containing everything needed for one patch repair — "
+                           "glass mat, two-part resin, tools and protection.",
+                "image": "images/gallery/patch-kit.jpg",
+                "highlights": ["Pre-measured glass mat", "Two-part resin pack", "100 × 550 mm WR"],
+                "body": [
+                    "Each kit is packed for a single repair so nothing has to be measured on site. Contents: "
+                    "pre-measured glass mat, protective gloves, disposable protective ground sheet, resin "
+                    "spreader, plastic cable ties and wire ties, packer protection hose and a two-part "
+                    "resin pack.",
+                ],
+            },
+            {
+                "slug": "glassfiber-complex-1050",
+                "name": "Glassfiber Complex 1050",
+                "tag": "Reinforcement",
+                "lead": "Glass fibre reinforcement complex.",
+                "summary": "Reinforcement material used where a repair needs additional structural strength.",
+                "highlights": ["Glass fibre", "Structural reinforcement"],
+                "body": [
+                    "Used in patch and spot repair work where the finished laminate has to carry more load "
+                    "than the resin alone provides. Data sheet available on request.",
+                ],
+            },
+            {
+                "slug": "end-cap-glue",
+                "name": "End Cap Glue",
+                "tag": "Ancillary",
+                "lead": "Adhesive for sealing liner end caps.",
+                "summary": "Used to seal end caps during installation.",
+                "highlights": ["End cap sealing", "Installation ancillary"],
+                "body": [
+                    "Supplied as part of the installation consumables range. Data sheet available on request.",
+                ],
+            },
+        ],
+    },
+]
+
+
+def esc(s):
+    return html.escape(str(s), quote=True)
+
+
+# --------------------------------------------------------------------------- #
+# Mega-menu
+# --------------------------------------------------------------------------- #
+def menu_html(base=""):
+    cols = []
+    panels = []
+    for i, cat in enumerate(CATALOGUE):
+        active = " is-active" if i == 0 else ""
+        cols.append(
+            f'<button type="button" class="mega__cat{active}" role="tab" '
+            f'aria-selected="{"true" if i == 0 else "false"}" aria-controls="mega-{cat["slug"]}" '
+            f'data-mega-cat="{cat["slug"]}">'
+            f'<span>{esc(cat["name"])}</span>'
+            f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>'
+            f"</button>"
+        )
+        links = "".join(
+            f'<a class="mega__item" href="{base}products/{it["slug"]}.html">'
+            f'<b>{esc(it["name"])}</b><span>{esc(it["tag"])}</span></a>'
+            for it in cat["items"]
+        )
+        panels.append(
+            f'<div class="mega__panel{active}" id="mega-{cat["slug"]}" role="tabpanel" '
+            f'data-mega-panel="{cat["slug"]}">'
+            f'<p class="mega__blurb">{esc(cat["blurb"])}</p>'
+            f'<div class="mega__grid">{links}</div>'
+            f"</div>"
+        )
+    return (
+        '<div class="mega" id="megaMenu" hidden>\n'
+        '        <div class="mega__inner">\n'
+        f'          <div class="mega__cats" role="tablist" aria-label="Product categories">{"".join(cols)}</div>\n'
+        f'          <div class="mega__panels">{"".join(panels)}</div>\n'
+        "        </div>\n"
+        "      </div>"
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Product page
+# --------------------------------------------------------------------------- #
+PAGE = """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>{name} — Lateral Repairs</title>
+  <meta name="description" content="{meta}" />
+  <meta name="theme-color" content="#070608" />
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png" />
+  <link rel="canonical" href="https://lateral-repairs-website.vercel.app/products/{slug}" />
+  <meta property="og:type" content="product" />
+  <meta property="og:title" content="{name} — Lateral Repairs" />
+  <meta property="og:description" content="{meta}" />
+  <link rel="stylesheet" href="../assets/fonts/fonts.css?v=13" />
+  <link rel="stylesheet" href="../assets/css/styles.css?v=13" />
+</head>
+<body>
+
+  <header class="nav scrolled" id="nav">
+    <a href="../index.html" class="nav__logo" aria-label="Lateral Repairs home">
+      <img src="../images/logo.svg" alt="" class="brand__mark" />
+      <img src="../images/wordmark.png" alt="Lateral Repairs" class="brand__wordmark" />
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <div class="nav__has-mega" data-mega-root>
+        <a href="../index.html#products" class="nav__mega-trigger" id="megaTrigger"
+           aria-haspopup="true" aria-expanded="false">Products
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+        <!-- MEGAMENU:START -->
+        <!-- MEGAMENU:END -->
+      </div>
+      <a href="../index.html#technology">Technology</a>
+      <a href="../index.html#group">Group</a>
+      <a href="../index.html#certifications">Quality</a>
+      <a href="../index.html#app">App</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <div class="nav__cta">
+      <a href="../index.html#contact" class="btn btn-ghost">Get a quote</a>
+      <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="pdp">
+    <div class="container">
+      <nav class="pdp__crumbs" aria-label="Breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span>
+        <a href="../index.html#products">Products</a> <span>/</span>
+        <span class="pdp__crumb-cat">{cat}</span>
+      </nav>
+
+      <div class="pdp__head">
+        <div class="pdp__intro">
+          <span class="product__tag">{tag}</span>
+          <h1>{name}</h1>
+          <p class="pdp__lead">{lead}</p>
+          <p class="pdp__summary">{summary}</p>
+          <ul class="pdp__highlights">{highlights}</ul>
+          <div class="pdp__actions">{actions}</div>
+        </div>
+        {media}
+      </div>
+
+      {content}
+
+      <div class="pdp__cta">
+        <div>
+          <h2>Need this for a project?</h2>
+          <p>Tell us the diameter, length and application and our technical team will confirm the right
+             liner and resin combination.</p>
+        </div>
+        <a href="../index.html#contact" class="btn btn-primary">Request a quote
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="legal">
+        <div class="reg">
+          <b>UAB&nbsp;"Lateral&nbsp;repairs"</b> &nbsp;·&nbsp; Company code: 304403126 &nbsp;·&nbsp; VAT: LT100010469717<br>
+          Paberžių g. 5, LT-72328 Tauragė, Lithuania
+        </div>
+        <div class="copy">
+          <a href="../privacy.html">Privacy Policy</a> · <a href="../cookies.html">Cookie Policy</a> ·
+          <a href="../index.html">Home</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js?v=13" defer></script>
+</body>
+</html>
+"""
+
+
+def build_page(cat, item):
+    highlights = "".join(f"<li>{esc(h)}</li>" for h in item.get("highlights", []))
+
+    actions = []
+    if item.get("pdf"):
+        actions.append(
+            f'<a class="btn btn-primary" href="../{item["pdf"]}" target="_blank" rel="noopener">'
+            f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+            f'stroke-linecap="round" stroke-linejoin="round">'
+            f'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>'
+            f'<path d="M14 2v6h6"/></svg> Technical data sheet</a>'
+        )
+    actions.append('<a class="btn btn-ghost" href="../index.html#contact">Ask a question</a>')
+
+    media = ""
+    if item.get("image"):
+        media = (
+            f'<figure class="pdp__media"><img src="../{item["image"]}" alt="{esc(item["name"])}" /></figure>'
+        )
+
+    blocks = []
+    if item.get("specs"):
+        rows = "".join(
+            f"<tr><th scope=\"row\">{esc(k)}</th><td>{esc(v)}</td></tr>" for k, v in item["specs"]
+        )
+        blocks.append(
+            '<section class="pdp__specs">'
+            "<h2>Technical data</h2>"
+            f'<div class="legal-table-wrap"><table class="legal-table pdp__table"><tbody>{rows}</tbody></table></div>'
+            f'<p class="pdp__note">{esc(LINER_NOTE)}</p>'
+            "</section>"
+        )
+    if item.get("body"):
+        paras = "".join(f"<p>{esc(p)}</p>" for p in item["body"])
+        blocks.append(f'<section class="pdp__body"><h2>About this product</h2>{paras}</section>')
+
+    others = [i for i in cat["items"] if i["slug"] != item["slug"]]
+    if others:
+        links = "".join(
+            f'<a class="mega__item" href="{o["slug"]}.html"><b>{esc(o["name"])}</b>'
+            f'<span>{esc(o["tag"])}</span></a>'
+            for o in others
+        )
+        blocks.append(
+            f'<section class="pdp__related"><h2>Other {esc(cat["name"]).lower()}</h2>'
+            f'<div class="mega__grid">{links}</div></section>'
+        )
+
+    page = PAGE.format(
+        name=esc(item["name"]),
+        slug=item["slug"],
+        cat=esc(cat["name"]),
+        tag=esc(item["tag"]),
+        lead=esc(item["lead"]),
+        summary=esc(item["summary"]),
+        meta=esc(f'{item["name"]} — {item["lead"]} Lateral Repairs CIPP products.'),
+        highlights=highlights,
+        actions="".join(actions),
+        media=media,
+        content="".join(blocks),
+    )
+    return inject_menu(page, base="../")
+
+
+# --------------------------------------------------------------------------- #
+# Menu injection
+# --------------------------------------------------------------------------- #
+START, END = "<!-- MEGAMENU:START -->", "<!-- MEGAMENU:END -->"
+
+
+def inject_menu(text, base=""):
+    if START not in text:
+        raise SystemExit("MEGAMENU markers missing")
+    return re.sub(
+        re.escape(START) + r".*?" + re.escape(END),
+        START + "\n        " + menu_html(base) + "\n        " + END,
+        text,
+        flags=re.S,
+    )
+
+
+def main():
+    out = ROOT / "products"
+    out.mkdir(exist_ok=True)
+    n = 0
+    for cat in CATALOGUE:
+        for item in cat["items"]:
+            (out / f'{item["slug"]}.html').write_text(build_page(cat, item), encoding="utf-8")
+            n += 1
+
+    index = ROOT / "index.html"
+    index.write_text(inject_menu(index.read_text(encoding="utf-8"), base=""), encoding="utf-8")
+
+    print(f"generated {n} product pages -> products/")
+    print("patched mega-menu in index.html")
+
+
+if __name__ == "__main__":
+    main()

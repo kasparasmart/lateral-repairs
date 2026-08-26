@@ -27,28 +27,29 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ================= Hero logo → nav dock =================
-     The brand mark lives in the nav (its final resting place). On load it is
-     transformed out into the hero slot; as you scroll it eases back to its
-     natural nav position, so it lands pixel-perfect (transform: none). */
+  /* ================= Hero brand lockup → nav dock =================
+     The mark and wordmark live in the nav (their final resting place). On load
+     they are transformed out into the hero slots; as you scroll they ease back
+     to their natural nav positions, landing pixel-perfect (transform: none). */
   (function () {
-    var mark = document.querySelector('.nav__logo .brand__mark');
-    var slot = document.getElementById('heroLogoSlot');
-    if (!mark || !slot || reduce) return;
+    var pairs = [
+      { el: document.querySelector('.nav__logo .brand__mark'), slot: document.getElementById('heroLogoSlot') },
+      { el: document.querySelector('.nav__logo .brand__wordmark'), slot: document.getElementById('heroWordSlot') }
+    ].filter(function (p) { return p.el && p.slot; });
+    if (!pairs.length || reduce) return;
 
     var root = document.documentElement;
-    var from = null;
 
-    function measure() {
-      var prev = mark.style.transform;
-      mark.style.transform = 'none';
-      var m = mark.getBoundingClientRect();
-      var s = slot.getBoundingClientRect();
-      mark.style.transform = prev;
-      if (!m.width || !s.width) { from = null; return; }
+    function measure(p) {
+      var prev = p.el.style.transform;
+      p.el.style.transform = 'none';
+      var m = p.el.getBoundingClientRect();
+      var s = p.slot.getBoundingClientRect();
+      p.el.style.transform = prev;
+      if (!m.width || !s.width) { p.from = null; return; }
       // slot position is taken in document space so measuring works at any scroll offset
       var slotTop = s.top + window.scrollY;
-      from = {
+      p.from = {
         scale: s.width / m.width,
         x: (s.left + s.width / 2) - (m.left + m.width / 2),
         y: (slotTop + s.height / 2) - (m.top + m.height / 2)
@@ -57,32 +58,100 @@
 
     function render() {
       ticking = false;
-      if (!from) return;
       var travel = Math.max(1, window.innerHeight * 0.5);
-      var p = Math.min(Math.max(window.scrollY / travel, 0), 1);
-      var k = Math.pow(1 - p, 3); // easeOutCubic remainder: 1 = in hero, 0 = docked
-      if (k < 0.002) {
-        mark.style.transform = ''; // fully docked — hand hover styling back to CSS
-        root.classList.remove('logo-flying');
-        return;
-      }
-      root.classList.add('logo-flying');
-      mark.style.transform =
-        'translate3d(' + (from.x * k).toFixed(2) + 'px,' + (from.y * k).toFixed(2) + 'px,0)' +
-        ' scale(' + (1 + (from.scale - 1) * k).toFixed(4) + ')';
+      var t = Math.min(Math.max(window.scrollY / travel, 0), 1);
+      var k = Math.pow(1 - t, 3); // easeOutCubic remainder: 1 = in hero, 0 = docked
+      var docked = k < 0.002;
+      pairs.forEach(function (p) {
+        if (!p.from) return;
+        if (docked) {
+          p.el.style.transform = ''; // hand hover styling back to CSS
+          return;
+        }
+        p.el.style.transform =
+          'translate3d(' + (p.from.x * k).toFixed(2) + 'px,' + (p.from.y * k).toFixed(2) + 'px,0)' +
+          ' scale(' + (1 + (p.from.scale - 1) * k).toFixed(4) + ')';
+      });
+      root.classList.toggle('logo-flying', !docked);
     }
 
     var ticking = false;
     function onScrollLogo() {
       if (!ticking) { ticking = true; requestAnimationFrame(render); }
     }
-    function remeasure() { measure(); render(); }
+    function remeasure() { pairs.forEach(measure); render(); }
 
-    measure();
-    render();
+    remeasure();
     window.addEventListener('scroll', onScrollLogo, { passive: true });
     window.addEventListener('resize', remeasure);
     window.addEventListener('load', remeasure);
+  })();
+
+  /* ================= Products mega-menu ================= */
+  (function () {
+    var host = document.querySelector('[data-mega-root]');
+    var mega = document.getElementById('megaMenu');
+    var trigger = document.getElementById('megaTrigger');
+    if (!host || !mega || !trigger) return;
+
+    var timer;
+    var pointerCoarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+    function open() {
+      clearTimeout(timer);
+      mega.hidden = false;
+      requestAnimationFrame(function () { host.classList.add('is-open'); });
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+    function close() {
+      clearTimeout(timer);
+      host.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+      timer = setTimeout(function () { mega.hidden = true; }, 280);
+    }
+    function closeSoon() { clearTimeout(timer); timer = setTimeout(close, 160); }
+    var isOpen = function () { return host.classList.contains('is-open'); };
+
+    if (!pointerCoarse) {
+      host.addEventListener('mouseenter', open);
+      host.addEventListener('mouseleave', closeSoon);
+    }
+    // touch / small screens: first tap opens the menu instead of jumping to the section
+    trigger.addEventListener('click', function (e) {
+      if (pointerCoarse || window.innerWidth <= 720) {
+        if (!isOpen()) { e.preventDefault(); open(); }
+      }
+    });
+    host.addEventListener('focusin', open);
+    host.addEventListener('focusout', function (e) {
+      if (!host.contains(e.relatedTarget)) closeSoon();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isOpen()) { close(); trigger.focus(); }
+    });
+    document.addEventListener('click', function (e) {
+      if (isOpen() && !host.contains(e.target)) close();
+    });
+
+    /* category ↔ panel switching */
+    var cats = Array.prototype.slice.call(mega.querySelectorAll('[data-mega-cat]'));
+    var panels = Array.prototype.slice.call(mega.querySelectorAll('[data-mega-panel]'));
+    function activate(key) {
+      cats.forEach(function (c) {
+        var on = c.getAttribute('data-mega-cat') === key;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-selected', String(on));
+      });
+      panels.forEach(function (p) {
+        p.classList.toggle('is-active', p.getAttribute('data-mega-panel') === key);
+      });
+    }
+    cats.forEach(function (c) {
+      var key = c.getAttribute('data-mega-cat');
+      c.addEventListener('mouseenter', function () { activate(key); });
+      c.addEventListener('focus', function () { activate(key); });
+      c.addEventListener('click', function (e) { e.preventDefault(); activate(key); });
+    });
   })();
 
   /* ================= Mobile menu ================= */
