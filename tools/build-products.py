@@ -21,6 +21,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 # Catalogue
 # --------------------------------------------------------------------------- #
 LINER_NOTE = "Values marked * are nominal. Always confirm against the current data sheet."
+GENERIC_NOTE = "Always confirm against the current data sheet before use."
 
 CATALOGUE = [
     {
@@ -214,6 +215,58 @@ CATALOGUE = [
                     ("Storage", "Protected from light, dry"),
                 ],
             },
+            {
+                "slug": "connection-liners",
+                "name": "Connection Liners",
+                "tag": "Lateral connections",
+                "lead": "Flexible polyester knitted hose with thermoplastic coating for the rehabilitation "
+                        "of lateral connections.",
+                "summary": "Restores lateral and branch connections at 45°, 90° and 180° from DN 50 to "
+                           "DN 300 — supplied stitched and sealed, or stitched only.",
+                "pdf": "assets/datasheets/LR_Connection_Liners.pdf",
+                "highlights": ["DN 50 – 300", "45° · 90° · 180°", "Approx. 3.0 mm"],
+                "variants": [
+                    {
+                        "name": "Stitched & Sealed Connection Liners",
+                        "specs": [
+                            ("Weight", "Approx. 450 g/m² (DIN EN 29073 T1)"),
+                            ("Thickness with coating", "Approx. 3.0 mm (DIN EN 29073 T2)"),
+                            ("Pore volume", "Approx. 85 %"),
+                            ("Fibers", "Polyester"),
+                            ("Coating", "TPU; PUR"),
+                            ("Coating thickness", "Approx. 150 μm"),
+                            ("Seam type", "Stitched and sealed"),
+                            ("Curing", "Ambient · Hot water · Steam mix"),
+                            ("Properties", "DN 50 to DN 300 · 45°, 90°, 180° connections"),
+                        ],
+                    },
+                    {
+                        "name": "Stitched (not sealed) Connection Liners",
+                        "specs": [
+                            ("Weight", "Approx. 450 g/m² (DIN EN 29073 T1)"),
+                            ("Thickness with coating", "Approx. 3.0 mm (DIN EN 29073 T2)"),
+                            ("Pore volume", "Approx. 85 %"),
+                            ("Fibers", "Polyester"),
+                            ("Coating", "TPU; PUR"),
+                            ("Coating thickness", "Approx. 150 μm"),
+                            ("Seam type", "Stitched"),
+                            ("Curing", "Ambient · Hot water · Steam mix"),
+                            ("Properties", "DN 50 to DN 300 · 45°, 90°, 180° connections"),
+                        ],
+                    },
+                ],
+                "body": [
+                    "The Connection Liner is built for non-pressure pipelines, restoring the junction "
+                    "between a lateral and the main with a durable polyester knitted hose under a "
+                    "thermoplastic coating. Angles other than 45°, 90° and 180°, and custom sizes, can be "
+                    "supplied in consultation with Lateral Repairs.",
+                    "The finished quality depends on the resin system used, the inversion pressure and the "
+                    "curing pressure — we advise against other resin systems or higher pressures. All "
+                    "figures are guideline values determined under laboratory conditions and can differ on "
+                    "site.",
+                ],
+                "note": "Guideline values determined under laboratory conditions; site results can differ.",
+            },
         ],
     },
     {
@@ -399,24 +452,76 @@ CATALOGUE = [
                 "slug": "glassfiber-complex-1050",
                 "name": "Glassfiber Complex 1050",
                 "tag": "Reinforcement",
-                "lead": "Glass fibre reinforcement complex.",
-                "summary": "Reinforcement material used where a repair needs additional structural strength.",
-                "highlights": ["Glass fibre", "Structural reinforcement"],
-                "body": [
-                    "Used in patch and spot repair work where the finished laminate has to carry more load "
-                    "than the resin alone provides. Data sheet available on request.",
+                "lead": "E-CR glass-fibre reinforcement complex for structural pipe rehabilitation and "
+                        "CIPP lining.",
+                "summary": "A two-layer stitched complex — chopped strand mat backed by woven roving — "
+                           "used where the finished laminate has to carry structural load.",
+                "pdf": "assets/datasheets/LR_Glassfiber_Complex_1050.pdf",
+                "highlights": ["E-CR glass", "1050 g/m² ± 8 %", "125 / 250 cm width"],
+                "specs": [
+                    ("Glass composition", "E-CR Glass"),
+                    ("Weight per unit area", "1050 g/m² ± 8 % (deviation from nominal)"),
+                    ("1st layer — Chopped Strand Mat", "500 g/m²"),
+                    ("2nd layer — Woven Roving", "Warp 0°: 150 g/m² · Weft 90°: 410 g/m²"),
+                    ("Bonding", "Stitching"),
+                    ("Sewing thread (polyester)", "≤ 15 g/m²"),
+                    ("Moisture content", "< 0.15 %"),
+                    ("Edges", "Trimmed"),
+                    ("Width", "125 cm / 250 cm"),
+                    ("Coupling agent", "Silane"),
+                    ("Tube diameter, internal", "70 mm"),
                 ],
+                "body": [
+                    "Condition the material for 24 hours at room temperature in the application area "
+                    "before use. Store it in its original packaging, keep it dry, and keep the storage "
+                    "temperature below 35 °C.",
+                    "Rolls are packed in stretch film and supplied on pallets. Other roll widths, tube "
+                    "diameters and lengths are available on request. Resin quantity can be calculated with "
+                    "the free Lateral Repairs app.",
+                ],
+                "note": "Always confirm against the current data sheet before use.",
             },
             {
                 "slug": "end-cap-glue",
                 "name": "End Cap Glue",
                 "tag": "Ancillary",
-                "lead": "Adhesive for sealing liner end caps.",
-                "summary": "Used to seal end caps during installation.",
-                "highlights": ["End cap sealing", "Installation ancillary"],
-                "body": [
-                    "Supplied as part of the installation consumables range. Data sheet available on request.",
+                "lead": "Solvent-borne, toluene-free special contact adhesive for industrial and "
+                        "professional use.",
+                "summary": "A contact adhesive that bonds on contact and reaches full strength in about "
+                           "two days — suited to rubber, leather, gasket, sheet, moulding, metal and "
+                           "lining materials.",
+                "pdf": "assets/datasheets/LR_End_Cap_Glue.pdf",
+                "highlights": ["Cures 5 – 15 min", "−40 °C to +75 °C", "Approx. 4 m² / l"],
+                "specs": [
+                    ("Application temperature", "+10 °C – +40 °C"),
+                    ("Using temperature", "min. +5 °C"),
+                    ("Temperature resistance", "−40 °C – +75 °C *"),
+                    ("Curing time", "5 – 15 min (depending on conditions)"),
+                    ("Open time", "10 – 40 min"),
+                    ("Density", "0.83 g/ml"),
+                    ("Dosage", "approx. 4 m² / l"),
+                    ("Colour", "Yellowish"),
+                    ("Phase", "Slightly yellowish liquid synthetic rubber solution"),
+                    ("Tools", "Brush, roller or spray gun"),
+                    ("Packaging", "Steel cans · 1, 3, 10, 20, 200, 1000 L"),
+                    ("Cleaning", "Acetone (product and tools)"),
+                    ("Storage stability", "12 months · +5 – +25 °C, dry"),
+                    ("Fire", "Highly flammable"),
+                    ("Transport", "ADR UN 1133, class 3.1"),
                 ],
+                "body": [
+                    "Surfaces must be clean, dry and free from grease and dust, and may be coarse-ground. "
+                    "Apply a thin, even layer to both surfaces with a brush or roller — for spray-gun use "
+                    "it can be thinned with 5–20 % acetone. Let it dry for 15–40 minutes depending on "
+                    "conditions, then press the surfaces firmly together, checking for air bubbles.",
+                    "Over-dried surfaces can be reactivated with heat; if heated, press together while "
+                    "still warm. The bond holds immediately and develops full strength in about two days. "
+                    "The dried adhesive is freeze-resistant.",
+                    "The product is highly flammable and harmful — read the safety data sheet before use "
+                    "and dispose of residues as hazardous waste; the cans are recyclable.",
+                ],
+                "note": "* Heat resistance of the dry seam is approx. +75 °C. Read the safety data sheet "
+                        "before use.",
             },
         ],
     },
@@ -600,6 +705,14 @@ def build_page(cat, item):
             f'<figure class="pdp__media"><img src="../{item["image"]}" alt="{esc(item["name"])}" /></figure>'
         )
 
+    # footnote: only mention asterisks when the table actually uses them
+    note = item.get("note")
+    if not note:
+        values = [v for _, v in item.get("specs", [])]
+        for var in item.get("variants", []):
+            values += [v for _, v in var["specs"]]
+        note = LINER_NOTE if any("*" in str(v) for v in values) else GENERIC_NOTE
+
     blocks = []
     if item.get("specs"):
         rows = "".join(
@@ -609,7 +722,7 @@ def build_page(cat, item):
             '<section class="pdp__specs">'
             "<h2>Technical data</h2>"
             f'<div class="legal-table-wrap"><table class="legal-table pdp__table"><tbody>{rows}</tbody></table></div>'
-            f'<p class="pdp__note">{esc(LINER_NOTE)}</p>'
+            f'<p class="pdp__note">{esc(note)}</p>'
             "</section>"
         )
     if item.get("variants"):
@@ -635,7 +748,8 @@ def build_page(cat, item):
                 )
             parts.append(f'<div class="pdp__variant">{block}</div>')
         blocks.append(
-            '<section class="pdp__specs"><h2>Technical data</h2>' + "".join(parts) + "</section>"
+            '<section class="pdp__specs"><h2>Technical data</h2>' + "".join(parts)
+            + f'<p class="pdp__note">{esc(note)}</p></section>'
         )
 
     if item.get("body"):
