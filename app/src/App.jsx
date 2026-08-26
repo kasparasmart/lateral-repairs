@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Zap,
-  Clock,
   FileText,
   Shield,
   Image,
@@ -11,7 +10,6 @@ import {
   MapPin,
   Globe,
   RotateCcw,
-  Check,
   ChevronRight,
   ChevronLeft,
 } from "lucide-react";
@@ -46,11 +44,15 @@ const IMG = {
   backwall425:  "/images/backwall-425.jpg",
   topWall:      "/images/top-wall.jpg",
   banner:       "/images/banner.jpg",
+  wordmark:     "/images/wordmark.png",
 };
 
 const styles = {
   app: {
-    background: C.bg,
+    // Transparent so the fixed screen artwork behind it shows through;
+    // the page background itself is painted on <body>.
+    background: "transparent",
+    zIndex: 1,
     minHeight: "100vh",
     fontFamily: "'Rajdhani', 'Oswald', sans-serif",
     color: C.text,
@@ -249,16 +251,6 @@ const styles = {
   resultRow: { display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: `1px solid ${C.border}` },
   resultLabel: { color: C.muted, fontSize: 13, letterSpacing: 1 },
   resultValue: { fontWeight: 700, fontSize: 15, color: C.green },
-  // Cure Timer
-  cureTitle: { fontSize: 24, fontWeight: 700, display: "flex", alignItems: "center", gap: 10, marginBottom: 20 },
-  cureResult: {
-    background: "#0a2030",
-    border: `1px solid ${C.cyan}44`,
-    borderRadius: 6,
-    padding: 20,
-    marginTop: 16,
-    textAlign: "center",
-  },
   // Contact
   contactCard: {
     background: C.card,
@@ -409,25 +401,52 @@ function kgPerMetre(liner, dnMm) {
 const mixedDensity = (r) =>
   r.single ? r.dens : (r.ratio[0] + r.ratio[1]) / (r.ratio[0] / r.densA + r.ratio[1] / r.densB);
 
-const DATASHEETS = [
-  { name: "Complete pack — all documents", file: "/datasheets/lr-technical-data-complete.pdf" },
-  { name: "MULTIline PRO 4.5 mm",      file: "/datasheets/multiline-pro-4-5mm.pdf" },
-  { name: "MULTIline PRO 5.5 mm",      file: "/datasheets/multiline-pro-5-5mm.pdf" },
-  { name: "MULTIline FLEX",            file: "/datasheets/multiline-flex.pdf" },
-  { name: "MULTIline CORE",            file: "/datasheets/multiline-core.pdf" },
-  { name: "MULTIline FORCE 3.0 mm",    file: "/datasheets/multiline-force-3-0mm.pdf" },
-  { name: "MULTIline FORCE RF 4.5 mm", file: "/datasheets/multiline-force-rf-4-5mm.pdf" },
-  { name: "MULTIline FORCE UV",        file: "/datasheets/multiline-force-uv.pdf" },
-  { name: "Calibration Hose Welded · Violet (LD)",  file: "/datasheets/calibration-hose-welded-violet-ld.pdf" },
-  { name: "Calibration Hose Welded (MD)",           file: "/datasheets/calibration-hose-welded-md.pdf" },
-  { name: "Calibration Hose Stitched & Welded (HD)", file: "/datasheets/calibration-hose-stitched-welded-hd.pdf" },
-  { name: "Glassfiber Complex 1050",   file: "/datasheets/glassfiber-complex-1050.pdf" },
-  { name: "End Cap Glue",              file: "/datasheets/end-cap-glue.pdf" },
-  { name: "MFE 7516 Vinyl Ester — SDS", file: "/datasheets/mfe7516-vinyl-ester-sds.pdf" },
-  { name: "Silicate Resin Waterglass Hardener — SDS", file: "/datasheets/silicate-resin-waterglass-hardener-sds.pdf" },
-  { name: "Silicate Resin W01 Fast — SDS",            file: "/datasheets/silicate-resin-w01-fast-sds.pdf" },
-  { name: "Silicate Resin Winter — SDS",               file: "/datasheets/silicate-resin-winter-sds.pdf" },
-  { name: "Silicate Resin Summer — SDS",               file: "/datasheets/silicate-resin-summer-sds.pdf" },
+// Tech Data documents, grouped so the list stays scannable. Each group is
+// collapsible; the first one starts open.
+const DATASHEET_GROUPS = [
+  {
+    group: "All documents",
+    items: [
+      { name: "Complete pack", note: "17 documents · 56 pages", file: "/datasheets/lr-technical-data-complete.pdf" },
+    ],
+  },
+  {
+    group: "Liners",
+    items: [
+      { name: "MULTIline PRO 4.5 mm",      file: "/datasheets/multiline-pro-4-5mm.pdf" },
+      { name: "MULTIline PRO 5.5 mm",      file: "/datasheets/multiline-pro-5-5mm.pdf" },
+      { name: "MULTIline FLEX",            file: "/datasheets/multiline-flex.pdf" },
+      { name: "MULTIline CORE",            file: "/datasheets/multiline-core.pdf" },
+      { name: "MULTIline FORCE 3.0 mm",    file: "/datasheets/multiline-force-3-0mm.pdf" },
+      { name: "MULTIline FORCE RF 4.5 mm", file: "/datasheets/multiline-force-rf-4-5mm.pdf" },
+      { name: "MULTIline FORCE UV",        file: "/datasheets/multiline-force-uv.pdf" },
+    ],
+  },
+  {
+    group: "Calibration hoses",
+    items: [
+      { name: "Welded · Violet",     note: "Light duty",  file: "/datasheets/calibration-hose-welded-violet-ld.pdf" },
+      { name: "Welded",              note: "Medium duty", file: "/datasheets/calibration-hose-welded-md.pdf" },
+      { name: "Stitched & Welded",   note: "Heavy duty",  file: "/datasheets/calibration-hose-stitched-welded-hd.pdf" },
+    ],
+  },
+  {
+    group: "Resins & materials",
+    items: [
+      { name: "MFE 7516 Vinyl Ester",  note: "Safety data sheet", file: "/datasheets/mfe7516-vinyl-ester-sds.pdf" },
+      { name: "Glassfiber Complex 1050", file: "/datasheets/glassfiber-complex-1050.pdf" },
+      { name: "End Cap Glue",            file: "/datasheets/end-cap-glue.pdf" },
+    ],
+  },
+  {
+    group: "Silicate resin system",
+    items: [
+      { name: "Waterglass Hardener", note: 'Component "B" · SDS', file: "/datasheets/silicate-resin-waterglass-hardener-sds.pdf" },
+      { name: "W01 Fast",            note: 'Component "A" · SDS', file: "/datasheets/silicate-resin-w01-fast-sds.pdf" },
+      { name: "Winter",              note: 'Component "A" · SDS', file: "/datasheets/silicate-resin-winter-sds.pdf" },
+      { name: "Summer",              note: 'Component "A" · SDS', file: "/datasheets/silicate-resin-summer-sds.pdf" },
+    ],
+  },
 ];
 
 // Certifying / testing bodies shown as logos only (no certificate uploaded).
@@ -522,7 +541,6 @@ function HomeScreen({ navigate }) {
       <div style={styles.grid}>
         {[
           { key: "calc",    Icon: Zap,      iconColor: C.pink,   label: "MIX CALC",     accent: C.pink },
-          { key: "cure",    Icon: Clock,    iconColor: C.cyan,   label: "CURE TIME",    accent: null },
           { key: "data",    Icon: FileText, iconColor: C.gold,   label: "TECH DATA",    accent: null },
           { key: "certs",   Icon: Shield,   iconColor: C.purple, label: "CERTIFICATES", accent: null },
           { key: "media",   Icon: Image,    iconColor: C.gold,   label: "MEDIA",        accent: null },
@@ -564,10 +582,31 @@ function CalcScreen() {
   const liner = LINERS.find((l) => l.name === linerType);
   const isMetric = units === "METRIC";
 
+  // Convert what's already typed when the unit system changes, so a DN of
+  // 150 mm doesn't silently become 150 inches. Imperial is inches for both
+  // diameter and length.
+  function switchUnits(next) {
+    if (next === units) return;
+    const conv = (v, f) => {
+      const n = parseFloat(v);
+      return Number.isFinite(n) ? String(Math.round(n * f * 100) / 100) : v;
+    };
+    if (next === "IMPERIAL") {
+      setDn((v) => conv(v, 1 / 25.4));
+      setLength((v) => conv(v, 1000 / 25.4)); // m -> in
+    } else {
+      setDn((v) => conv(v, 25.4));
+      setLength((v) => conv(v, 25.4 / 1000)); // in -> m
+    }
+    setUnits(next);
+    setResult(null);
+  }
+
   function calculate() {
     const rs = RESINS.find((r) => r.name === resin);
+    // Imperial input is inches for BOTH diameter and length.
     const dnMm = (parseFloat(dn) || 0) * (isMetric ? 1 : 25.4);
-    const lenM = (parseFloat(length) || 0) * (isMetric ? 1 : 0.3048);
+    const lenM = (parseFloat(length) || 0) * (isMetric ? 1 : 0.0254);
     if (dnMm <= 0 || lenM <= 0) return;
     const extraPct = parseFloat(extra) || 0;
 
@@ -628,8 +667,8 @@ function CalcScreen() {
           ["Liner type",       result.linerType],
           ["Resin system",     result.resin],
           ["Liner DN",         result.dn + (units === "METRIC" ? " mm" : " in")],
-          ["Wall thickness",   result.wall.toFixed(1) + " mm"],
-          ["Liner lenght",     result.length + (units === "METRIC" ? " m" : " ft")],
+          ["Wall thickness",   units === "METRIC" ? result.wall.toFixed(1) + " mm" : (result.wall / 25.4).toFixed(2) + " in"],
+          ["Liner lenght",     result.length + (units === "METRIC" ? " m" : " in")],
           ["Extra margin",     "+" + result.extraPct + " %"],
           ["Mix ratio",        result.rs.single ? "Single component" : result.rs.ratio.join(":") + " by weight"],
         ].map(([l, v]) => (
@@ -641,9 +680,11 @@ function CalcScreen() {
 
         {result.dnOutOfRange && (
           <div style={{ color: "#ffc65c", fontSize: 13, lineHeight: 1.5, padding: "8px 0" }}>
-            ⚠ DN {result.dnMm} mm is outside the {result.linerType} range
-            ({LINERS.find((l) => l.name === result.linerType).dn.join("–")} mm) —
-            calculated at DN {result.dnClamped} mm.
+            ⚠ DN {isMetric ? `${result.dnMm} mm` : `${(result.dnMm / 25.4).toFixed(1)} in`} is outside
+            the {result.linerType} range ({isMetric
+              ? `${LINERS.find((l) => l.name === result.linerType).dn.join("–")} mm`
+              : LINERS.find((l) => l.name === result.linerType).dn.map((d) => (d / 25.4).toFixed(1)).join("–") + " in"}) —
+            calculated at DN {isMetric ? `${result.dnClamped} mm` : `${(result.dnClamped / 25.4).toFixed(1)} in`}.
           </div>
         )}
 
@@ -737,7 +778,7 @@ function CalcScreen() {
       <span style={styles.label}>UNITS</span>
       <div style={styles.toggleRow}>
         {["METRIC", "IMPERIAL"].map((u) => (
-          <button key={u} style={styles.toggleBtn(units === u, C.text)} onClick={() => setUnits(u)}>{u}</button>
+          <button key={u} style={styles.toggleBtn(units === u, C.text)} onClick={() => switchUnits(u)}>{u}</button>
         ))}
       </div>
 
@@ -750,11 +791,15 @@ function CalcScreen() {
       <span style={styles.label}>LINER DN ({isMetric ? "MM" : "IN"})</span>
       <input style={styles.input} value={dn} onChange={(e) => setDn(e.target.value)} placeholder={isMetric ? "150" : "6"} type="number" />
       <div style={{ color: C.muted, fontSize: 13, marginTop: 6 }}>
-        {liner.name}: DN {liner.dn[0]}–{liner.dn[1]} mm · wall {liner.wall.toFixed(1)} mm (from datasheet)
+        {liner.name}: DN{" "}
+        {isMetric
+          ? `${liner.dn[0]}–${liner.dn[1]} mm · wall ${liner.wall.toFixed(1)} mm`
+          : `${(liner.dn[0] / 25.4).toFixed(1)}–${(liner.dn[1] / 25.4).toFixed(1)} in · wall ${(liner.wall / 25.4).toFixed(2)} in`}
+        {" "}(from datasheet)
       </div>
 
-      <span style={styles.label}>LINER LENGTH ({isMetric ? "M" : "FT"})</span>
-      <input style={styles.input} value={length} onChange={(e) => setLength(e.target.value)} placeholder={isMetric ? "5" : "15"} type="number" />
+      <span style={styles.label}>LINER LENGTH ({isMetric ? "M" : "IN"})</span>
+      <input style={styles.input} value={length} onChange={(e) => setLength(e.target.value)} placeholder={isMetric ? "5" : "200"} type="number" />
 
       <span style={styles.label}>EXTRA MARGIN (WET-OUT / WASTAGE)</span>
       <SelectDropdown options={EXTRA_OPTIONS} value={extra} onChange={setExtra} />
@@ -767,75 +812,48 @@ function CalcScreen() {
   );
 }
 
-function CureScreen() {
-  const [method, setMethod] = useState("AMBIENT");
-  const [temp, setTemp] = useState("20");
-  const [result, setResult] = useState(null);
-  const METHODS = ["AMBIENT", "HOT WATER", "STEAM"];
-
-  function calculate() {
-    const t = parseFloat(temp) || 20;
-    let hours;
-    if (method === "AMBIENT")        hours = Math.max(1, Math.round(48 / (t / 10)));
-    else if (method === "HOT WATER") hours = Math.max(0.5, Math.round(24 / (t / 20)));
-    else                             hours = Math.max(0.25, Math.round(8 / (t / 60)));
-    setResult({ hours, method, temp: t });
-  }
-
-  return (
-    <div style={styles.body}>
-      <SectionPhoto
-        src={IMG.backwallLevi}
-        url={IMG.backwallLevi}
-        maxHeight={220}
-        style={{ marginBottom: 20 }}
-      />
-      <div style={styles.cureTitle}>
-        <Clock size={28} color={C.cyan} style={{ filter: `drop-shadow(0 0 6px ${C.cyan})` }} />
-        <span>CURE TIMER</span>
-      </div>
-
-      <span style={styles.label}>CURING METHOD</span>
-      <div style={styles.toggleRow}>
-        {METHODS.map((m) => (
-          <button key={m} style={{ ...styles.toggleBtn(method === m, C.cyan), fontSize: 11 }} onClick={() => { setMethod(m); setResult(null); }}>
-            {method === m && <Check size={12} />}{m}
-          </button>
-        ))}
-      </div>
-
-      <span style={styles.label}>TEMPERATURE (°C)</span>
-      <input style={styles.input} value={temp} onChange={(e) => setTemp(e.target.value)} type="number" />
-
-      <button style={styles.calcBtn(C.cyan)} onClick={calculate}>CALCULATE TIME</button>
-
-      {result && (
-        <div style={styles.cureResult}>
-          <div style={{ color: C.cyan, fontSize: 12, letterSpacing: 3, marginBottom: 8 }}>ESTIMATED CURE TIME</div>
-          <div style={{ fontSize: 48, fontWeight: 900, color: C.cyan }}>{result.hours}h</div>
-          <div style={{ color: C.muted, fontSize: 13, marginTop: 4 }}>{result.method} @ {result.temp}°C</div>
-        </div>
-      )}
-
-      <div style={styles.versionText}>VERSION 1.3.0</div>
-    </div>
-  );
-}
-
 function DataScreen() {
+  // Only the first group starts expanded, so the screen opens as a short
+  // menu instead of one long list.
+  const [open, setOpen] = useState(() => DATASHEET_GROUPS.map((_, i) => i === 0));
+  const toggle = (i) => setOpen((o) => o.map((v, k) => (k === i ? !v : v)));
+
   return (
     <div style={styles.body}>
       <div style={styles.sectionTitle}>TECHNICAL DATA</div>
       <div style={styles.sectionSub}>:: OFFICIAL DOCUMENTATION</div>
       <div style={styles.divider} />
-      {DATASHEETS.map(({ name, file }) => (
-        <div key={name} style={styles.listItem} onClick={() => window.open(file, "_blank")}>
-          <div style={styles.listIcon}><FileText size={24} color={C.pink} /></div>
-          <div style={styles.listText}>
-            <div style={styles.listTitle}>{name}</div>
-            <div style={styles.listSub}>OPEN PDF</div>
+
+      {DATASHEET_GROUPS.map(({ group, items }, gi) => (
+        <div key={group} style={{ marginBottom: 14 }}>
+          <div
+            onClick={() => toggle(gi)}
+            style={{
+              display: "flex", alignItems: "center", gap: 10, cursor: "pointer",
+              padding: "10px 4px", borderBottom: `1px solid ${C.border}`, marginBottom: 10,
+            }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: 2, color: C.pink, flex: 1 }}>
+              {group.toUpperCase()}
+            </span>
+            <span style={{ fontSize: 12, color: C.muted }}>{items.length}</span>
+            <ChevronRight
+              size={16}
+              color={C.muted}
+              style={{ transform: open[gi] ? "rotate(90deg)" : "none", transition: "transform 0.15s" }}
+            />
           </div>
-          <ChevronRight size={18} color={C.muted} />
+
+          {open[gi] && items.map(({ name, note, file }) => (
+            <div key={file} style={styles.listItem} onClick={() => window.open(file, "_blank")}>
+              <div style={styles.listIcon}><FileText size={24} color={C.pink} /></div>
+              <div style={styles.listText}>
+                <div style={styles.listTitle}>{name}</div>
+                <div style={styles.listSub}>{note ? note.toUpperCase() : "OPEN PDF"}</div>
+              </div>
+              <ChevronRight size={18} color={C.muted} />
+            </div>
+          ))}
         </div>
       ))}
     </div>
@@ -992,14 +1010,15 @@ function ContactScreen() {
 }
 
 // ─── APP ─────────────────────────────────────────────────────────────────────
+// `bg` is the artwork that stays fixed behind each screen while its content
+// scrolls over it.
 const SCREENS = {
-  home:    { title: null,           component: HomeScreen },
-  calc:    { title: "CALCULATOR",   component: CalcScreen },
-  cure:    { title: "CURE TIME",    component: CureScreen },
-  data:    { title: "DATASHEETS",   component: DataScreen },
-  certs:   { title: "CERTIFICATES", component: CertsScreen },
-  media:   { title: "MEDIA",        component: MediaScreen },
-  contact: { title: "CONTACT",      component: ContactScreen },
+  home:    { title: null,           component: HomeScreen,    bg: IMG.backwallDesni },
+  calc:    { title: "CALCULATOR",   component: CalcScreen,    bg: IMG.backwall400 },
+  data:    { title: "DATASHEETS",   component: DataScreen,    bg: IMG.backwall425 },
+  certs:   { title: "CERTIFICATES", component: CertsScreen,   bg: IMG.backwall400 },
+  media:   { title: "MEDIA",        component: MediaScreen,   bg: IMG.backwallLevi },
+  contact: { title: "CONTACT",      component: ContactScreen, bg: IMG.backwall425 },
 };
 
 export default function App() {
@@ -1018,6 +1037,33 @@ export default function App() {
         ::-webkit-scrollbar { width: 4px; background: #111; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
       `}</style>
+
+      {/* Screen artwork, held fixed so it stays visible behind the content
+          as the page scrolls. Dimmed and non-interactive so text stays legible. */}
+      {current.bg && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            top: 0,
+            bottom: 0,
+            left: "50%",
+            width: "100%",
+            maxWidth: 420,
+            // Dark scrim + blur: the artwork reads as a branded wash rather
+            // than lettering that competes with the text scrolling over it.
+            backgroundImage: `linear-gradient(rgba(10,10,10,0.5), rgba(10,10,10,0.5)), url(${current.bg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "blur(7px)",
+            transform: "translateX(-50%) scale(1.06)",
+            opacity: 0.5,
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        />
+      )}
+
       <div style={styles.app}>
         {/* Header */}
         <div style={styles.header}>
@@ -1034,7 +1080,13 @@ export default function App() {
                 <img src={IMG.logo} alt="Lateral Repairs" style={{ maxHeight: 44, display: "block" }} />
               </div>
               <div style={styles.headerTitle}>
-                <div style={styles.brandName}>LATERAL REPAIRS</div>
+                {/* The wordmark is lifted straight from the brand artwork, so
+                    the lettering matches the printed material exactly. */}
+                <img
+                  src={IMG.wordmark}
+                  alt="LATERAL REPAIRS"
+                  style={{ display: "block", height: 19, width: "auto", marginBottom: 3 }}
+                />
                 <div style={styles.brandSub}>MANUFACTURING PERFECTION</div>
               </div>
             </>
