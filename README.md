@@ -16,11 +16,18 @@ GitHub Pages, S3…).
 
 ```
 index.html              # all sections
+products/*.html         # generated product pages — do not hand-edit
+tools/build-products.py # product catalogue: pages, mega-menu, drawer, browser
 assets/css/styles.css   # brand system + layout + animations
-assets/js/main.js       # preloader, nav, scroll reveals, tilt cards, 3D hero
-images/                 # logo, app-store badges, favicons
+assets/js/main.js       # preloader, nav, drawer, catalogue, reveals, 3D hero
+assets/datasheets/      # technical + safety data sheets (PDF)
+images/                 # logo, wordmark, photography, favicons
 vercel.json             # caching + security headers
 ```
+
+Run `python3 tools/build-products.py` after editing the catalogue. It regenerates
+every product page and re-injects the mega-menu, the mobile drawer and the home-page
+catalogue browser from one source.
 
 ## Design system
 

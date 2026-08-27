@@ -18,9 +18,9 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="assets/fonts/fonts.css?v=13" />
+  <link rel="stylesheet" href="assets/fonts/fonts.css?v=14" />
   <link rel="canonical" href="https://lateral-repairs-website.vercel.app/" />
-  <link rel="stylesheet" href="assets/css/styles.css?v=13" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=14" />
   <noscript>
     <style>
       /* JS unavailable: kill the preloader overlay and show all content */
@@ -79,6 +79,27 @@
       <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </header>
+
+  <!-- DRAWER:START -->
+  <button class="drawer__scrim" id="drawerScrim" aria-label="Close menu" tabindex="-1"></button>
+  <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
+    <div class="drawer__head">
+      <a href="index.html" class="drawer__brand" aria-label="Lateral Repairs home">
+        <img src="images/logo.svg" alt="" />
+        <img src="images/wordmark.png" alt="Lateral Repairs" class="drawer__word" />
+      </a>
+      <button type="button" class="drawer__close" id="drawerClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="drawer__body">
+      <p class="drawer__label">Products</p>
+      <div class="dgroup" data-dgroup><button type="button" class="dgroup__btn" aria-expanded="false"><span>Liners</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dgroup__items"><div class="dgroup__inner"><a href="products/multiline-flex.html">MULTIline FLEX<span>Drain &amp; lateral lines</span></a><a href="products/multiline-core.html">MULTIline CORE<span>Everyday sewer &amp; pipe</span></a><a href="products/multiline-pro-40.html">MULTIline PRO 4.0 mm<span>Advanced technology</span></a><a href="products/multiline-pro-45.html">MULTIline PRO 4.5 mm<span>Advanced technology</span></a><a href="products/multiline-force.html">MULTIline FORCE<span>Structural rehabilitation</span></a><a href="products/multiline-force-rf.html">MULTIline FORCE RF<span>Large diameter</span></a><a href="products/multiline-force-uv.html">MULTIline FORCE UV<span>UV curing</span></a><a href="products/connection-liners.html">Connection Liners<span>Lateral connections</span></a></div></div></div><div class="dgroup" data-dgroup><button type="button" class="dgroup__btn" aria-expanded="false"><span>Resins</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dgroup__items"><div class="dgroup__inner"><a href="products/lr-epoxy-fastcast-15.html">LR-Epoxy Fastcast 15<span>Fastest cure</span></a><a href="products/lr-epoxy-fastcast-30.html">LR-Epoxy Fastcast 30<span>Longer window</span></a><a href="products/lr-120-plus.html">LR-120+<span>Longest working time</span></a><a href="products/lr-uv-resin.html">LR-UV-Resin<span>Light cured</span></a><a href="products/lr-silicate-resin.html">LR Silicate Resin<span>Silicate system</span></a></div></div></div><div class="dgroup" data-dgroup><button type="button" class="dgroup__btn" aria-expanded="false"><span>Other consumables</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="dgroup__items"><div class="dgroup__inner"><a href="products/calibration-hoses.html">Calibration hoses<span>Installation equipment</span></a><a href="products/patch-repair-kit.html">Patch Repair Kit<span>Spot repairs</span></a><a href="products/glassfiber-complex-1050.html">Glassfiber Complex 1050<span>Reinforcement</span></a><a href="products/end-cap-glue.html">End Cap Glue<span>Ancillary</span></a></div></div></div>
+      <nav class="drawer__links"><a href="index.html#technology">Technology</a><a href="index.html#group">Group</a><a href="index.html#certifications">Quality</a><a href="index.html#app">App</a><a href="index.html#contact">Contact</a></nav>
+      <a href="index.html#contact" class="btn btn-primary drawer__cta">Get a quote</a>
+    </div>
+  </aside>
+  <!-- DRAWER:END -->
 
   <!-- ============ HERO ============ -->
   <section class="hero" id="top">
@@ -143,71 +164,22 @@
   <section class="section section--light" id="products">
     <div class="container">
       <div class="section__head reveal">
-        <span class="eyebrow">Liner systems</span>
-        <h2>Liners engineered for every line.</h2>
+        <span class="eyebrow">Products</span>
+        <h2>Engineered for every line.</h2>
         <p>A complete portfolio of CIPP liners — from house connections to large-diameter mains — manufactured to exact wall thicknesses and paired with the right resin for the job.</p>
       </div>
-      <div class="products">
-        <article class="product reveal tilt" data-d="1">
-          <figure class="product__media"><img src="images/products/flex.jpg" alt="MULTIline FLEX liner with printed product identification" loading="lazy" /></figure>
-          <span class="product__num">01</span>
-          <span class="product__tag">Drain &amp; lateral lines</span>
-          <h3>MULTIline FLEX</h3>
-          <p>A versatile felt liner for drains and lateral connections, delivering a smooth, structural, jointless new pipe inside the old one.</p>
-          <div class="spec"><b>3 mm</b><b>4.5 mm</b><b>Epoxy / UV cure</b></div>
-          <span class="product__glow" aria-hidden="true"></span>
-        </article>
-        <article class="product reveal tilt" data-d="2">
-          <figure class="product__media"><img src="images/products/force.jpg" alt="MULTIline FORCE liner with printed product identification" loading="lazy" /></figure>
-          <span class="product__num">02</span>
-          <span class="product__tag">Main &amp; large diameter</span>
-          <h3>MULTIline FORCE</h3>
-          <p>Heavy-duty liner built for manhole-to-manhole rehabilitation of mains and larger profiles where strength and longevity are critical.</p>
-          <div class="spec"><b>Structural</b><b>MH-to-MH</b><b>High DN</b></div>
-          <span class="product__glow" aria-hidden="true"></span>
-        </article>
-        <article class="product reveal tilt" data-d="3">
-          <figure class="product__media"><img src="images/products/pro.jpg" alt="MULTIline PRO nanotechnology liner with printed product identification" loading="lazy" /></figure>
-          <span class="product__num">03</span>
-          <span class="product__tag">Advanced technology</span>
-          <h3>MULTIline PRO</h3>
-          <p>Our next-generation nanotechnology liner — optimised resin uptake and performance for demanding, high-specification rehabilitation projects.</p>
-          <div class="spec"><b>Nanotech</b><b>Premium</b><b>Low styrene</b></div>
-          <span class="product__glow" aria-hidden="true"></span>
-        </article>
-        <article class="product reveal tilt" data-d="4">
-          <figure class="product__media"><img src="images/products/core.jpg" alt="MULTIline CORE liner with printed product identification" loading="lazy" /></figure>
-          <span class="product__num">04</span>
-          <span class="product__tag">Everyday sewer &amp; pipe</span>
-          <h3>MULTIline CORE</h3>
-          <p>The dependable all-round liner for standard sewer and pipe rehabilitation — a structural, jointless reline with consistent quality across everyday diameters.</p>
-          <div class="spec"><b>Structural</b><b>Versatile DN</b><b>Epoxy / UV cure</b></div>
-          <span class="product__glow" aria-hidden="true"></span>
-        </article>
-      </div>
-
-      <div class="reveal" data-d="2" style="margin-top:54px">
-        <span class="eyebrow">Resin systems</span>
-        <p class="resins-lead">A liner is only as good as the resin inside it. We supply the matching resin for every job — the difference between them is <b>working time</b>: how long the crew has to impregnate, invert and position the liner before it starts to cure.</p>
-        <div class="resins">
-          <article class="resin">
-            <span class="resin__name"><i></i> LR-Epoxy Fastcast 15</span>
-            <p>Our fastest two-part epoxy. Built for small drain and lateral repairs where the priority is getting the line back into service the same visit.</p>
-          </article>
-          <article class="resin">
-            <span class="resin__name"><i></i> LR-Epoxy Fastcast 30</span>
-            <p>The same fast-cast chemistry with a longer working window — extra time to impregnate and place the liner, while still curing quickly on site.</p>
-          </article>
-          <article class="resin">
-            <span class="resin__name"><i></i> LR-120+</span>
-            <p>Our longest working time, for large-diameter and manhole-to-manhole runs where a big liner has to be soaked and installed without racing the clock.</p>
-          </article>
-          <article class="resin">
-            <span class="resin__name"><i></i> LR-UV-Resin</span>
-            <p>Light-cured resin for UV liner systems. It stays workable until the UV light train is switched on, so the crew decides exactly when curing starts.</p>
-          </article>
+      <!-- CATALOG:START -->
+      <div class="catalog" id="catalog">
+        <div class="picker" data-picker>
+          <button type="button" class="picker__btn" id="pickerBtn" aria-haspopup="listbox" aria-expanded="false">
+            <span class="picker__meta"><small>Category</small><b id="pickerLabel">Liners</b></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <ul class="picker__list" role="listbox" aria-label="Product category"><li role="option" aria-selected="true" tabindex="-1" data-pick="liners"><b>Liners</b><span>CIPP hose liners for every diameter and application.</span></li><li role="option" aria-selected="false" tabindex="-1" data-pick="resins"><b>Resins</b><span>Matched resin systems — the difference between them is working time.</span></li><li role="option" aria-selected="false" tabindex="-1" data-pick="consumables"><b>Other consumables</b><span>Everything else the crew needs to complete the installation.</span></li></ul>
         </div>
+        <div class="catalog__panels"><div class="catalog__panel is-active" data-cat-panel="liners"><a class="pcard" href="products/multiline-flex.html"><span class="pcard__media"><img src="images/products/flex.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Drain &amp; lateral lines<span class="pcard__doc">1 PDF</span></span><b>MULTIline FLEX</b><span class="pcard__sum">The most flexible liner in the range — negotiates 90° bends and the small diameters typical of house connections, from DN 30 upwards.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/multiline-core.html"><span class="pcard__media"><img src="images/products/core.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Everyday sewer &amp; pipe<span class="pcard__doc">1 PDF</span></span><b>MULTIline CORE</b><span class="pcard__sum">The dependable all-rounder for standard sewer and pipe rehabilitation, with a higher heat resistance than FLEX and the same 90° bend capability.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/multiline-pro-40.html"><span class="pcard__media"><img src="images/products/pro.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Advanced technology<span class="pcard__doc">1 PDF</span></span><b>MULTIline PRO 4.0 mm</b><span class="pcard__sum">TPU-coated multi-knitted liner for demanding, high-specification work — up to DN 300 while still negotiating 90° bends.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/multiline-pro-45.html"><span class="pcard__media"><img src="images/products/pro.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Advanced technology<span class="pcard__doc">1 PDF</span></span><b>MULTIline PRO 4.5 mm</b><span class="pcard__sum">The thicker-walled PRO for the same DN range — more structural reserve where the host pipe is badly degraded.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/multiline-force.html"><span class="pcard__media"><img src="images/products/force.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Structural rehabilitation<span class="pcard__doc">1 PDF</span></span><b>MULTIline FORCE</b><span class="pcard__sum">Filament-reinforced liner rated to 100 °C — the choice when the new pipe has to carry the load itself.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/multiline-force-rf.html"><span class="pcard__media"><img src="images/products/force.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Large diameter<span class="pcard__doc">1 PDF</span></span><b>MULTIline FORCE RF</b><span class="pcard__sum">The heavy-duty FORCE: a 4.50 mm wall and a heavier textile, reaching DN 600 for mains and manhole-to-manhole runs.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/multiline-force-uv.html"><span class="pcard__media"><img src="images/products/force.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">UV curing<span class="pcard__doc">1 PDF</span></span><b>MULTIline FORCE UV</b><span class="pcard__sum">Reinforced liner with a TPU coating built for UV light-train curing — the crew controls exactly when the reline sets, up to DN 600.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/connection-liners.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Lateral connections<span class="pcard__doc">1 PDF</span></span><b>Connection Liners</b><span class="pcard__sum">Restores lateral and branch connections at 45°, 90° and 180° from DN 50 to DN 300 — supplied stitched and sealed, or stitched only.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a></div><div class="catalog__panel" data-cat-panel="resins"><a class="pcard" href="products/lr-epoxy-fastcast-15.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Fastest cure</span><b>LR-Epoxy Fastcast 15</b><span class="pcard__sum">Our fastest two-part epoxy. Built for small drain and lateral repairs where the priority is getting the line back into service the same visit.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/lr-epoxy-fastcast-30.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Longer window</span><b>LR-Epoxy Fastcast 30</b><span class="pcard__sum">The same fast-cast chemistry with a longer working window — extra time to impregnate and place the liner, while still curing quickly on site.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/lr-120-plus.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Longest working time</span><b>LR-120+</b><span class="pcard__sum">Our longest working time, for large-diameter and manhole-to-manhole runs where a big liner has to be soaked and installed without racing the clock.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/lr-uv-resin.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Light cured</span><b>LR-UV-Resin</b><span class="pcard__sum">Stays workable until the UV light train is switched on, so the crew decides exactly when curing starts.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/lr-silicate-resin.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Silicate system<span class="pcard__doc">4 PDF</span></span><b>LR Silicate Resin</b><span class="pcard__sum">Supplied as an &quot;A&quot; component — Winter, Summer or W01 Fast — cured with the waterglass &quot;B&quot; hardener, so the system can be matched to site temperature and the required set speed.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a></div><div class="catalog__panel" data-cat-panel="consumables"><a class="pcard" href="products/calibration-hoses.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Installation equipment<span class="pcard__doc">4 PDF</span></span><b>Calibration hoses</b><span class="pcard__sum">The calibration hose carries the pressure that holds the impregnated liner against the host pipe while it cures. Both constructions work with the common resin systems — UV vinyl ester, silicate and epoxy.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/patch-repair-kit.html"><span class="pcard__media"><img src="images/gallery/patch-kit.jpg" alt="" loading="lazy" /></span><span class="pcard__body"><span class="pcard__tag">Spot repairs</span><b>Patch Repair Kit</b><span class="pcard__sum">A boxed, pre-measured kit containing everything needed for one patch repair — glass mat, two-part resin, tools and protection.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/glassfiber-complex-1050.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Reinforcement<span class="pcard__doc">1 PDF</span></span><b>Glassfiber Complex 1050</b><span class="pcard__sum">A two-layer stitched complex — chopped strand mat backed by woven roving — used where the finished laminate has to carry structural load.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a><a class="pcard" href="products/end-cap-glue.html"><span class="pcard__media pcard__media--blank" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span><span class="pcard__body"><span class="pcard__tag">Ancillary<span class="pcard__doc">1 PDF</span></span><b>End Cap Glue</b><span class="pcard__sum">A contact adhesive that bonds on contact and reaches full strength in about two days — suited to rubber, leather, gasket, sheet, moulding, metal and lining materials.</span><span class="pcard__go">View details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></a></div></div>
       </div>
+      <!-- CATALOG:END -->
     </div>
   </section>
 
@@ -523,6 +495,6 @@
   </div>
 
   <script src="assets/vendor/three.min.js?v=8" defer></script>
-  <script src="assets/js/main.js?v=13" defer></script>
+  <script src="assets/js/main.js?v=14" defer></script>
 </body>
 </html>

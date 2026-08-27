@@ -154,23 +154,92 @@
     });
   })();
 
-  /* ================= Mobile menu ================= */
+  /* ================= Mobile drawer =================
+     The drawer lives outside <header> on purpose: .nav.scrolled uses
+     backdrop-filter, which makes it the containing block for fixed-position
+     descendants — that collapsed the old fullscreen menu into the nav bar. */
   var burger = document.getElementById('burger');
-  var navLinksWrap = document.getElementById('navLinks');
-  if (burger && navLinksWrap) {
-    burger.addEventListener('click', function () {
-      var open = navLinksWrap.classList.toggle('open');
+  var drawer = document.getElementById('drawer');
+  var scrim = document.getElementById('drawerScrim');
+  if (burger && drawer) {
+    var closeBtn = document.getElementById('drawerClose');
+    function setDrawer(open) {
+      document.body.classList.toggle('drawer-open', open);
       burger.classList.toggle('open', open);
       burger.setAttribute('aria-expanded', String(open));
+      drawer.setAttribute('aria-hidden', String(!open));
+      if (open && closeBtn) closeBtn.focus();
+      else if (!open) burger.focus();
+    }
+    burger.addEventListener('click', function () {
+      setDrawer(!document.body.classList.contains('drawer-open'));
     });
-    navLinksWrap.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        navLinksWrap.classList.remove('open');
-        burger.classList.remove('open');
-        burger.setAttribute('aria-expanded', 'false');
+    if (closeBtn) closeBtn.addEventListener('click', function () { setDrawer(false); });
+    if (scrim) scrim.addEventListener('click', function () { setDrawer(false); });
+    drawer.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setDrawer(false); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && document.body.classList.contains('drawer-open')) setDrawer(false);
+    });
+    // product category accordions inside the drawer
+    drawer.querySelectorAll('.dgroup__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('aria-expanded') === 'true';
+        drawer.querySelectorAll('.dgroup__btn').forEach(function (o) {
+          o.setAttribute('aria-expanded', String(o === btn && !open));
+        });
       });
     });
   }
+
+  /* ================= Catalogue browser (home page) ================= */
+  (function () {
+    var picker = document.querySelector('[data-picker]');
+    var catalog = document.getElementById('catalog');
+    if (!picker || !catalog) return;
+    var btn = document.getElementById('pickerBtn');
+    var label = document.getElementById('pickerLabel');
+    var opts = Array.prototype.slice.call(picker.querySelectorAll('[data-pick]'));
+    var panels = Array.prototype.slice.call(catalog.querySelectorAll('[data-cat-panel]'));
+
+    function setOpen(open) {
+      if (open) picker.setAttribute('data-open', '');
+      else picker.removeAttribute('data-open');
+      btn.setAttribute('aria-expanded', String(open));
+    }
+    function choose(key) {
+      opts.forEach(function (o) {
+        var on = o.getAttribute('data-pick') === key;
+        o.setAttribute('aria-selected', String(on));
+        if (on) label.textContent = o.querySelector('b').textContent;
+      });
+      panels.forEach(function (p) {
+        p.classList.toggle('is-active', p.getAttribute('data-cat-panel') === key);
+      });
+      setOpen(false);
+    }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(!picker.hasAttribute('data-open'));
+    });
+    opts.forEach(function (o) {
+      o.addEventListener('click', function () { choose(o.getAttribute('data-pick')); btn.focus(); });
+      o.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(o.getAttribute('data-pick')); btn.focus(); }
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!picker.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && picker.hasAttribute('data-open')) { setOpen(false); btn.focus(); }
+    });
+    // deep link: /#products?cat=resins style hash, e.g. #products-resins
+    var m = /^#products-([a-z]+)$/.exec(location.hash);
+    if (m && panels.some(function (p) { return p.getAttribute('data-cat-panel') === m[1]; })) choose(m[1]);
+  })();
 
   /* ================= Scroll-spy ================= */
   var spyLinks = Array.prototype.slice.call(document.querySelectorAll('.nav__links a[href^="#"]'));

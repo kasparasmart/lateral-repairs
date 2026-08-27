@@ -572,6 +572,118 @@ def menu_html(base=""):
 
 
 # --------------------------------------------------------------------------- #
+# Mobile drawer (lives outside <header> so the nav's backdrop-filter cannot
+# become its containing block — that bug collapsed the old fullscreen menu)
+# --------------------------------------------------------------------------- #
+NAV_LINKS = [
+    ("technology", "Technology"),
+    ("group", "Group"),
+    ("certifications", "Quality"),
+    ("app", "App"),
+    ("contact", "Contact"),
+]
+
+
+def drawer_html(base=""):
+    home = f"{base}index.html" if base else "index.html"
+    groups = []
+    for i, cat in enumerate(CATALOGUE):
+        items = "".join(
+            f'<a href="{base}products/{it["slug"]}.html">{esc(it["name"])}'
+            f'<span>{esc(it["tag"])}</span></a>'
+            for it in cat["items"]
+        )
+        groups.append(
+            f'<div class="dgroup" data-dgroup>'
+            f'<button type="button" class="dgroup__btn" aria-expanded="false">'
+            f'<span>{esc(cat["name"])}</span>'
+            f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>'
+            f"</button>"
+            f'<div class="dgroup__items"><div class="dgroup__inner">{items}</div></div>'
+            f"</div>"
+        )
+    links = "".join(f'<a href="{home}#{a}">{esc(b)}</a>' for a, b in NAV_LINKS)
+    return (
+        '<button class="drawer__scrim" id="drawerScrim" aria-label="Close menu" tabindex="-1"></button>\n'
+        '  <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">\n'
+        '    <div class="drawer__head">\n'
+        f'      <a href="{home}" class="drawer__brand" aria-label="Lateral Repairs home">\n'
+        f'        <img src="{base}images/logo.svg" alt="" />\n'
+        f'        <img src="{base}images/wordmark.png" alt="Lateral Repairs" class="drawer__word" />\n'
+        "      </a>\n"
+        '      <button type="button" class="drawer__close" id="drawerClose" aria-label="Close menu">\n'
+        '        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>\n'
+        "      </button>\n"
+        "    </div>\n"
+        '    <div class="drawer__body">\n'
+        '      <p class="drawer__label">Products</p>\n'
+        f'      {"".join(groups)}\n'
+        f'      <nav class="drawer__links">{links}</nav>\n'
+        f'      <a href="{home}#contact" class="btn btn-primary drawer__cta">Get a quote</a>\n'
+        "    </div>\n"
+        "  </aside>"
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Interactive catalogue browser on the home page
+# --------------------------------------------------------------------------- #
+def catalog_html():
+    opts, panels = [], []
+    for i, cat in enumerate(CATALOGUE):
+        sel = "true" if i == 0 else "false"
+        opts.append(
+            f'<li role="option" aria-selected="{sel}" tabindex="-1" data-pick="{cat["slug"]}">'
+            f'<b>{esc(cat["name"])}</b><span>{esc(cat["blurb"])}</span></li>'
+        )
+        cards = []
+        for it in cat["items"]:
+            media = (
+                f'<span class="pcard__media"><img src="{it["image"]}" alt="" loading="lazy" /></span>'
+                if it.get("image")
+                else '<span class="pcard__media pcard__media--blank" aria-hidden="true">'
+                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">'
+                     '<path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg></span>'
+            )
+            docs = len(it.get("docs", [])) or (1 if it.get("pdf") else 0)
+            badge = f'<span class="pcard__doc">{docs} PDF</span>' if docs else ""
+            cards.append(
+                f'<a class="pcard" href="products/{it["slug"]}.html">'
+                f"{media}"
+                f'<span class="pcard__body">'
+                f'<span class="pcard__tag">{esc(it["tag"])}{badge}</span>'
+                f'<b>{esc(it["name"])}</b>'
+                f'<span class="pcard__sum">{esc(it["summary"])}</span>'
+                f'<span class="pcard__go">View details'
+                f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+                f'stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+                f"</span></span></a>"
+            )
+        panels.append(
+            f'<div class="catalog__panel{" is-active" if i == 0 else ""}" '
+            f'data-cat-panel="{cat["slug"]}">{"".join(cards)}</div>'
+        )
+    first = CATALOGUE[0]
+    return (
+        '<div class="catalog" id="catalog">\n'
+        '        <div class="picker" data-picker>\n'
+        '          <button type="button" class="picker__btn" id="pickerBtn" aria-haspopup="listbox" '
+        'aria-expanded="false">\n'
+        '            <span class="picker__meta"><small>Category</small>'
+        f'<b id="pickerLabel">{esc(first["name"])}</b></span>\n'
+        '            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+        'stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>\n'
+        "          </button>\n"
+        f'          <ul class="picker__list" role="listbox" aria-label="Product category">{"".join(opts)}</ul>\n'
+        "        </div>\n"
+        f'        <div class="catalog__panels">{"".join(panels)}</div>\n'
+        "      </div>"
+    )
+
+
+# --------------------------------------------------------------------------- #
 # Product page
 # --------------------------------------------------------------------------- #
 PAGE = """<!doctype html>
@@ -587,8 +699,8 @@ PAGE = """<!doctype html>
   <meta property="og:type" content="product" />
   <meta property="og:title" content="{name} — Lateral Repairs" />
   <meta property="og:description" content="{meta}" />
-  <link rel="stylesheet" href="../assets/fonts/fonts.css?v=13" />
-  <link rel="stylesheet" href="../assets/css/styles.css?v=13" />
+  <link rel="stylesheet" href="../assets/fonts/fonts.css?v=14" />
+  <link rel="stylesheet" href="../assets/css/styles.css?v=14" />
 </head>
 <body>
 
@@ -618,6 +730,9 @@ PAGE = """<!doctype html>
       <button class="nav__burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </header>
+
+  <!-- DRAWER:START -->
+  <!-- DRAWER:END -->
 
   <main class="pdp">
     <div class="container">
@@ -670,7 +785,7 @@ PAGE = """<!doctype html>
     </div>
   </footer>
 
-  <script src="../assets/js/main.js?v=13" defer></script>
+  <script src="../assets/js/main.js?v=14" defer></script>
 </body>
 </html>
 """
@@ -802,18 +917,21 @@ def build_page(cat, item):
 # --------------------------------------------------------------------------- #
 # Menu injection
 # --------------------------------------------------------------------------- #
-START, END = "<!-- MEGAMENU:START -->", "<!-- MEGAMENU:END -->"
-
-
-def inject_menu(text, base=""):
-    if START not in text:
-        raise SystemExit("MEGAMENU markers missing")
+def inject(text, name, content, indent):
+    start, end = f"<!-- {name}:START -->", f"<!-- {name}:END -->"
+    if start not in text:
+        raise SystemExit(f"{name} markers missing")
     return re.sub(
-        re.escape(START) + r".*?" + re.escape(END),
-        START + "\n        " + menu_html(base) + "\n        " + END,
+        re.escape(start) + r".*?" + re.escape(end),
+        lambda _: f"{start}\n{indent}{content}\n{indent}{end}",
         text,
         flags=re.S,
     )
+
+
+def inject_menu(text, base=""):
+    text = inject(text, "MEGAMENU", menu_html(base), "        ")
+    return inject(text, "DRAWER", drawer_html(base), "  ")
 
 
 def main():
@@ -826,10 +944,12 @@ def main():
             n += 1
 
     index = ROOT / "index.html"
-    index.write_text(inject_menu(index.read_text(encoding="utf-8"), base=""), encoding="utf-8")
+    src = inject_menu(index.read_text(encoding="utf-8"), base="")
+    src = inject(src, "CATALOG", catalog_html(), "      ")
+    index.write_text(src, encoding="utf-8")
 
     print(f"generated {n} product pages -> products/")
-    print("patched mega-menu in index.html")
+    print("patched mega-menu, drawer and catalogue in index.html")
 
 
 if __name__ == "__main__":
