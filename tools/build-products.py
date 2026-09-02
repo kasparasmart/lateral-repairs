@@ -169,7 +169,6 @@ CATALOGUE = [
                 "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
                 "summary": "The heavy-duty FORCE: a 4.50 mm wall and a heavier textile, reaching DN 600 for "
                            "mains and manhole-to-manhole runs.",
-                "image": "images/products/force.jpg",
                 "pdf": "assets/datasheets/LR_MULTIline_FORCE_RF.pdf",
                 "highlights": ["DN 100 – 600", "4.50 mm wall", "900 g/m²"],
                 "specs": [
@@ -196,7 +195,7 @@ CATALOGUE = [
                 "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
                 "summary": "Reinforced liner with a TPU coating built for UV light-train curing — the crew "
                            "controls exactly when the reline sets, up to DN 600.",
-                "image": "images/products/force.jpg",
+                "image": "images/products/force-uv.jpg",
                 "pdf": "assets/datasheets/LR_MULTIline_FORCE_UV.pdf",
                 "highlights": ["DN 100 – 600", "3.30 mm wall", "UV cure"],
                 "specs": [
@@ -699,8 +698,8 @@ PAGE = """<!doctype html>
   <meta property="og:type" content="product" />
   <meta property="og:title" content="{name} — Lateral Repairs" />
   <meta property="og:description" content="{meta}" />
-  <link rel="stylesheet" href="../assets/fonts/fonts.css?v=14" />
-  <link rel="stylesheet" href="../assets/css/styles.css?v=14" />
+  <link rel="stylesheet" href="../assets/fonts/fonts.css?v=15" />
+  <link rel="stylesheet" href="../assets/css/styles.css?v=15" />
 </head>
 <body>
 
@@ -785,7 +784,7 @@ PAGE = """<!doctype html>
     </div>
   </footer>
 
-  <script src="../assets/js/main.js?v=14" defer></script>
+  <script src="../assets/js/main.js?v=15" defer></script>
 </body>
 </html>
 """
