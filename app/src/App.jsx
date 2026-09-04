@@ -425,9 +425,10 @@ const DATASHEET_GROUPS = [
   {
     group: "Calibration hoses",
     items: [
-      { name: "Welded · Violet",     note: "Light duty",  file: "/datasheets/calibration-hose-welded-violet-ld.pdf" },
-      { name: "Welded",              note: "Medium duty", file: "/datasheets/calibration-hose-welded-md.pdf" },
-      { name: "Stitched & Welded",   note: "Heavy duty",  file: "/datasheets/calibration-hose-stitched-welded-hd.pdf" },
+      { name: "Welded · Violet",                note: "Light duty", file: "/datasheets/calibration-hose-welded-violet-ld.pdf" },
+      { name: "Welded · Transparent",           note: "Light duty", file: "/datasheets/calibration-hose-welded-transparent-ld.pdf" },
+      { name: "Stitched & Welded · Transparent", note: "Heavy duty", file: "/datasheets/calibration-hose-stitched-welded-transparent-hd.pdf" },
+      { name: "Stitched & Welded · Orange",      note: "Heavy duty", file: "/datasheets/calibration-hose-stitched-welded-orange-hd.pdf" },
     ],
   },
   {
