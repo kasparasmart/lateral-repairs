@@ -23,6 +23,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 LINER_NOTE = "Values marked * are nominal. Always confirm against the current data sheet."
 GENERIC_NOTE = "Always confirm against the current data sheet before use."
 
+# bumped when a product photo is replaced under the same filename
+IMG_V = "?v=2"
+
 CATALOGUE = [
     {
         "slug": "liners",
@@ -640,7 +643,7 @@ def catalog_html():
         cards = []
         for it in cat["items"]:
             media = (
-                f'<span class="pcard__media"><img src="{it["image"]}" alt="" loading="lazy" /></span>'
+                f'<span class="pcard__media"><img src="{it["image"]}{IMG_V}" alt="" loading="lazy" /></span>'
                 if it.get("image")
                 else '<span class="pcard__media pcard__media--blank" aria-hidden="true">'
                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">'
@@ -816,7 +819,7 @@ def build_page(cat, item):
     media = ""
     if item.get("image"):
         media = (
-            f'<figure class="pdp__media"><img src="../{item["image"]}" alt="{esc(item["name"])}" /></figure>'
+            f'<figure class="pdp__media"><img src="../{item["image"]}{IMG_V}" alt="{esc(item["name"])}" /></figure>'
         )
 
     # footnote: only mention asterisks when the table actually uses them
