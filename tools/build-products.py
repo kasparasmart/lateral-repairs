@@ -172,6 +172,7 @@ CATALOGUE = [
                 "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
                 "summary": "The heavy-duty FORCE: a 4.50 mm wall and a heavier textile, reaching DN 600 for "
                            "mains and manhole-to-manhole runs.",
+                "image": "images/products/force.jpg",
                 "pdf": "assets/datasheets/LR_MULTIline_FORCE_RF.pdf",
                 "highlights": ["DN 100 – 600", "4.50 mm wall", "900 g/m²"],
                 "specs": [
@@ -225,6 +226,7 @@ CATALOGUE = [
                         "of lateral connections.",
                 "summary": "Restores lateral and branch connections at 45°, 90° and 180° from DN 50 to "
                            "DN 300 — supplied stitched and sealed, or stitched only.",
+                "image": "images/products/connection-liners.jpg",
                 "pdf": "assets/datasheets/LR_Connection_Liners.pdf",
                 "highlights": ["DN 50 – 300", "45° · 90° · 180°", "Approx. 3.0 mm"],
                 "variants": [
