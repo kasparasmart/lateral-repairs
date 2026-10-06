@@ -381,6 +381,7 @@ CATALOGUE = [
                 "summary": "The calibration hose carries the pressure that holds the impregnated liner "
                            "against the host pipe while it cures. Both constructions work with the common "
                            "resin systems — UV vinyl ester, silicate and epoxy.",
+                "image": "images/products/calibration-hoses.jpg",
                 "highlights": ["Light duty · 50 °C", "Heavy duty · 80 °C", "50 m / 100 m rolls"],
                 "variants": [
                     {
@@ -460,6 +461,7 @@ CATALOGUE = [
                         "CIPP lining.",
                 "summary": "A two-layer stitched complex — chopped strand mat backed by woven roving — "
                            "used where the finished laminate has to carry structural load.",
+                "image": "images/products/glassfiber.jpg",
                 "pdf": "assets/datasheets/LR_Glassfiber_Complex_1050.pdf",
                 "highlights": ["E-CR glass", "1050 g/m² ± 8 %", "125 / 250 cm width"],
                 "specs": [
@@ -494,6 +496,7 @@ CATALOGUE = [
                 "summary": "A contact adhesive that bonds on contact and reaches full strength in about "
                            "two days — suited to rubber, leather, gasket, sheet, moulding, metal and "
                            "lining materials.",
+                "image": "images/products/end-cap-glue.jpg",
                 "pdf": "assets/datasheets/LR_End_Cap_Glue.pdf",
                 "highlights": ["Cures 5 – 15 min", "−40 °C to +75 °C", "Approx. 4 m² / l"],
                 "specs": [
