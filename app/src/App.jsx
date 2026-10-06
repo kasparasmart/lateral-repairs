@@ -427,6 +427,7 @@ const DATASHEET_GROUPS = [
     items: [
       { name: "Welded · Violet",                note: "Light duty", file: "/datasheets/calibration-hose-welded-violet-ld.pdf" },
       { name: "Welded · Transparent",           note: "Light duty", file: "/datasheets/calibration-hose-welded-transparent-ld.pdf" },
+      { name: "Welded · Pink",                  note: "Light duty", file: "/datasheets/calibration-hose-welded-pink-ld.pdf" },
       { name: "Stitched & Welded · Transparent", note: "Heavy duty", file: "/datasheets/calibration-hose-stitched-welded-transparent-hd.pdf" },
       { name: "Stitched & Welded · Orange",      note: "Heavy duty", file: "/datasheets/calibration-hose-stitched-welded-orange-hd.pdf" },
     ],
