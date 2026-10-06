@@ -707,7 +707,7 @@ PAGE = """<!doctype html>
   <meta property="og:title" content="{name} — Lateral Repairs" />
   <meta property="og:description" content="{meta}" />
   <link rel="stylesheet" href="../assets/fonts/fonts.css?v=15" />
-  <link rel="stylesheet" href="../assets/css/styles.css?v=16" />
+  <link rel="stylesheet" href="../assets/css/styles.css?v=17" />
 </head>
 <body>
 

@@ -460,6 +460,12 @@ html.logo-flying .nav__logo { pointer-events: none; }
 .group__announce p a:hover { border-color: var(--pink-2); }
 .group__announce p b { color: var(--white); }
 
+.group__synergy { max-width: 820px; margin: clamp(30px, 4vw, 44px) 0; }
+.group__synergy .eyebrow { margin-bottom: 12px; }
+.group__synergy h3 { font-size: clamp(22px, 2.6vw, 30px); color: var(--black); margin-bottom: 16px; }
+.group__synergy p { color: var(--muted-dark); font-size: 16px; line-height: 1.7; }
+.group__synergy p + p { margin-top: 14px; }
+
 .partners { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; perspective: 1100px; }
 .partner {
   position: relative; display: block;
