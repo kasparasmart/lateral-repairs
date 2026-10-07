@@ -39,9 +39,19 @@ class Page(HTMLParser):
         self.ids = collections.Counter()
         self.meta, self.links, self.forms = {}, [], []
         self._h = None
+        self.lang, self.title, self._in_title, self.external = None, "", False, []
+
+    def handle_data(self, data):
+        if self._in_title: self.title += data
+
+    def handle_endtag(self, tag):
+        if tag == "title": self._in_title = False
 
     def handle_starttag(self, tag, a):
         a = dict(a)
+        if tag == "html": self.lang = a.get("lang")
+        if tag == "title": self._in_title = True
+        if tag == "a" and (a.get("href") or "").startswith(("http://", "https://")): self.external.append(a["href"])
         if "id" in a: self.ids[a["id"]] += 1
         for k in ("href", "src", "action", "poster"):
             if a.get(k): self.refs.append((tag, k, a[k]))
@@ -152,6 +162,8 @@ def main():
     elif sm_bad: block(f"sitemap URLs that would 404: {sm_bad}")
     else: ok(f"sitemap.xml: all {len(locs)} URLs map to packaged files")
     warn(f"indexable pages not in sitemap: {missing_from_sm}") if missing_from_sm else ok("every indexable page is listed in sitemap.xml")
+    noindex_listed = [t for t in sm_files if t in parsed and "noindex" in (parsed[t].meta.get("robots") or "")]
+    block(f"noindex pages listed in sitemap.xml: {noindex_listed}") if noindex_listed else ok("sitemap.xml lists no noindex pages")
     robots = (PKG / "robots.txt").read_text(encoding="utf-8") if exists_case("robots.txt") else ""
     (ok("robots.txt points to the production sitemap") if f"Sitemap: {SITE}/sitemap.xml" in robots
      else block("robots.txt does not reference the production sitemap"))
@@ -188,9 +200,38 @@ def main():
     ok("ids unique, all images have alt, aria/label references resolve, one h1 per page") if not any(
         x for x in blockers if "duplicate ids" in x or "alt" in x or "aria" in x or "label" in x or "h1" in x) else None
 
-    # ---- PDFs ----------------------------------------------------------------
-    badpdf = [f for f in files if f.endswith(".pdf") and (PKG / f).read_bytes()[:5] != b"%PDF-"]
-    block(f"invalid PDF files: {badpdf}") if badpdf else ok(f"all {sum(f.endswith('.pdf') for f in files)} PDFs are valid PDF files")
+    # ---- SEO basics per page ---------------------------------------------------
+    seo = []
+    for f, pg in parsed.items():
+        if not pg.lang: seo.append(f"{f}: <html> has no lang")
+        if not pg.title.strip(): seo.append(f"{f}: empty <title>")
+        if not pg.meta.get("description"): seo.append(f"{f}: no meta description")
+        if "width=device-width" not in (pg.meta.get("viewport") or ""): seo.append(f"{f}: no responsive viewport meta")
+    block(f"SEO basics missing: {seo}") if seo else ok("every page has lang, <title>, meta description and viewport")
+    for label, key in (("title", lambda pg: pg.title.strip()), ("meta description", lambda pg: pg.meta.get("description"))):
+        seen = collections.defaultdict(list)
+        for f, pg in parsed.items(): seen[key(pg)].append(f)
+        dup = {k: v for k, v in seen.items() if len(v) > 1}
+        warn(f"duplicate {label}: {dup}") if dup else ok(f"every page has a unique {label}")
+    insecure = sorted({u for pg in parsed.values() for u in pg.external if u.startswith("http://")})
+    block(f"external links over plain http: {insecure}") if insecure else ok(
+        f"all {len({u for pg in parsed.values() for u in pg.external})} distinct external links use https "
+        "(reachability NOT VERIFIED offline)")
+
+    # ---- PDFs / images ---------------------------------------------------------
+    badpdf = [f for f in files if f.endswith(".pdf") and ((PKG / f).read_bytes()[:5] != b"%PDF-" or b"%%EOF" not in (PKG / f).read_bytes()[-2048:])]
+    block(f"invalid or truncated PDF files: {badpdf}") if badpdf else ok(f"all {sum(f.endswith('.pdf') for f in files)} PDFs have a valid header and end-of-file marker")
+    try:
+        from PIL import Image
+        badimg = []
+        for f in files:
+            if f.endswith((".jpg", ".jpeg", ".png")):
+                try:
+                    with Image.open(PKG / f) as im: im.load()
+                except Exception as e: badimg.append(f"{f}: {e}")
+        block(f"images that fail to decode: {badimg}") if badimg else ok(f"all {sum(f.endswith(('.jpg', '.jpeg', '.png')) for f in files)} raster images decode fully")
+    except ImportError:
+        warn("Pillow not installed — raster images not decoded (pip install Pillow)")
     linked = {os.path.normpath(os.path.join(os.path.dirname(f), urlsplit(u).path)).replace("\\", "/")
               for f, pg in parsed.items() for t, k, u in pg.refs if u.endswith(".pdf")}
     orphan = [f for f in files if f.endswith(".pdf") and f not in linked]

@@ -30,7 +30,9 @@ IMG_V = "?v=2"
 # Production origin. Canonical and sitemap URLs use real .html paths so they resolve on
 # plain Apache hosting without rewrite rules.
 SITE = "https://lateralrepairs.com"
-STATIC_PAGES = ["", "privacy.html", "cookies.html"]  # "" = home page (/)
+# Indexable pages only: privacy.html / cookies.html carry robots "noindex", and listing a
+# noindex URL in the sitemap is reported as an error by search engines.
+STATIC_PAGES = [""]  # "" = home page (/)
 
 CATALOGUE = [
     {

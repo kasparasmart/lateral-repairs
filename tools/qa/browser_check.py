@@ -90,8 +90,10 @@ def main():
 
         # ===================== every page, desktop =====================
         ctx = b.new_context(viewport={"width": 1440, "height": 900})
-        pages = pages_from_sitemap(ctx, base)
-        check(f"sitemap lists 20 pages", len(pages) == 20, str(len(pages)))
+        listed = pages_from_sitemap(ctx, base)
+        check("sitemap lists the 18 indexable pages (home + 17 products)", len(listed) == 18, str(len(listed)))
+        # noindex legal pages are not in the sitemap but are tested like every other page
+        pages = listed + [base + "privacy.html", base + "cookies.html"]
         for url in pages:
             rel = url[len(base):] or "/"
             r = ctx.request.get(url)
@@ -221,20 +223,23 @@ def main():
         nums = pg.evaluate("() => [...document.querySelectorAll('.num[data-count]')].map(n => [n.textContent.trim(), n.dataset.count + (n.dataset.suffix || '')])")
         check("count-up stats reach their targets", all(a == b_ for a, b_ in nums), str(nums))
 
-        # keyboard tab order: never lands on hidden things, always visible focus
-        t = ctx.new_page(); t.goto(home, wait_until="load"); t.wait_for_timeout(400)
-        stops = []
-        for _ in range(45):
-            t.keyboard.press("Tab")
-            stops.append(t.evaluate("""() => { const e = document.activeElement, cs = getComputedStyle(e), r = e.getBoundingClientRect();
-              let hidden = false; for (let x = e; x; x = x.parentElement) { const s = getComputedStyle(x); if (s.visibility === 'hidden' || s.display === 'none' || x.hidden) hidden = true; }
-              return {id: e.id || e.tagName, hidden, onscreen: r.width > 0 && r.right > 0 && r.left < innerWidth,
-                      ring: (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none'}; }"""))
-        hid = [s for s in stops if s["hidden"] or not s["onscreen"]]
-        check("keyboard: 45 Tab stops never land on hidden/off-screen elements", not hid, str(hid[:3]))
-        noring = [s for s in stops if not s["ring"]]
-        check("keyboard: every Tab stop shows a focus indicator", not noring, str(noring[:3]))
-        t.close()
+        # keyboard tab order on representative pages: never lands on hidden things, always visible focus
+        for path in ["", "products/calibration-hoses.html", "privacy.html"]:
+            t = ctx.new_page(); t.goto(base + path, wait_until="load"); t.wait_for_timeout(400)
+            stops = []
+            for _ in range(45):
+                t.keyboard.press("Tab")
+                st_ = t.evaluate("""() => { const e = document.activeElement; if (!e || e === document.body) return null;
+                  const cs = getComputedStyle(e), r = e.getBoundingClientRect();
+                  let hidden = false; for (let x = e; x; x = x.parentElement) { const s = getComputedStyle(x); if (s.visibility === 'hidden' || s.display === 'none' || x.hidden) hidden = true; }
+                  return {id: e.id || e.tagName + ':' + (e.textContent || '').trim().slice(0, 20), hidden, onscreen: r.width > 0 && r.right > 0 && r.left < innerWidth,
+                          ring: (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none'}; }""")
+                if st_: stops.append(st_)
+            hid = [x for x in stops if x["hidden"] or not x["onscreen"]]
+            noring = [x for x in stops if not x["ring"]]
+            check(f"keyboard [/{path}]: {len(stops)} Tab stops — none hidden/off-screen, all show a focus indicator",
+                  len(stops) >= 10 and not hid and not noring, f"hidden={hid[:3]} no-ring={noring[:3]}")
+            t.close()
         check("no uncaught JS errors during home-page interaction tests", not perr, str(perr[:2]))
         ctx.close()
 
