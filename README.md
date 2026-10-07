@@ -10,9 +10,9 @@ datasheet tool). The site links out to the app on the App Store and Google Play.
 
 ## Stack
 
-Zero-build static site — pure HTML, CSS and vanilla JS, plus **Three.js** (CDN) for the
-3D hero. No install step; deploys instantly to any static host (Vercel, Netlify,
-GitHub Pages, S3…).
+Zero-build static site — pure HTML, CSS and vanilla JS, plus a self-hosted **Three.js**
+build for the 3D hero. No install step. Production target: plain Apache hosting at
+Serveriai.lt (`https://lateralrepairs.com/`), alongside the existing PHP backend.
 
 ```
 index.html              # all sections
@@ -22,7 +22,10 @@ assets/css/styles.css   # brand system + layout + animations
 assets/js/main.js       # preloader, nav, drawer, catalogue, reveals, 3D hero
 assets/datasheets/      # technical + safety data sheets (PDF)
 images/                 # logo, wordmark, photography, favicons
-vercel.json             # caching + security headers
+tools/build-deploy.py   # builds deployment/public_html (the exact upload) + MANIFEST
+tools/qa/               # static + browser QA (run-all.sh)
+deployment/             # upload package, DEPLOY.md, .htaccess additions
+vercel.json             # preview deployments only — never uploaded to production
 ```
 
 Run `python3 tools/build-products.py` after editing the catalogue. It regenerates
@@ -43,7 +46,7 @@ catalogue browser from one source.
 - **3D hero (Three.js):** the camera drifts through a tunnel of pink particle rings —
   the inside of a freshly relined pipe — with a wireframe shell, floating dust,
   fog and mouse parallax. Renders only while on screen; falls back to a CSS gradient
-  when WebGL or the CDN is unavailable.
+  when WebGL is unavailable.
 - **3D tilt cards** with cursor-follow glow (products, partners, stats, certifications)
   and a 3D-swaying phone mockup.
 - **Hero logo dock:** the brand mark opens large in the hero and eases up into its nav
@@ -64,9 +67,9 @@ The `#group` section links to all partner companies:
 | Company | Speciality | Link |
 | --- | --- | --- |
 | IMS Robotics | Sewer rehabilitation robots & milling systems | [ims-robotics.de](https://www.ims-robotics.de/en/home) |
-| Polypipe | CIPP liner systems | [polypipe.de](https://polypipe.de/en) |
+| Polypipe | Coating systems for trenchless in-house pipe rehabilitation | [polypipe.de](https://polypipe.de/en) |
 | Amex Sanivar | Pressure pipe liners & repair seals | [amex-sanivar.com](https://www.amex-sanivar.com/) |
-| Resinnovation | High-performance synthetic resins | [resinnovation.com](https://www.resinnovation.com/en/) |
+| resinnovation | High-performance synthetic resins | [resinnovation.com](https://www.resinnovation.com/en/) |
 | Kardiam | Diamond milling & cutting tools | [kardiam.eu](https://www.kardiam.eu/?lang=en) |
 | Hurricane Trenchless | Liner curing systems & vehicle fit-outs | [hurricane-tt.de](https://hurricane-tt.de/en/) |
 
@@ -80,21 +83,32 @@ The `#group` section links to all partner companies:
 - Legal data: UAB "Lateral repairs" · company code 304403126 · VAT LT100010469717 ·
   Paberžių g. 5, LT-72328 Tauragė, Lithuania.
 
-## ⚠️ Before launch — TODO
+## Before launch
 
-1. **Contact form** — currently a front-end prototype (no backend). Wire it to email/CRM
-   (e.g. Vercel serverless function, Formspree, or your inbox) before going live.
-2. **App Store / Play links** — verified live, but confirm the listings are the correct
-   public ones for your region.
-3. **Custom domain** — add it in your Vercel project settings once deployed.
+See **[deployment/DEPLOY.md](deployment/DEPLOY.md)** — deployment gates, upload list,
+`.htaccess` additions, backup, rollback and post-deployment tests. In short:
+
+1. **Contact form — NOT CONNECTED.** No backend exists in this repository; the form says so
+   to visitors and never claims success. It needs the production PHP handler (DEPLOY.md §11).
+2. **Privacy policy** — resolve the highlighted `[TO CONFIRM …]` markers in `privacy.html`.
+
+## Build & QA
+
+```bash
+python3 tools/build-products.py   # pages, menus, consent banner, sitemap
+python3 tools/build-deploy.py     # deployment/public_html + MANIFEST.sha256
+sh tools/qa/run-all.sh            # determinism, JS syntax, package, static + browser QA
+```
+
+Browser QA needs `pip install playwright` and a Chromium that Playwright can launch.
 
 ## Local preview
 
 ```bash
-python3 -m http.server 8000   # then open http://localhost:8000
+python3 -m http.server 8000 --directory deployment/public_html   # http://localhost:8000
 ```
 
-## Deploy (keep it separate from the app)
+## Vercel preview (not production)
 
-Import this repo/branch as a **new** Vercel project (e.g. `lateral-repairs-web`) so it does
-not overwrite the existing app project. Framework preset: **Other** (static). No build command.
+The Vercel project only serves review previews. `vercel.json` mirrors production behaviour
+(real `.html` URLs, same headers); `.vercelignore` keeps `deployment/` and `tools/` off previews.

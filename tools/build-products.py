@@ -4,9 +4,10 @@ Builds the product pages and the Products mega-menu from one catalogue.
 
   python3 tools/build-products.py
 
-Writes products/<slug>.html for every item and patches the mega-menu between the
-MEGAMENU markers in index.html and in every generated page, so the menu markup
-has a single source of truth.
+Writes products/<slug>.html for every item, sitemap.xml, and patches the
+MEGAMENU / DRAWER / CATALOG / CONSENT markers in index.html, privacy.html,
+cookies.html and every generated page, so that markup has a single source of truth.
+Then run tools/build-deploy.py to refresh deployment/public_html.
 
 Liner specifications are transcribed from the official technical data sheets in
 assets/datasheets/ (issue V2026.1). Do not hand-edit generated pages.
@@ -25,6 +26,11 @@ GENERIC_NOTE = "Always confirm against the current data sheet before use."
 
 # bumped when a product photo is replaced under the same filename
 IMG_V = "?v=2"
+
+# Production origin. Canonical and sitemap URLs use real .html paths so they resolve on
+# plain Apache hosting without rewrite rules.
+SITE = "https://lateralrepairs.com"
+STATIC_PAGES = ["", "privacy.html", "cookies.html"]  # "" = home page (/)
 
 CATALOGUE = [
     {
@@ -634,6 +640,37 @@ def drawer_html(base=""):
     )
 
 
+def consent_html(base=""):
+    return (
+        '<div class="consent" id="consent" role="dialog" aria-modal="false" aria-labelledby="consentTitle" hidden>\n'
+        '    <div class="consent__card">\n'
+        '      <div class="consent__text">\n'
+        '        <b id="consentTitle">Privacy on this site</b>\n'
+        "        <p>We set <b>no tracking cookies</b> — only one entry that remembers this choice. Embedded "
+        "videos (YouTube) load from Google only if you allow third-party content. Details: "
+        f'<a href="{base}cookies.html">Cookie Policy</a> · <a href="{base}privacy.html">Privacy Policy</a>.</p>\n'
+        "      </div>\n"
+        '      <div class="consent__actions">\n'
+        '        <button class="btn btn-primary" id="consentAccept" type="button">Accept all</button>\n'
+        '        <button class="btn btn-ghost" id="consentNecessary" type="button">Necessary only</button>\n'
+        "      </div>\n"
+        "    </div>\n"
+        "  </div>"
+    )
+
+
+def sitemap_xml():
+    urls = [f"{SITE}/{p}" for p in STATIC_PAGES] + [
+        f'{SITE}/products/{it["slug"]}.html' for cat in CATALOGUE for it in cat["items"]
+    ]
+    body = "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls)
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{body}</urlset>\n"
+    )
+
+
 # --------------------------------------------------------------------------- #
 # Interactive catalogue browser on the home page
 # --------------------------------------------------------------------------- #
@@ -677,13 +714,13 @@ def catalog_html():
         '<div class="catalog" id="catalog">\n'
         '        <div class="picker" data-picker>\n'
         '          <button type="button" class="picker__btn" id="pickerBtn" aria-haspopup="listbox" '
-        'aria-expanded="false">\n'
+        'aria-controls="pickerList" aria-expanded="false">\n'
         '            <span class="picker__meta"><small>Category</small>'
         f'<b id="pickerLabel">{esc(first["name"])}</b></span>\n'
         '            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
         'stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>\n'
         "          </button>\n"
-        f'          <ul class="picker__list" role="listbox" aria-label="Product category">{"".join(opts)}</ul>\n'
+        f'          <ul class="picker__list" id="pickerList" role="listbox" aria-label="Product category">{"".join(opts)}</ul>\n'
         "        </div>\n"
         f'        <div class="catalog__panels">{"".join(panels)}</div>\n'
         "      </div>"
@@ -702,12 +739,13 @@ PAGE = """<!doctype html>
   <meta name="description" content="{meta}" />
   <meta name="theme-color" content="#070608" />
   <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png" />
-  <link rel="canonical" href="https://lateral-repairs-website.vercel.app/products/{slug}" />
+  <link rel="canonical" href="{site}/products/{slug}.html" />
   <meta property="og:type" content="product" />
+  <meta property="og:url" content="{site}/products/{slug}.html" />
   <meta property="og:title" content="{name} — Lateral Repairs" />
-  <meta property="og:description" content="{meta}" />
+  <meta property="og:description" content="{meta}" />{og_image}
   <link rel="stylesheet" href="../assets/fonts/fonts.css?v=15" />
-  <link rel="stylesheet" href="../assets/css/styles.css?v=17" />
+  <link rel="stylesheet" href="../assets/css/styles.css?v=18" />
 </head>
 <body>
 
@@ -786,13 +824,17 @@ PAGE = """<!doctype html>
         </div>
         <div class="copy">
           <a href="../privacy.html">Privacy Policy</a> · <a href="../cookies.html">Cookie Policy</a> ·
+          <button type="button" class="linklike" id="cookieSettings">Cookie settings</button> ·
           <a href="../index.html">Home</a>
         </div>
       </div>
     </div>
   </footer>
 
-  <script src="../assets/js/main.js?v=15" defer></script>
+  <!-- CONSENT:START -->
+  <!-- CONSENT:END -->
+
+  <script src="../assets/js/main.js?v=16" defer></script>
 </body>
 </html>
 """
@@ -905,7 +947,12 @@ def build_page(cat, item):
             f'<div class="mega__grid">{links}</div></section>'
         )
 
+    og_image = (
+        f'\n  <meta property="og:image" content="{SITE}/{item["image"]}" />' if item.get("image") else ""
+    )
     page = PAGE.format(
+        site=SITE,
+        og_image=og_image,
         name=esc(item["name"]),
         slug=item["slug"],
         cat=esc(cat["name"]),
@@ -938,7 +985,8 @@ def inject(text, name, content, indent):
 
 def inject_menu(text, base=""):
     text = inject(text, "MEGAMENU", menu_html(base), "        ")
-    return inject(text, "DRAWER", drawer_html(base), "  ")
+    text = inject(text, "DRAWER", drawer_html(base), "  ")
+    return inject(text, "CONSENT", consent_html(base), "  ")
 
 
 def main():
@@ -955,8 +1003,16 @@ def main():
     src = inject(src, "CATALOG", catalog_html(), "      ")
     index.write_text(src, encoding="utf-8")
 
+    for legal in ("privacy.html", "cookies.html"):
+        f = ROOT / legal
+        f.write_text(inject(f.read_text(encoding="utf-8"), "CONSENT", consent_html(""), "  "), encoding="utf-8")
+
+    (ROOT / "sitemap.xml").write_text(sitemap_xml(), encoding="utf-8")
+
     print(f"generated {n} product pages -> products/")
-    print("patched mega-menu, drawer and catalogue in index.html")
+    print("patched mega-menu, drawer, catalogue and consent banner in index.html")
+    print("patched consent banner in privacy.html, cookies.html")
+    print("wrote sitemap.xml")
 
 
 if __name__ == "__main__":

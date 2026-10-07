@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""
+Builds the production upload package for plain Apache hosting (Serveriai.lt).
+
+  python3 tools/build-products.py   # regenerate pages first
+  python3 tools/build-deploy.py
+
+Writes deployment/public_html/ (exactly what gets uploaded to the document root) and
+deployment/MANIFEST.sha256. Only allow-listed files are copied: no Vercel config,
+tooling, docs or .htaccess (server config is merged by hand, see deployment/DEPLOY.md).
+"""
+import hashlib
+import pathlib
+import re
+import shutil
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+OUT = ROOT / "deployment" / "public_html"
+MANIFEST = ROOT / "deployment" / "MANIFEST.sha256"
+
+INCLUDE = [
+    "index.html",
+    "privacy.html",
+    "cookies.html",
+    "robots.txt",
+    "sitemap.xml",
+    "products/*.html",
+    "assets/css/styles.css",
+    "assets/js/main.js",
+    "assets/vendor/three.min.js",
+    "assets/fonts/fonts.css",
+    "assets/fonts/*.woff2",
+    "assets/datasheets/*.pdf",
+    "assets/certs/*.pdf",
+    "images/*.png",
+    "images/*.svg",
+    "images/products/*.jpg",
+    "images/gallery/*.jpg",
+    "images/certs/*",
+]
+EXCLUDE = {"images/logo.png"}  # not referenced by any page
+
+FORBIDDEN = re.compile(r"vercel\.app|vercel\.com|localhost|127\.0\.0\.1|0\.0\.0\.0")
+TEXT_EXT = {".html", ".css", ".js", ".txt", ".xml"}
+
+
+def collect():
+    files = set()
+    for pattern in INCLUDE:
+        matches = [p for p in ROOT.glob(pattern) if p.is_file()]
+        if not matches:
+            raise SystemExit(f"allow-list pattern matched nothing: {pattern}")
+        files.update(p.relative_to(ROOT).as_posix() for p in matches)
+    return sorted(files - EXCLUDE)
+
+
+def main():
+    files = collect()
+
+    problems = []
+    for rel in files:
+        if pathlib.Path(rel).suffix in TEXT_EXT and rel != "assets/vendor/three.min.js":
+            for n, line in enumerate((ROOT / rel).read_text(encoding="utf-8").splitlines(), 1):
+                if FORBIDDEN.search(line):
+                    problems.append(f"{rel}:{n}: {FORBIDDEN.search(line).group(0)}")
+    if problems:
+        print("refusing to package development/Vercel URLs:", *problems, sep="\n  ")
+        sys.exit(1)
+
+    if OUT.exists():
+        shutil.rmtree(OUT)
+    lines = []
+    for rel in files:
+        dst = OUT / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / rel, dst)
+        data = dst.read_bytes()
+        lines.append(f"{hashlib.sha256(data).hexdigest()}  {rel}")
+    MANIFEST.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    size = sum((OUT / f).stat().st_size for f in files)
+    print(f"packaged {len(files)} files ({size / 1048576:.1f} MB) -> deployment/public_html/")
+    print("wrote deployment/MANIFEST.sha256")
+
+    markers = [
+        f"{rel}: {m}"
+        for rel in files if rel.endswith(".html")
+        for m in re.findall(r"\[TO CONFIRM[^\]]*\]", (ROOT / rel).read_text(encoding="utf-8"))
+    ]
+    if markers:
+        print(f"\nWARNING: {len(markers)} unresolved TO CONFIRM marker(s) — resolve before upload:")
+        for m in markers:
+            print("  " + m)
+
+
+if __name__ == "__main__":
+    main()
