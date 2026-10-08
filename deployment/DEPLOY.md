@@ -77,7 +77,7 @@ Everything outside `deployment/public_html/`, in particular:
 - `.git/`, `.gitignore`, `.vercelignore`, `vercel.json`;
 - `README.md`, `tools/`;
 - `deployment/DEPLOY.md`, `deployment/MANIFEST.sha256`, `deployment/htaccess-additions.conf`,
-  `deployment/inspect-server-readonly.sh`;
+  `deployment/inspect-server-readonly.sh`, `deployment/capture-contact-form.sh`;
 - `deployment/robots.txt` (only per §6 C).
 
 The package builder refuses to include any PHP file, `.htaccess`, `config.php`, SQL dump, or
@@ -228,14 +228,57 @@ of a complete upload. T3 is.
 
 ## 12. Contact form: NOT CONNECTED
 
-The form has no `action` and is marked `data-form-status="not-connected"`. It shows
-"NOT CONNECTED YET — please email info@lateralrepairs.com or call +370 698 76581". Submitting
-says "NOT sent" and makes no request. The privacy policy states that enquiries currently arrive
-by email/phone only.
+**Current state (verified):**
+- The form has no `action` and is marked `data-form-status="not-connected"`.
+- It shows "NOT CONNECTED YET — please email info@lateralrepairs.com or call +370 698 76581".
+- Submitting says "NOT sent" and makes no request.
+- The privacy policy states that enquiries currently arrive by email/phone only.
 
-To connect it later I need the URL of the current CMS contact page, its `<form>…</form>` HTML
-(View Source), and which CMS module renders it. CMS module actions on this site go through
-`index.php` (`?mact=`). Whether they can be called from a static page is NOT VERIFIED.
+**Why it isn't connected yet:** the existing form's HTML and handler haven't been seen. The live
+site is unreachable from the QA environment, and the production files supplied so far
+(`.htaccess`, `index.php`) contain no form. Nothing has been guessed.
+
+**Facts already established** (from the production `.htaccess`, tested in `tools/qa/apache_check.py`):
+
+- Every PHP file is denied except the allow-list, which contains no mail/contact script. So the
+  existing form must post to the CMS (`index.php` via `?mact=` or a CMS page URL) or to an
+  allow-listed script such as `ajax.php`.
+- After the §7 merge these targets still reach the CMS exactly as today: `POST /?mact=…`,
+  `POST /<cms-page>/`, `POST /ajax.php`.
+- `POST /index.php` is answered with a 301 by the existing rule on line 459–460. The browser then
+  re-requests it as a GET and **drops the form data**, which is already true today. The new form
+  must not post to `/index.php`.
+
+**Step 1: capture the existing form (read-only, 1 minute).** From any computer with `curl`:
+
+```bash
+sh deployment/capture-contact-form.sh                       # lists candidate contact-page links
+sh deployment/capture-contact-form.sh https://www.lateralrepairs.com/<contact-page>/
+```
+
+It only makes GET requests (two independent visits) and never submits the form. Send back
+`lr-contact-form-report.txt`, which contains the form HTML, hidden fields, a comparison of the
+hidden values between the two visits, cookies (values masked), and CAPTCHA/AJAX markers.
+
+**Step 2: decision rule.**
+
+| Report shows | Result |
+| --- | --- |
+| hidden values **identical** in both visits, no CAPTCHA, no required session cookie | **can connect**: copy the exact action, method, field names and hidden fields into the new form |
+| hidden values **differ** between visits (per-request token), or a CAPTCHA, or a session cookie the handler checks | **cannot connect from static HTML**. It needs a change by the CMS maintainer; no workaround will be invented. |
+| form submits via JavaScript (AJAX) to `ajax.php` or similar | its request contract (fields, response) is needed as well; decide after seeing it |
+
+**Step 3: how it will be connected (no backend change).** The new form becomes a normal HTML
+`POST` to the existing endpoint, with the existing field names and hidden values. The browser then
+shows the **CMS's own** response page, so success or failure is reported by the existing backend,
+never by the new frontend. `lr-assets/js/main.js` already does this automatically: once the
+`<form>` has an `action`, it no longer intercepts the submit. The "NOT CONNECTED" notice and
+`data-form-status` are then removed, and the privacy/cookie texts are updated if the handler
+stores submissions or sets cookies.
+
+**Step 4: real test submission (only with your approval).** It sends a real enquiry through the
+production system: an email to the inbox and possibly a database record. It would be one message
+clearly marked "TEST — please ignore", sent once and checked in the inbox.
 
 ## 13. Observed in the existing configuration (not changed by this release)
 
