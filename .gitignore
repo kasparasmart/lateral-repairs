@@ -3,3 +3,9 @@ node_modules/
 .vercel
 *.log
 __pycache__/
+
+# never commit production server files (this repository is public)
+*.htaccess
+.htaccess
+*.php
+production*

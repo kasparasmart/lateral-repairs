@@ -27,9 +27,9 @@ GENERIC_NOTE = "Always confirm against the current data sheet before use."
 # bumped when a product photo is replaced under the same filename
 IMG_V = "?v=2"
 
-# Production origin. Canonical and sitemap URLs use real .html paths so they resolve on
-# plain Apache hosting without rewrite rules.
-SITE = "https://lateralrepairs.com"
+# Production origin. The production .htaccess 301-redirects every bare-domain request to www,
+# so www is canonical. Canonical and sitemap URLs use real .html paths (no rewrites needed).
+SITE = "https://www.lateralrepairs.com"
 # Indexable pages only: privacy.html / cookies.html carry robots "noindex", and listing a
 # noindex URL in the sitemap is reported as an error by search engines.
 STATIC_PAGES = [""]  # "" = home page (/)
@@ -1009,12 +1009,13 @@ def main():
         f = ROOT / legal
         f.write_text(inject(f.read_text(encoding="utf-8"), "CONSENT", consent_html(""), "  "), encoding="utf-8")
 
-    (ROOT / "sitemap.xml").write_text(sitemap_xml(), encoding="utf-8")
+    # distinct name: the CMS (SiteMapMadeSimple) may own /sitemap.xml on the production server
+    (ROOT / "sitemap-lr.xml").write_text(sitemap_xml(), encoding="utf-8")
 
     print(f"generated {n} product pages -> products/")
     print("patched mega-menu, drawer, catalogue and consent banner in index.html")
     print("patched consent banner in privacy.html, cookies.html")
-    print("wrote sitemap.xml")
+    print("wrote sitemap-lr.xml")
 
 
 if __name__ == "__main__":

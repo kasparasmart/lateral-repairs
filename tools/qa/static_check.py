@@ -20,8 +20,8 @@ from urllib.parse import unquote, urlsplit
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
 PKG = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else REPO / "deployment" / "public_html"
-SITE = "https://lateralrepairs.com"
-FORBIDDEN = re.compile(r"vercel\.app|vercel\.com|localhost|127\.0\.0\.1|0\.0\.0\.0|www\.lateralrepairs\.com|http://lateralrepairs")
+SITE = "https://www.lateralrepairs.com"
+FORBIDDEN = re.compile(r"vercel\.app|vercel\.com|localhost|127\.0\.0\.1|0\.0\.0\.0|https?://lateralrepairs\.com|http://www\.lateralrepairs")
 NOT_ALLOWED_IN_PKG = re.compile(
     r"(^|/)(\.htaccess|\.git.*|vercel\.json|\.vercelignore|README\.md|.*\.py|.*\.md|.*\.conf|.*\.sh|"
     r".*\.php|\.user\.ini|php\.ini|.*\.sql(\.gz)?)$"
@@ -110,7 +110,7 @@ def main():
     block(f"package differs from repo source (rebuild with tools/build-deploy.py): {drift[:8]}") if drift else ok("package is identical to repo source files")
 
     top = sorted({f.split("/")[0] for f in files})
-    allowed_top = ["cookies.html", "index.html", "lr-assets", "privacy.html", "products", "robots.txt", "sitemap.xml"]
+    allowed_top = ["cookies.html", "index.html", "lr-assets", "privacy.html", "products", "sitemap-lr.xml"]
     (ok(f"package root contains only {allowed_top}") if top == allowed_top
      else block(f"unexpected top-level entries in package: {sorted(set(top) - set(allowed_top))} / missing {sorted(set(allowed_top) - set(top))}"))
 
@@ -160,20 +160,21 @@ def main():
     block(f"canonical problems: {canon_bad}") if canon_bad else ok(f"all {len(parsed)} canonicals are {SITE}/… and map to the page's own .html file")
     block(f"Open Graph URLs that don't resolve: {og_bad}") if og_bad else ok("all og:url / og:image URLs resolve to packaged files")
 
-    sm = (PKG / "sitemap.xml").read_text(encoding="utf-8") if exists_case("sitemap.xml") else ""
+    sm = (PKG / "sitemap-lr.xml").read_text(encoding="utf-8") if exists_case("sitemap-lr.xml") else ""
     locs = re.findall(r"<loc>([^<]+)</loc>", sm)
     sm_files = [site_url_to_file(u) for u in locs]
     sm_bad = [u for u, t in zip(locs, sm_files) if not t or not exists_case(t)]
     indexable = sorted(f for f, pg in parsed.items() if "noindex" not in (pg.meta.get("robots") or ""))
     missing_from_sm = sorted(set(indexable) - set(sm_files))
-    if not locs: block("sitemap.xml missing or empty")
+    if not locs: block("sitemap-lr.xml missing or empty")
     elif sm_bad: block(f"sitemap URLs that would 404: {sm_bad}")
-    else: ok(f"sitemap.xml: all {len(locs)} URLs map to packaged files")
-    warn(f"indexable pages not in sitemap: {missing_from_sm}") if missing_from_sm else ok("every indexable page is listed in sitemap.xml")
+    else: ok(f"sitemap-lr.xml: all {len(locs)} URLs map to packaged files")
+    warn(f"indexable pages not in sitemap: {missing_from_sm}") if missing_from_sm else ok("every indexable page is listed in sitemap-lr.xml")
     noindex_listed = [t for t in sm_files if t in parsed and "noindex" in (parsed[t].meta.get("robots") or "")]
-    block(f"noindex pages listed in sitemap.xml: {noindex_listed}") if noindex_listed else ok("sitemap.xml lists no noindex pages")
-    robots = (PKG / "robots.txt").read_text(encoding="utf-8") if exists_case("robots.txt") else ""
-    (ok("robots.txt points to the production sitemap") if f"Sitemap: {SITE}/sitemap.xml" in robots
+    block(f"noindex pages listed in sitemap-lr.xml: {noindex_listed}") if noindex_listed else ok("sitemap-lr.xml lists no noindex pages")
+    rb = REPO / "deployment" / "robots.txt"
+    robots = rb.read_text(encoding="utf-8") if rb.is_file() else ""
+    (ok("robots.txt points to the production sitemap") if f"Sitemap: {SITE}/sitemap-lr.xml" in robots
      else block("robots.txt does not reference the production sitemap"))
 
     # ---- unresolved facts ----------------------------------------------------

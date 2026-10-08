@@ -6,7 +6,7 @@ set -u
 cd "$(dirname "$0")/../.." || exit 1
 status=0
 
-snap() { cat index.html privacy.html cookies.html sitemap.xml products/*.html | sha256sum; }
+snap() { cat index.html privacy.html cookies.html sitemap-lr.xml products/*.html | sha256sum; }
 
 echo "== 1. generator: regenerate twice, output must be identical"
 python3 tools/build-products.py >/dev/null && a=$(snap)

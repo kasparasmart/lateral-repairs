@@ -10,6 +10,7 @@ Loads every page, checks JS errors / failed requests / images / horizontal overf
 9 widths, and exercises every interactive component. Exit code 1 on any FAIL.
 """
 import functools
+import os
 import http.server
 import pathlib
 import re
@@ -21,7 +22,7 @@ from playwright.sync_api import sync_playwright
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
 PKG = REPO / "deployment" / "public_html"
-SITE = "https://lateralrepairs.com/"
+SITE = "https://www.lateralrepairs.com/"
 WIDTHS = [320, 375, 390, 414, 768, 1024, 1280, 1440, 1920]
 LAUNCH_ARGS = ["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"]
 
@@ -75,7 +76,7 @@ VISIBLE_JS = "(sel) => { const e = document.querySelector(sel); if (!e) return f
 
 
 def pages_from_sitemap(ctx, base):
-    xml = ctx.request.get(urljoin(base, "sitemap.xml")).text()
+    xml = ctx.request.get(urljoin(base, "sitemap-lr.xml")).text()
     urls = re.findall(r"<loc>([^<]+)</loc>", xml)
     return [u.replace(SITE, base) for u in urls]
 
@@ -87,6 +88,9 @@ def main():
     print(f"Browser QA against {base}\n")
     with sync_playwright() as p:
         b = p.chromium.launch(args=LAUNCH_ARGS)
+        if os.environ.get("LR_INSECURE_TLS"):  # local HTTPS test server with a self-signed certificate
+            _orig = b.new_context
+            b.new_context = lambda **kw: _orig(ignore_https_errors=True, **kw)
 
         # ===================== every page, desktop =====================
         ctx = b.new_context(viewport={"width": 1440, "height": 900})

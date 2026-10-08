@@ -11,8 +11,8 @@ datasheet tool). The site links out to the app on the App Store and Google Play.
 ## Stack
 
 Zero-build static site — pure HTML, CSS and vanilla JS, plus a self-hosted **Three.js**
-build for the 3D hero. No install step. Production target: plain Apache hosting at
-Serveriai.lt (`https://lateralrepairs.com/`), alongside the existing PHP backend.
+build for the 3D hero. No install step. Production target: Apache hosting at
+Serveriai.lt (`https://www.lateralrepairs.com/`), alongside the existing CMS Made Simple site.
 
 ```
 index.html              # all sections
@@ -24,8 +24,9 @@ lr-assets/datasheets/      # technical + safety data sheets (PDF)
 lr-assets/images/          # logo, wordmark, photography, favicons
 # all frontend assets live in lr-assets/ — CMS Made Simple already owns a top-level assets/
 tools/build-deploy.py   # builds deployment/public_html (the exact upload) + MANIFEST
-tools/qa/               # static + browser QA (run-all.sh)
-deployment/             # upload package, DEPLOY.md, .htaccess additions
+tools/merge_htaccess.py # adds the 2 frontend blocks to a LOCAL copy of the production .htaccess
+tools/qa/               # static + browser QA (run-all.sh); apache_check.py = .htaccess before/after test
+deployment/             # upload package, DEPLOY.md (release runbook), .htaccess additions
 vercel.json             # preview deployments only — never uploaded to production
 ```
 

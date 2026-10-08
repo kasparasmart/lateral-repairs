@@ -32,7 +32,7 @@ find . -name .htaccess -exec grep -Hn -i -E 'DirectoryIndex|Rewrite(Rule|Cond|Ba
 section "PHP ini overrides"; ls -la .user.ini php.ini 2>/dev/null; cat .user.ini 2>/dev/null
 
 section "paths the new frontend would create or overwrite (top level)"
-for p in index.html privacy.html cookies.html robots.txt sitemap.xml products lr-assets; do
+for p in index.html privacy.html cookies.html robots.txt sitemap.xml sitemap-lr.xml products lr-assets; do
   if [ -e "$p" ]; then printf 'EXISTS  %s\n' "$p"; ls -ld "$p"; else printf 'absent  %s\n' "$p"; fi
 done
 section "manifest collisions (files that WOULD BE OVERWRITTEN)"
