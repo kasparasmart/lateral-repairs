@@ -15,7 +15,7 @@ python3 tools/build-products.py >/dev/null && b=$(snap)
 
 echo "== 2. JavaScript syntax"
 if command -v node >/dev/null 2>&1; then
-  node --check assets/js/main.js && echo "PASS assets/js/main.js parses" || status=1
+  node --check lr-assets/js/main.js && echo "PASS lr-assets/js/main.js parses" || status=1
 else
   echo "SKIP node not installed"
 fi

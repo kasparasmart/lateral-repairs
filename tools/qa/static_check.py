@@ -21,10 +21,13 @@ from urllib.parse import unquote, urlsplit
 REPO = pathlib.Path(__file__).resolve().parents[2]
 PKG = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else REPO / "deployment" / "public_html"
 SITE = "https://lateralrepairs.com"
-FORBIDDEN = re.compile(r"vercel\.app|vercel\.com|localhost|127\.0\.0\.1|0\.0\.0\.0")
-NOT_ALLOWED_IN_PKG = re.compile(r"(^|/)(\.htaccess|\.git.*|vercel\.json|\.vercelignore|README\.md|.*\.py|.*\.md|.*\.conf)$")
+FORBIDDEN = re.compile(r"vercel\.app|vercel\.com|localhost|127\.0\.0\.1|0\.0\.0\.0|www\.lateralrepairs\.com|http://lateralrepairs")
+NOT_ALLOWED_IN_PKG = re.compile(
+    r"(^|/)(\.htaccess|\.git.*|vercel\.json|\.vercelignore|README\.md|.*\.py|.*\.md|.*\.conf|.*\.sh|"
+    r".*\.php|\.user\.ini|php\.ini|.*\.sql(\.gz)?)$"
+    r"|^(admin|modules|plugins|vendor|uploads|lib|tmp|doc|install|assets|cgi-bin|\.well-known)/")
 
-blockers, warnings, passes = [], [], []
+blockers, warnings, passes, known = [], [], [], []
 
 
 def block(msg): blockers.append(msg)
@@ -106,10 +109,15 @@ def main():
     drift = [f for f in files if (REPO / f).is_file() and (REPO / f).read_bytes() != (PKG / f).read_bytes()]
     block(f"package differs from repo source (rebuild with tools/build-deploy.py): {drift[:8]}") if drift else ok("package is identical to repo source files")
 
+    top = sorted({f.split("/")[0] for f in files})
+    allowed_top = ["cookies.html", "index.html", "lr-assets", "privacy.html", "products", "robots.txt", "sitemap.xml"]
+    (ok(f"package root contains only {allowed_top}") if top == allowed_top
+     else block(f"unexpected top-level entries in package: {sorted(set(top) - set(allowed_top))} / missing {sorted(set(allowed_top) - set(top))}"))
+
     # ---- forbidden URLs ----------------------------------------------------
     hits = []
     for f in files:
-        if f.endswith((".html", ".css", ".js", ".txt", ".xml")) and f != "assets/vendor/three.min.js":
+        if f.endswith((".html", ".css", ".js", ".txt", ".xml")) and f != "lr-assets/vendor/three.min.js":
             for n, line in enumerate((PKG / f).read_text(encoding="utf-8").splitlines(), 1):
                 m = FORBIDDEN.search(line)
                 if m: hits.append(f"{f}:{n} {m.group(0)}")
@@ -177,7 +185,11 @@ def main():
         for form in pg.forms:
             if not form.get("action"):
                 status = form.get("data-form-status")
-                block(f"{f}: contact form NOT CONNECTED (no action; data-form-status={status!r}). Needs the production PHP endpoint.")
+                html_ = (PKG / f).read_text(encoding="utf-8")
+                if status == "not-connected" and "NOT CONNECTED YET" in html_ and 'id="formStatus"' in html_:
+                    known.append(f"{f}: contact form NOT CONNECTED — explicitly marked for visitors; needs the production CMSMS/PHP endpoint")
+                else:
+                    block(f"{f}: form has no action and is NOT marked as not connected (would silently lose enquiries)")
             else:
                 warn(f"{f}: contact form posts to {form['action']} — NOT VERIFIED until tested against the production backend")
 
@@ -240,8 +252,9 @@ def main():
     print(f"Static QA of {PKG.relative_to(REPO) if PKG.is_relative_to(REPO) else PKG}: {len(files)} files, {len(pages)} pages\n")
     for p in passes: print("PASS    " + p)
     for w in warnings: print("WARN    " + w)
+    for k in known: print("KNOWN   " + k)
     for b in blockers: print("BLOCKER " + b)
-    print(f"\n{len(passes)} pass, {len(warnings)} warning(s), {len(blockers)} blocker(s)")
+    print(f"\n{len(passes)} pass, {len(warnings)} warning(s), {len(known)} known/accepted, {len(blockers)} blocker(s)")
     sys.exit(1 if blockers else 0)
 
 

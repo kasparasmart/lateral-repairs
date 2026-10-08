@@ -47,8 +47,8 @@ CATALOGUE = [
                 "lead": "Flexible hose liner for the trenchless rehabilitation of drains and house connections.",
                 "summary": "The most flexible liner in the range — negotiates 90° bends and the small "
                            "diameters typical of house connections, from DN 30 upwards.",
-                "image": "images/products/flex.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_FLEX.pdf",
+                "image": "lr-assets/images/products/flex.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_FLEX.pdf",
                 "highlights": ["DN 30 – 250", "3.50 mm wall", "90° bends"],
                 "specs": [
                     ("Product code", "FLEX"),
@@ -73,8 +73,8 @@ CATALOGUE = [
                 "lead": "Multi-knitted hose liner for the trenchless inner lining of pipes.",
                 "summary": "The dependable all-rounder for standard sewer and pipe rehabilitation, with a "
                            "higher heat resistance than FLEX and the same 90° bend capability.",
-                "image": "images/products/core.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_CORE.pdf",
+                "image": "lr-assets/images/products/core.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_CORE.pdf",
                 "highlights": ["DN 70 – 250", "4.50 mm wall", "85 °C"],
                 "specs": [
                     ("Product code", "CORE"),
@@ -100,8 +100,8 @@ CATALOGUE = [
                         "impaired pipes.",
                 "summary": "TPU-coated multi-knitted liner for demanding, high-specification work — up to "
                            "DN 300 while still negotiating 90° bends.",
-                "image": "images/products/pro.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_PRO_45mm.pdf",
+                "image": "lr-assets/images/products/pro.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_PRO_45mm.pdf",
                 "highlights": ["DN 70 – 300", "4.50 mm wall", "TPU coating"],
                 "specs": [
                     ("Product code", "PRO"),
@@ -127,8 +127,8 @@ CATALOGUE = [
                         "impaired pipes.",
                 "summary": "The heaviest-walled PRO, built on an 800 g/m² textile — the greatest structural "
                            "reserve where the host pipe is badly degraded.",
-                "image": "images/products/pro.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_PRO_55mm.pdf",
+                "image": "lr-assets/images/products/pro.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_PRO_55mm.pdf",
                 "highlights": ["DN 70 – 300", "5.50 mm wall", "800 g/m² textile"],
                 "specs": [
                     ("Product code", "PRO"),
@@ -153,8 +153,8 @@ CATALOGUE = [
                 "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
                 "summary": "Filament-reinforced liner rated to 100 °C — the choice when the new pipe has to "
                            "carry the load itself.",
-                "image": "images/products/force.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_FORCE.pdf",
+                "image": "lr-assets/images/products/force.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_FORCE.pdf",
                 "highlights": ["DN 100 – 300", "3.00 mm wall", "100 °C"],
                 "specs": [
                     ("Product code", "FORCE"),
@@ -180,8 +180,8 @@ CATALOGUE = [
                 "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
                 "summary": "The heavy-duty FORCE: a 4.50 mm wall and a heavier textile, reaching DN 600 for "
                            "mains and manhole-to-manhole runs.",
-                "image": "images/products/force.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_FORCE_RF.pdf",
+                "image": "lr-assets/images/products/force.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_FORCE_RF.pdf",
                 "highlights": ["DN 100 – 600", "4.50 mm wall", "900 g/m²"],
                 "specs": [
                     ("Product code", "FORCE"),
@@ -207,8 +207,8 @@ CATALOGUE = [
                 "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
                 "summary": "Reinforced liner with a TPU coating built for UV light-train curing — the crew "
                            "controls exactly when the reline sets, up to DN 600.",
-                "image": "images/products/force-uv.jpg",
-                "pdf": "assets/datasheets/LR_MULTIline_FORCE_UV.pdf",
+                "image": "lr-assets/images/products/force-uv.jpg",
+                "pdf": "lr-assets/datasheets/LR_MULTIline_FORCE_UV.pdf",
                 "highlights": ["DN 100 – 600", "3.30 mm wall", "UV cure"],
                 "specs": [
                     ("Product code", "FORCEUV"),
@@ -234,8 +234,8 @@ CATALOGUE = [
                         "of lateral connections.",
                 "summary": "Restores lateral and branch connections at 45°, 90° and 180° from DN 50 to "
                            "DN 300 — supplied stitched and sealed, or stitched only.",
-                "image": "images/products/connection-liners.jpg",
-                "pdf": "assets/datasheets/LR_Connection_Liners.pdf",
+                "image": "lr-assets/images/products/connection-liners.jpg",
+                "pdf": "lr-assets/datasheets/LR_Connection_Liners.pdf",
                 "highlights": ["DN 50 – 300", "45° · 90° · 180°", "Approx. 3.0 mm"],
                 "variants": [
                     {
@@ -365,13 +365,13 @@ CATALOGUE = [
                 ],
                 "docs": [
                     {"label": "LR Silicate Resin Type W · Winter", "sub": "Safety data sheet · \"A\" component",
-                     "file": "assets/datasheets/LR_Silicate_Resin_Winter_SDS.pdf"},
+                     "file": "lr-assets/datasheets/LR_Silicate_Resin_Winter_SDS.pdf"},
                     {"label": "LR Silicate Resin Type Summer", "sub": "Safety data sheet · \"A\" component",
-                     "file": "assets/datasheets/LR_Silicate_Resin_Summer_SDS.pdf"},
+                     "file": "lr-assets/datasheets/LR_Silicate_Resin_Summer_SDS.pdf"},
                     {"label": "LR Silicate Resin Type W01 · Fast", "sub": "Safety data sheet · \"A\" component",
-                     "file": "assets/datasheets/LR_Silicate_Resin_W01_Fast_SDS.pdf"},
+                     "file": "lr-assets/datasheets/LR_Silicate_Resin_W01_Fast_SDS.pdf"},
                     {"label": "LR Silicate Resin Waterglass · Hardener", "sub": "Safety data sheet · \"B\" component",
-                     "file": "assets/datasheets/LR_Silicate_Resin_Waterglass_Hardener_SDS.pdf"},
+                     "file": "lr-assets/datasheets/LR_Silicate_Resin_Waterglass_Hardener_SDS.pdf"},
                 ],
             },
         ],
@@ -389,7 +389,7 @@ CATALOGUE = [
                 "summary": "The calibration hose carries the pressure that holds the impregnated liner "
                            "against the host pipe while it cures. Both constructions work with the common "
                            "resin systems — UV vinyl ester, silicate and epoxy.",
-                "image": "images/products/calibration-hoses.jpg",
+                "image": "lr-assets/images/products/calibration-hoses.jpg",
                 "highlights": ["Light duty · 50 °C", "Heavy duty · 80 °C", "50 m / 100 m rolls"],
                 "variants": [
                     {
@@ -436,13 +436,13 @@ CATALOGUE = [
                 ],
                 "docs": [
                     {"label": "Calibration Hose Welded — Transparent", "sub": "Technical data sheet · light duty",
-                     "file": "assets/datasheets/LR_Calibration_Hose_Heat_Welded_MD.pdf"},
+                     "file": "lr-assets/datasheets/LR_Calibration_Hose_Heat_Welded_MD.pdf"},
                     {"label": "Calibration Hose Welded · Violet", "sub": "Technical data sheet · light duty",
-                     "file": "assets/datasheets/LR_Calibration_Hose_Welded_Violet.pdf"},
+                     "file": "lr-assets/datasheets/LR_Calibration_Hose_Welded_Violet.pdf"},
                     {"label": "Calibration Hose Stitched & Welded — Transparent", "sub": "Technical data sheet · heavy duty",
-                     "file": "assets/datasheets/LR_Calibration_Hose_Stitched_Welded.pdf"},
+                     "file": "lr-assets/datasheets/LR_Calibration_Hose_Stitched_Welded.pdf"},
                     {"label": "Calibration Hose Stitched & Welded — Orange", "sub": "Technical data sheet · heavy duty",
-                     "file": "assets/datasheets/LR_Calibration_Hose_Stitched_Welded_Orange.pdf"},
+                     "file": "lr-assets/datasheets/LR_Calibration_Hose_Stitched_Welded_Orange.pdf"},
                 ],
             },
             {
@@ -452,7 +452,7 @@ CATALOGUE = [
                 "lead": "Complete kit for a single localised pipe repair.",
                 "summary": "A boxed, pre-measured kit containing everything needed for one patch repair — "
                            "glass mat, two-part resin, tools and protection.",
-                "image": "images/gallery/patch-kit.jpg",
+                "image": "lr-assets/images/gallery/patch-kit.jpg",
                 "highlights": ["Pre-measured glass mat", "Two-part resin pack", "100 × 550 mm WR"],
                 "body": [
                     "Each kit is packed for a single repair so nothing has to be measured on site. Contents: "
@@ -469,8 +469,8 @@ CATALOGUE = [
                         "CIPP lining.",
                 "summary": "A two-layer stitched complex — chopped strand mat backed by woven roving — "
                            "used where the finished laminate has to carry structural load.",
-                "image": "images/products/glassfiber.jpg",
-                "pdf": "assets/datasheets/LR_Glassfiber_Complex_1050.pdf",
+                "image": "lr-assets/images/products/glassfiber.jpg",
+                "pdf": "lr-assets/datasheets/LR_Glassfiber_Complex_1050.pdf",
                 "highlights": ["E-CR glass", "1050 g/m² ± 8 %", "125 / 250 cm width"],
                 "specs": [
                     ("Glass composition", "E-CR Glass"),
@@ -504,8 +504,8 @@ CATALOGUE = [
                 "summary": "A contact adhesive that bonds on contact and reaches full strength in about "
                            "two days — suited to rubber, leather, gasket, sheet, moulding, metal and "
                            "lining materials.",
-                "image": "images/products/end-cap-glue.jpg",
-                "pdf": "assets/datasheets/LR_End_Cap_Glue.pdf",
+                "image": "lr-assets/images/products/end-cap-glue.jpg",
+                "pdf": "lr-assets/datasheets/LR_End_Cap_Glue.pdf",
                 "highlights": ["Cures 5 – 15 min", "−40 °C to +75 °C", "Approx. 4 m² / l"],
                 "specs": [
                     ("Application temperature", "+10 °C – +40 °C"),
@@ -624,8 +624,8 @@ def drawer_html(base=""):
         '  <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">\n'
         '    <div class="drawer__head">\n'
         f'      <a href="{home}" class="drawer__brand" aria-label="Lateral Repairs home">\n'
-        f'        <img src="{base}images/logo.svg" alt="" />\n'
-        f'        <img src="{base}images/wordmark.png" alt="Lateral Repairs" class="drawer__word" />\n'
+        f'        <img src="{base}lr-assets/images/logo.svg" alt="" />\n'
+        f'        <img src="{base}lr-assets/images/wordmark.png" alt="Lateral Repairs" class="drawer__word" />\n'
         "      </a>\n"
         '      <button type="button" class="drawer__close" id="drawerClose" aria-label="Close menu">\n'
         '        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
@@ -740,21 +740,21 @@ PAGE = """<!doctype html>
   <title>{name} — Lateral Repairs</title>
   <meta name="description" content="{meta}" />
   <meta name="theme-color" content="#070608" />
-  <link rel="icon" type="image/png" sizes="192x192" href="../images/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="../lr-assets/images/icon-192.png" />
   <link rel="canonical" href="{site}/products/{slug}.html" />
   <meta property="og:type" content="product" />
   <meta property="og:url" content="{site}/products/{slug}.html" />
   <meta property="og:title" content="{name} — Lateral Repairs" />
   <meta property="og:description" content="{meta}" />{og_image}
-  <link rel="stylesheet" href="../assets/fonts/fonts.css?v=15" />
-  <link rel="stylesheet" href="../assets/css/styles.css?v=18" />
+  <link rel="stylesheet" href="../lr-assets/fonts/fonts.css?v=15" />
+  <link rel="stylesheet" href="../lr-assets/css/styles.css?v=18" />
 </head>
 <body>
 
   <header class="nav scrolled" id="nav">
     <a href="../index.html" class="nav__logo" aria-label="Lateral Repairs home">
-      <img src="../images/logo.svg" alt="" class="brand__mark" />
-      <img src="../images/wordmark.png" alt="Lateral Repairs" class="brand__wordmark" />
+      <img src="../lr-assets/images/logo.svg" alt="" class="brand__mark" />
+      <img src="../lr-assets/images/wordmark.png" alt="Lateral Repairs" class="brand__wordmark" />
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
       <div class="nav__has-mega" data-mega-root>
@@ -836,7 +836,7 @@ PAGE = """<!doctype html>
   <!-- CONSENT:START -->
   <!-- CONSENT:END -->
 
-  <script src="../assets/js/main.js?v=16" defer></script>
+  <script src="../lr-assets/js/main.js?v=16" defer></script>
 </body>
 </html>
 """

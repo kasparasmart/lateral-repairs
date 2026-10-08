@@ -1,7 +1,7 @@
 # Certificate PDF
 
 The certification **logos** in the `#certifications` section are non-clickable
-trust badges (their images live in `images/certs/`).
+trust badges (their images live in `lr-assets/images/certs/`).
 
 Below them, one **clickable document** links to the official certificate PDF:
 

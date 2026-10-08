@@ -18,10 +18,11 @@ Serveriai.lt (`https://lateralrepairs.com/`), alongside the existing PHP backend
 index.html              # all sections
 products/*.html         # generated product pages — do not hand-edit
 tools/build-products.py # product catalogue: pages, mega-menu, drawer, browser
-assets/css/styles.css   # brand system + layout + animations
-assets/js/main.js       # preloader, nav, drawer, catalogue, reveals, 3D hero
-assets/datasheets/      # technical + safety data sheets (PDF)
-images/                 # logo, wordmark, photography, favicons
+lr-assets/css/styles.css   # brand system + layout + animations
+lr-assets/js/main.js       # preloader, nav, drawer, catalogue, reveals, 3D hero
+lr-assets/datasheets/      # technical + safety data sheets (PDF)
+lr-assets/images/          # logo, wordmark, photography, favicons
+# all frontend assets live in lr-assets/ — CMS Made Simple already owns a top-level assets/
 tools/build-deploy.py   # builds deployment/public_html (the exact upload) + MANIFEST
 tools/qa/               # static + browser QA (run-all.sh)
 deployment/             # upload package, DEPLOY.md, .htaccess additions
@@ -38,7 +39,7 @@ catalogue browser from one source.
   near-black `#070608`, white/off-white surfaces. Dark and light sections alternate.
 - **Type:** Space Grotesk (headings) + Inter (body).
 - **Logo:** the official Lateral Repairs droplet mark, converted from the supplied vector
-  artwork to `images/logo.svg` (2.5 KB, transparent, sharp at any size). Used by the
+  artwork to `lr-assets/images/logo.svg` (2.5 KB, transparent, sharp at any size). Used by the
   preloader, nav, hero, phone mockup and footer; PNG icons remain for favicons.
 
 ## Animation
@@ -77,7 +78,7 @@ The `#group` section links to all partner companies:
 
 - Company facts, products, certifications and the company video are reused from the
   Lateral Repairs app and the official site (lateralrepairs.com).
-- All photography is self-hosted in `images/` — real product liners, job-site and equipment shots supplied by the company.
+- All photography is self-hosted in `lr-assets/images/` — real product liners, job-site and equipment shots supplied by the company.
 - Group/partner facts from the public announcement (Trenchless Works, Apheon,
   ims-robotics.de, resinnovation.com).
 - Legal data: UAB "Lateral repairs" · company code 304403126 · VAT LT100010469717 ·

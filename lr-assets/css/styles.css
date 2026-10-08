@@ -394,7 +394,7 @@ html.logo-flying .nav__logo { pointer-events: none; }
   position: relative; aspect-ratio: 16 / 9; cursor: pointer;
   background:
     radial-gradient(700px 360px at 50% 50%, rgba(230,0,126,0.22), transparent 70%),
-    url("../../images/gallery/liner-macro.jpg") center/cover no-repeat,
+    url("../images/gallery/liner-macro.jpg") center/cover no-repeat,
     var(--black-2);
   display: grid; place-items: center;
 }

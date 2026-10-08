@@ -26,20 +26,28 @@ INCLUDE = [
     "robots.txt",
     "sitemap.xml",
     "products/*.html",
-    "assets/css/styles.css",
-    "assets/js/main.js",
-    "assets/vendor/three.min.js",
-    "assets/fonts/fonts.css",
-    "assets/fonts/*.woff2",
-    "assets/datasheets/*.pdf",
-    "assets/certs/*.pdf",
-    "images/*.png",
-    "images/*.svg",
-    "images/products/*.jpg",
-    "images/gallery/*.jpg",
-    "images/certs/*",
+    "lr-assets/css/styles.css",
+    "lr-assets/js/main.js",
+    "lr-assets/vendor/three.min.js",
+    "lr-assets/fonts/fonts.css",
+    "lr-assets/fonts/*.woff2",
+    "lr-assets/datasheets/*.pdf",
+    "lr-assets/certs/*.pdf",
+    "lr-assets/images/*.png",
+    "lr-assets/images/*.svg",
+    "lr-assets/images/products/*.jpg",
+    "lr-assets/images/gallery/*.jpg",
+    "lr-assets/images/certs/*",
 ]
-EXCLUDE = {"images/logo.png"}  # not referenced by any page
+EXCLUDE = {"lr-assets/images/logo.png"}  # not referenced by any page
+
+# Names that belong to the existing CMS Made Simple / PHP site. The package must never contain
+# them, so an upload can't replace backend files. All frontend assets live in lr-assets/
+# because CMSMS 2.x already uses a top-level assets/ directory.
+BACKEND_NAMES = re.compile(
+    r"(^|/)(index\.php|config\.php|.*\.php|\.htaccess|\.user\.ini|php\.ini|.*\.sql(\.gz)?)$"
+    r"|^(admin|modules|plugins|vendor|uploads|lib|tmp|doc|install|assets|cgi-bin|\.well-known)/"
+)
 
 FORBIDDEN = re.compile(r"vercel\.app|vercel\.com|localhost|127\.0\.0\.1|0\.0\.0\.0")
 TEXT_EXT = {".html", ".css", ".js", ".txt", ".xml"}
@@ -57,10 +65,13 @@ def collect():
 
 def main():
     files = collect()
+    clash = [f for f in files if BACKEND_NAMES.search(f)]
+    if clash:
+        raise SystemExit(f"refusing to package backend/CMS paths: {clash}")
 
     problems = []
     for rel in files:
-        if pathlib.Path(rel).suffix in TEXT_EXT and rel != "assets/vendor/three.min.js":
+        if pathlib.Path(rel).suffix in TEXT_EXT and rel != "lr-assets/vendor/three.min.js":
             for n, line in enumerate((ROOT / rel).read_text(encoding="utf-8").splitlines(), 1):
                 if FORBIDDEN.search(line):
                     problems.append(f"{rel}:{n}: {FORBIDDEN.search(line).group(0)}")
