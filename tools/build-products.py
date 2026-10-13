@@ -150,8 +150,8 @@ CATALOGUE = [
                 "slug": "multiline-force",
                 "name": "MULTIline FORCE",
                 "tag": "Structural rehabilitation",
-                "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
-                "summary": "Filament-reinforced liner rated to 100 °C — the choice when the new pipe has to "
+                "lead": "High-strength hose liner for the structural rehabilitation of pipes.",
+                "summary": "High-strength liner rated to 100 °C — the choice when the new pipe has to "
                            "carry the load itself.",
                 "image": "lr-assets/images/products/force.jpg",
                 "pdf": "lr-assets/datasheets/LR_MULTIline_FORCE.pdf",
@@ -176,7 +176,7 @@ CATALOGUE = [
                 "slug": "multiline-force-rf",
                 "name": "MULTIline FORCE RF",
                 "tag": "Large diameter",
-                "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
+                "lead": "High-strength hose liner for the structural rehabilitation of pipes.",
                 "summary": "The heavy-duty FORCE: a 4.50 mm wall and a heavier textile, reaching DN 600 for "
                            "mains and manhole-to-manhole runs.",
                 "image": "lr-assets/images/products/force.jpg",
@@ -202,8 +202,8 @@ CATALOGUE = [
                 "slug": "multiline-force-uv",
                 "name": "MULTIline FORCE UV",
                 "tag": "UV curing",
-                "lead": "High-strength, reinforced hose liner for the structural rehabilitation of pipes.",
-                "summary": "Reinforced liner with a TPU coating built for UV light-train curing — the crew "
+                "lead": "High-strength hose liner for the structural rehabilitation of pipes.",
+                "summary": "Liner with a TPU coating built for UV light-train curing — the crew "
                            "controls exactly when the reline sets, up to DN 600.",
                 "image": "lr-assets/images/products/force-uv.jpg",
                 "pdf": "lr-assets/datasheets/LR_MULTIline_FORCE_UV.pdf",
@@ -216,8 +216,7 @@ CATALOGUE = [
                     ("Liner undersized", "10 %"),
                     ("Heat resistance", "Max. 80 °C / 176 °F"),
                     ("Negotiating bends", "Max. 45°"),
-                    ("Material", "Polyester needle-punched fleece with filament reinforcement and a "
-                                 "thermoplastic polyurethane (TPU) coating"),
+                    ("Material", "Needle-punched fleece with thermoplastic polyurethane (TPU) coating"),
                     ("Textile", "Polyester, 500 g/m²"),
                     ("Coating", "TPU, 150 g/m²"),
                     ("Colour / coating", "White / Transparent"),
