@@ -164,8 +164,7 @@ CATALOGUE = [
                     ("Liner undersized", "10 %"),
                     ("Heat resistance", "Max. 100 °C / 212 °F"),
                     ("Negotiating bends", "Max. 45°"),
-                    ("Material", "Polyester needle-punched fleece with filament reinforcement and a "
-                                 "polypropylene (PP) coating"),
+                    ("Material", "Needle-punched fleece with polypropylene (PP) coating"),
                     ("Textile", "Polyester, 650 g/m²"),
                     ("Coating", "PP, 300 g/m²"),
                     ("Colour / coating", "White / Milky white"),
@@ -191,8 +190,7 @@ CATALOGUE = [
                     ("Liner undersized", "10 %"),
                     ("Heat resistance", "Max. 100 °C / 212 °F"),
                     ("Negotiating bends", "Max. 45°"),
-                    ("Material", "Polyester needle-punched fleece with filament reinforcement and a "
-                                 "polypropylene (PP) coating"),
+                    ("Material", "Needle-punched fleece with polypropylene (PP) coating"),
                     ("Textile", "Polyester, 900 g/m²"),
                     ("Coating", "PP, 300 g/m²"),
                     ("Colour / coating", "White / Milky white"),
